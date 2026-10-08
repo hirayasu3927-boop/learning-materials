@@ -9,12 +9,11 @@
 <body>
   <div id="root"></div>
   <script type="module">
-    import { i as React, t as getReactDOMClient } from "./framework-CXnKph_e.js";
+    import { i as getReact, t as getReactDOMClient } from "./framework-CXnKph_e.js";
     import Clock from "./page-C7J1KzJA.js";
-    getReactDOMClient().hydrateRoot(
-      document.getElementById("root"),
-      React.createElement(Clock)
-    );
+    const React = getReact();
+    const ReactDOM = getReactDOMClient();
+    ReactDOM.hydrateRoot(document.getElementById("root"), React.createElement(Clock));
   </script>
 </body>
 </html>
