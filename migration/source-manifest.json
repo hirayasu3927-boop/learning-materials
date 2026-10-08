@@ -1,0 +1,57 @@
+[
+  {
+    "sourceSlug": "math-number-line-002",
+    "path": "/math/number-line/",
+    "sourceCommit": "c0ae366bda4b3151ea81f8bb1b689c93f8d9b9fb"
+  },
+  {
+    "sourceSlug": "math-003-five-steps",
+    "path": "/math/add-subtract/",
+    "sourceCommit": "07caf0ead4569e3f131ff79af98b13da73d59632"
+  },
+  {
+    "sourceSlug": "chugaku-sugaku-004-seifu-jouhou",
+    "path": "/math/multiply/",
+    "sourceCommit": "51a522068dbc75060d505327a64ae1d40733c515"
+  },
+  {
+    "sourceSlug": "math-005-integer-division",
+    "path": "/math/divide/",
+    "sourceCommit": "ed02a5d24a713288049be72b2122486a49ea1a29"
+  },
+  {
+    "sourceSlug": "math006-three-step-practice",
+    "path": "/math/mixed-operations/",
+    "sourceCommit": "4d6060d99bb49abbdecff87619166a854208933b"
+  },
+  {
+    "sourceSlug": "literal-expressions",
+    "path": "/math/literal-expressions/",
+    "sourceCommit": "633004d93a7dd530a46dee19359acf49d00b8d1d"
+  },
+  {
+    "sourceSlug": "signed-numbers-average",
+    "path": "/math/positive-negative-average/",
+    "sourceCommit": "bbffd31e9bcaf472668585225df20cb4547b37f4"
+  },
+  {
+    "sourceSlug": "math006-mixed-operations",
+    "path": "/math/mixed-operations-original/",
+    "sourceCommit": "d075ab37d2d768d381c14d51f9e3d5a6279c358c"
+  },
+  {
+    "sourceSlug": "signed-number-add-subtract",
+    "path": "/math/add-subtract-original/",
+    "sourceCommit": "e334acde696dfde642980fdc4f24e51da896138d"
+  },
+  {
+    "sourceSlug": "math003-adaptive-plus-minus",
+    "path": "/math/adaptive-add-subtract/",
+    "sourceCommit": "ddd3509f48ee9b0fa01f783022db4e7da6f25081",
+    "adaptations": [
+      "Relative API endpoint",
+      "Next.js edge route converted to Pages Function"
+    ],
+    "needs": "Cloudflare Pages OPENAI_API_KEY secret for optional AI decisions"
+  }
+]

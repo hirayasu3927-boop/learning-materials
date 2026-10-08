@@ -1,0 +1,420 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>中学数学004｜正負の数の乗法</title>
+  <meta name="description" content="人物の向きと数直線の移動から、正負の数の掛け算を理解する中学1年生向けWeb教材です。">
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%231b4b66'/%3E%3Cpath d='M15 20h34M15 44h34M22 13v14M42 37v14' stroke='%23fff' stroke-width='6' stroke-linecap='round'/%3E%3C/svg%3E">
+  <style>
+    :root {
+      --ink:#173141; --muted:#587080; --paper:#f4f8fa; --white:#fff;
+      --navy:#1b4b66; --blue:#287ca3; --sky:#dff2fa; --teal:#138277;
+      --orange:#ef8f3a; --gold:#ffd56a; --red:#c94a4a; --line:#c9d8df;
+      --shadow:0 12px 34px rgba(24,61,81,.10); --radius:22px;
+    }
+    *{box-sizing:border-box}
+    html{font-size:16px;scroll-behavior:smooth}
+    body{margin:0;background:linear-gradient(180deg,#edf6fa 0,#f9fbfc 55%,#edf6fa 100%);color:var(--ink);font-family:"BIZ UDPGothic","Yu Gothic UI","Hiragino Kaku Gothic ProN",sans-serif;line-height:1.7;min-height:100vh}
+    button,input,select{font:inherit}
+    button{cursor:pointer}
+    .shell{max-width:1050px;margin:auto;padding:18px 20px 54px}
+    .topbar{display:flex;align-items:center;justify-content:space-between;gap:14px;margin-bottom:16px}
+    .titlebox{display:flex;align-items:center;gap:12px;min-width:0}
+    .course-no{display:grid;place-items:center;width:46px;height:46px;border-radius:14px;background:var(--navy);color:white;font-weight:900;box-shadow:0 6px 16px rgba(27,75,102,.23);flex:none}
+    h1{font-size:clamp(1.1rem,2.7vw,1.55rem);line-height:1.35;margin:0;letter-spacing:.02em}
+    .home-btn{border:1px solid #b7cad4;background:white;color:var(--navy);border-radius:13px;padding:10px 14px;font-weight:800;white-space:nowrap;box-shadow:0 3px 8px rgba(24,61,81,.06)}
+    .home-btn:hover,.home-btn:focus-visible{border-color:var(--blue);background:#f3fbff}
+    .stage-nav{display:grid;grid-template-columns:repeat(5,1fr);gap:8px;background:rgba(255,255,255,.82);border:1px solid #d4e1e7;border-radius:19px;padding:8px;position:sticky;top:8px;z-index:20;backdrop-filter:blur(12px);box-shadow:0 8px 22px rgba(34,73,93,.08)}
+    .stage-tab{border:0;background:transparent;color:#536d7b;border-radius:13px;padding:9px 6px;min-height:48px;font-size:.88rem;font-weight:800;line-height:1.25}
+    .stage-tab span{display:block;font-size:.73rem;font-weight:700;opacity:.8}
+    .stage-tab[aria-selected="true"]{background:var(--navy);color:white;box-shadow:0 5px 14px rgba(27,75,102,.22)}
+    .stage-tab:focus-visible,.primary:focus-visible,.secondary:focus-visible,.choice:focus-visible{outline:3px solid var(--gold);outline-offset:2px}
+    main{margin-top:18px}
+    .stage{display:none;animation:fade .28s ease}
+    .stage.active{display:block}
+    @keyframes fade{from{opacity:.25;transform:translateY(5px)}to{opacity:1;transform:none}}
+    .panel{background:rgba(255,255,255,.96);border:1px solid #d8e4e9;border-radius:var(--radius);box-shadow:var(--shadow);padding:clamp(20px,4.5vw,42px)}
+    .stage-head{display:flex;align-items:center;gap:10px;color:var(--blue);font-weight:900;margin-bottom:8px}
+    .stage-head .num{display:grid;place-items:center;width:30px;height:30px;border-radius:9px;background:var(--sky);color:var(--navy)}
+    h2{font-size:clamp(1.45rem,4vw,2.25rem);line-height:1.35;margin:6px 0 18px}
+    h3{font-size:1.18rem;margin:0 0 10px}
+    .lead{color:var(--muted);font-weight:650;margin:0 auto 24px;max-width:690px}
+    .formula{font-family:"Arial",sans-serif;font-variant-numeric:tabular-nums;font-weight:900;letter-spacing:.02em}
+    .goal{min-height:470px;display:grid;place-items:center;text-align:center;position:relative;overflow:hidden}
+    .goal:before,.goal:after{content:"";position:absolute;border-radius:50%;background:var(--sky);opacity:.65}
+    .goal:before{width:250px;height:250px;top:-110px;right:-80px}
+    .goal:after{width:170px;height:170px;bottom:-95px;left:-45px}
+    .goal-inner{position:relative;z-index:1}
+    .goal .formula{font-size:clamp(2.7rem,9vw,5.6rem);color:var(--navy);line-height:1.2;margin:28px 0 12px}
+    .question{font-size:clamp(1.2rem,3vw,1.55rem);font-weight:900}
+    .primary,.secondary{border:0;border-radius:14px;padding:13px 22px;font-weight:900;transition:.15s transform,.15s box-shadow}
+    .primary{background:var(--navy);color:white;box-shadow:0 7px 17px rgba(27,75,102,.23)}
+    .secondary{background:#e7f4f8;color:var(--navy)}
+    .primary:hover,.secondary:hover{transform:translateY(-1px)}
+    .button-row{display:flex;justify-content:center;gap:10px;flex-wrap:wrap;margin-top:24px}
+    .compare{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin:22px 0}
+    .compare-card{border:1px solid var(--line);border-radius:17px;padding:17px;background:#fbfdfe}
+    .compare-card strong{display:block;color:var(--navy);margin-bottom:5px}
+    .start-zero{background:#fff7df;border:2px solid #f4cf69}
+    .demo-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:20px}
+    .demo-card{border:1px solid var(--line);border-radius:18px;padding:20px;background:#fbfdfe}
+    .demo-card .formula{font-size:1.6rem;color:var(--navy)}
+    .mini-route{display:flex;align-items:center;justify-content:center;gap:8px;margin:18px 0;font-weight:900;font-size:1.12rem;flex-wrap:wrap}
+    .point{display:grid;place-items:center;min-width:44px;height:44px;padding:0 8px;border-radius:12px;background:var(--sky);color:var(--navy)}
+    .arrow{color:var(--orange);font-size:1.35rem}
+    .microcopy{font-size:.94rem;color:var(--muted);font-weight:700}
+    .together-layout{display:grid;grid-template-columns:minmax(0,.85fr) minmax(320px,1.4fr);gap:20px;align-items:start}
+    .problem-picker{display:flex;gap:8px;margin-bottom:18px}
+    .choice{flex:1;border:1px solid #b9ced8;border-radius:13px;background:white;padding:11px 8px;color:var(--navy);font-weight:900}
+    .choice.active{background:var(--navy);color:white;border-color:var(--navy)}
+    .token-row{display:flex;justify-content:center;align-items:center;gap:7px;flex-wrap:wrap;margin:8px 0 20px}
+    .token{min-width:54px;padding:9px 12px;border-radius:13px;background:#e9f0f3;color:#738691;text-align:center;font-size:1.55rem;line-height:1;font-family:Arial,sans-serif;font-weight:900;border:3px solid transparent;transition:.2s}
+    .token.active{color:var(--navy);background:#fff4cd;border-color:var(--gold);transform:scale(1.08);box-shadow:0 6px 14px rgba(190,137,24,.17)}
+    .times{font-size:1.25rem;font-weight:900;color:#718795}
+    .meaning-box{border-radius:17px;background:#eef7fa;padding:18px;min-height:128px;display:grid;align-content:center;text-align:center}
+    .meaning-label{color:var(--blue);font-weight:900;font-size:.84rem}
+    .meaning-main{font-size:1.25rem;font-weight:900;margin:3px 0}
+    .meaning-sub{color:var(--muted);font-weight:700;font-size:.92rem}
+    .step-controls{display:flex;gap:9px;margin-top:12px}
+    .step-controls button{flex:1}
+    .visual{border:1px solid var(--line);border-radius:19px;background:linear-gradient(180deg,#fafeff,#eef7fa);padding:20px 20px 24px;min-height:325px;overflow:hidden}
+    .direction-legend{display:flex;justify-content:center;gap:18px;flex-wrap:wrap;margin-bottom:8px;font-size:.86rem;font-weight:800;color:var(--muted)}
+    .legend-mark{display:inline-block;width:26px;height:4px;border-radius:5px;margin-right:5px;vertical-align:middle}
+    .face-mark{background:var(--blue)}.move-mark{background:var(--orange)}
+    .walker-zone{height:112px;position:relative;margin:0 8px}
+    .walker{position:absolute;left:50%;bottom:6px;font-size:3.3rem;line-height:1;transform:translateX(-50%) scaleX(1);transform-origin:center;transition:left .72s cubic-bezier(.22,.8,.3,1),transform .35s ease;filter:drop-shadow(0 5px 4px rgba(30,65,82,.17));z-index:2}
+    .walker.face-left{transform:translateX(-50%) scaleX(-1)}
+    .move-arrow{position:absolute;bottom:70px;height:5px;border-radius:6px;background:var(--orange);opacity:0;transition:.25s;z-index:1}
+    .move-arrow:after{content:"";position:absolute;right:-2px;top:-6px;border-left:12px solid var(--orange);border-top:8px solid transparent;border-bottom:8px solid transparent}
+    .move-arrow.leftward:after{right:auto;left:-2px;border-left:0;border-right:12px solid var(--orange)}
+    .move-arrow.show{opacity:1}
+    .face-arrow{position:absolute;bottom:12px;left:50%;color:var(--blue);font-size:.8rem;font-weight:900;transform:translateX(-50%);white-space:nowrap}
+    .numberline{height:84px;position:relative;margin:0 7px}
+    .axis{position:absolute;left:0;right:0;top:27px;height:4px;border-radius:5px;background:var(--navy)}
+    .axis:before,.axis:after{content:"";position:absolute;top:-5px;border-top:7px solid transparent;border-bottom:7px solid transparent}
+    .axis:before{left:-1px;border-right:10px solid var(--navy)}.axis:after{right:-1px;border-left:10px solid var(--navy)}
+    .tick{position:absolute;top:18px;width:2px;height:21px;background:var(--navy);transform:translateX(-50%)}
+    .tick b{position:absolute;top:24px;left:50%;transform:translateX(-50%);font-size:.78rem;color:#526c7a;font-weight:800;white-space:nowrap}
+    .tick.zero{height:28px;top:14px;background:var(--orange);width:3px}.tick.zero b{color:var(--ink);font-size:.9rem}
+    .landing{position:absolute;top:17px;width:16px;height:16px;border-radius:50%;background:var(--orange);transform:translate(-50%);opacity:0;transition:.25s;box-shadow:0 0 0 5px rgba(239,143,58,.16)}
+    .landing.show{opacity:1}
+    .visual-caption{text-align:center;min-height:30px;font-weight:900;color:var(--navy);margin-top:3px}
+    .solve-card{max-width:690px;margin:auto;text-align:center}
+    .solve-formula{font-size:clamp(2.1rem,7vw,3.6rem);margin:22px 0;color:var(--navy)}
+    .answer-row{display:flex;align-items:center;justify-content:center;gap:9px;flex-wrap:wrap}
+    .answer-row select,.answer-row input{border:2px solid #aac2ce;border-radius:13px;background:white;padding:10px 12px;font-size:1.15rem;font-weight:900;color:var(--ink)}
+    .answer-row select{width:92px}.answer-row input{width:110px;text-align:center}
+    .feedback{min-height:48px;margin:15px auto 0;padding:10px 14px;border-radius:12px;font-weight:900;max-width:520px}
+    .feedback:empty{padding:0}.feedback.good{background:#ddf5ed;color:#12695f}.feedback.try{background:#fff0e2;color:#9c511b}
+    .hints{display:grid;gap:9px;margin:22px auto 0;max-width:560px;text-align:left}
+    .hint{display:none;border-left:5px solid var(--gold);background:#fff9e8;border-radius:10px;padding:11px 14px;font-weight:800}
+    .hint.show{display:block;animation:fade .2s ease}
+    .hint-model{display:none;margin-top:16px}.hint-model.show{display:block}
+    .quiz-wrap{display:grid;grid-template-columns:230px 1fr;gap:20px;align-items:start}
+    .rule-card{border-radius:18px;background:var(--navy);color:white;padding:20px;position:sticky;top:92px}
+    .rule-card h3{color:var(--gold)}
+    .rule-block{padding:11px 0;border-top:1px solid rgba(255,255,255,.2)}
+    .rule-block strong{display:block;font-size:1.1rem}
+    .quiz-card{border:1px solid var(--line);border-radius:19px;padding:25px;background:#fbfdfe;text-align:center}
+    .quiz-count{color:var(--blue);font-weight:900}
+    .quiz-formula{font-size:clamp(2rem,6vw,3.2rem);margin:15px 0;color:var(--navy)}
+    .progress{height:9px;background:#dfe9ed;border-radius:10px;overflow:hidden;margin-bottom:24px}
+    .progress div{height:100%;width:12.5%;background:linear-gradient(90deg,var(--blue),var(--teal));transition:.3s}
+    .summary{display:none;text-align:left}.summary.show{display:block}
+    .summary-steps{display:grid;grid-template-columns:1fr 42px 1fr;align-items:center;gap:8px;margin:22px 0}
+    .summary-step{background:#eef7fa;border-radius:15px;padding:17px;text-align:center;font-weight:900}
+    .down-arrow{text-align:center;font-size:1.5rem;color:var(--orange);font-weight:900}
+    .sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
+    @media(max-width:760px){
+      .shell{padding:12px 12px 38px}.topbar{align-items:flex-start}.course-no{width:40px;height:40px}.home-btn{padding:8px 10px}
+      .stage-nav{gap:4px;padding:6px}.stage-tab{font-size:.76rem;padding:7px 2px;min-height:45px}.stage-tab span{display:none}
+      .panel{border-radius:18px;padding:20px 16px}.compare,.demo-grid,.together-layout,.quiz-wrap{grid-template-columns:1fr}
+      .goal{min-height:430px}.visual{min-height:310px;padding:16px 8px 20px}.rule-card{position:static;display:grid;grid-template-columns:1fr 1fr;gap:8px}.rule-card h3{grid-column:1/-1}
+      .rule-block{border:1px solid rgba(255,255,255,.2);border-radius:12px;padding:10px}.summary-steps{grid-template-columns:1fr}.down-arrow{transform:rotate(90deg)}
+    }
+  </style>
+</head>
+<body>
+  <div class="shell">
+    <header>
+      <div class="topbar">
+        <div class="titlebox"><div class="course-no">004</div><h1>正負の数の乗法</h1></div>
+        <button class="home-btn" type="button" id="homeBtn" aria-label="教材の最初に戻る">⌂ ホーム</button>
+      </div>
+      <nav class="stage-nav" aria-label="学習の5段階">
+        <button class="stage-tab" data-stage="1" aria-selected="true">① ゴール<span>見る</span></button>
+        <button class="stage-tab" data-stage="2" aria-selected="false">② 完成例<span>見る</span></button>
+        <button class="stage-tab" data-stage="3" aria-selected="false">③ いっしょに<span>解く</span></button>
+        <button class="stage-tab" data-stage="4" aria-selected="false">④ 自分で<span>解く</span></button>
+        <button class="stage-tab" data-stage="5" aria-selected="false">⑤ 考えて<span>解く</span></button>
+      </nav>
+    </header>
+
+    <main>
+      <section class="stage active" id="stage1" aria-labelledby="s1title">
+        <div class="panel goal">
+          <div class="goal-inner">
+            <div class="stage-head" style="justify-content:center"><span class="num">①</span>今日のゴール</div>
+            <h2 id="s1title">マイナス × マイナスは、どうなる？</h2>
+            <div class="formula">(−3) × (−2) = ?</div>
+            <p class="lead">向きと動きで、たしかめよう。</p>
+            <button class="primary go-next" type="button">完成例を見る　→</button>
+          </div>
+        </div>
+      </section>
+
+      <section class="stage" id="stage2" aria-labelledby="s2title">
+        <div class="panel">
+          <div class="stage-head"><span class="num">②</span>完成例を見る</div>
+          <h2 id="s2title">掛け算は「いくつを、何回？」</h2>
+          <div class="compare">
+            <div class="compare-card"><strong>足し算・引き算</strong><span class="formula">2＋3</span> は、<b>2から</b>スタート</div>
+            <div class="compare-card start-zero"><strong>掛け算</strong><span class="formula">3×2</span> は、「3を2回」だから <b>0から</b>スタート</div>
+          </div>
+          <div class="demo-grid">
+            <article class="demo-card">
+              <div class="formula">3 × 2</div>
+              <p class="microcopy">3ずつ、右へ2回</p>
+              <div class="mini-route"><span class="point">0</span><span class="arrow">→</span><span class="point">3</span><span class="arrow">→</span><span class="point">6</span></div>
+              <p><b>3を2回</b>で、答えは <span class="formula">＋6</span></p>
+            </article>
+            <article class="demo-card">
+              <div class="formula">(−3) × 2</div>
+              <p class="microcopy">−3ずつ、左へ2回</p>
+              <div class="mini-route"><span class="point">0</span><span class="arrow">←</span><span class="point">−3</span><span class="arrow">←</span><span class="point">−6</span></div>
+              <p><b>−3を2回</b>で、答えは <span class="formula">−6</span></p>
+            </article>
+          </div>
+          <div class="button-row"><button class="primary go-next" type="button">いっしょに解く　→</button></div>
+        </div>
+      </section>
+
+      <section class="stage" id="stage3" aria-labelledby="s3title">
+        <div class="panel">
+          <div class="stage-head"><span class="num">③</span>いっしょに解く</div>
+          <h2 id="s3title">式を4つに分けて、動きにしよう</h2>
+          <div class="together-layout">
+            <div>
+              <div class="problem-picker" aria-label="一緒に解く問題">
+                <button class="choice active" type="button" data-demo="plusminus">3 × (−2)</button>
+                <button class="choice" type="button" data-demo="minusminus">(−3) × (−2)</button>
+              </div>
+              <div class="token-row" aria-label="式を4つの意味に分ける">
+                <span class="token" id="t0">＋</span><span class="token" id="t1">3</span><span class="times">×</span><span class="token" id="t2">−</span><span class="token" id="t3">2</span>
+              </div>
+              <div class="meaning-box" aria-live="polite">
+                <div class="meaning-label" id="meaningLabel">まず、最初の符号</div>
+                <div class="meaning-main" id="meaningMain">「次へ」を押して、1つずつ見よう</div>
+                <div class="meaning-sub" id="meaningSub">式と動きがつながります。</div>
+              </div>
+              <div class="step-controls">
+                <button class="secondary" type="button" id="stepBack">← 戻る</button>
+                <button class="primary" type="button" id="stepNext">次へ →</button>
+              </div>
+            </div>
+            <div class="visual" id="mainVisual">
+              <div class="direction-legend"><span><i class="legend-mark face-mark"></i>人物が向く方向</span><span><i class="legend-mark move-mark"></i>実際に動く方向</span></div>
+              <div class="walker-zone">
+                <div class="move-arrow" id="moveArrow"></div>
+                <div class="walker" id="walker" aria-label="右を向いた人物">🚶</div>
+                <div class="face-arrow" id="faceLabel">スタート：0</div>
+              </div>
+              <div class="numberline" id="numberline" aria-label="マイナス12からプラス12までの数直線"><div class="axis"></div></div>
+              <div class="visual-caption" id="visualCaption">0から考えます</div>
+            </div>
+          </div>
+          <div class="button-row"><button class="primary go-next" type="button">自分で解く　→</button></div>
+        </div>
+      </section>
+
+      <section class="stage" id="stage4" aria-labelledby="s4title">
+        <div class="panel solve-card">
+          <div class="stage-head" style="justify-content:center"><span class="num">④</span>自分で解く</div>
+          <h2 id="s4title">まずは、ヒントなしで</h2>
+          <div class="formula solve-formula">(−4) × (−3) = ?</div>
+          <div class="answer-row">
+            <label><span class="sr-only">答えの符号</span><select id="basicSign"><option value="">符号</option><option value="+">＋</option><option value="-">−</option></select></label>
+            <label><span class="sr-only">答えの数字</span><input id="basicNumber" type="number" min="0" inputmode="numeric" placeholder="数字"></label>
+            <button class="primary" type="button" id="basicCheck">答える</button>
+          </div>
+          <div class="feedback" id="basicFeedback" aria-live="polite"></div>
+          <div class="button-row"><button class="secondary" type="button" id="hintBtn">ヒントを見る（1/3）</button></div>
+          <div class="hints">
+            <div class="hint" id="hint1"><b>符号を見る：</b> − × − → ＋</div>
+            <div class="hint" id="hint2"><b>数字だけ計算：</b> 4 × 3 ＝ 12</div>
+            <div class="hint" id="hint3"><b>動きで確認：</b> 左を向いて、後ろへ4ずつ3回 → 右へ12</div>
+          </div>
+          <div class="hint-model" id="hintModel">
+            <div class="mini-route"><span class="point">0</span><span class="arrow">→</span><span class="point">4</span><span class="arrow">→</span><span class="point">8</span><span class="arrow">→</span><span class="point">12</span></div>
+          </div>
+          <div class="button-row"><button class="primary go-next" type="button">仕上げの問題へ　→</button></div>
+        </div>
+      </section>
+
+      <section class="stage" id="stage5" aria-labelledby="s5title">
+        <div class="panel">
+          <div class="stage-head"><span class="num">⑤</span>考えて解く</div>
+          <h2 id="s5title">符号を決めて、数字を掛けよう</h2>
+          <div class="quiz-wrap">
+            <aside class="rule-card" aria-label="符号のルール">
+              <h3>符号の見方</h3>
+              <div class="rule-block"><strong>同じ符号 → ＋</strong>＋×＋ ／ −×−</div>
+              <div class="rule-block"><strong>違う符号 → −</strong>＋×− ／ −×＋</div>
+            </aside>
+            <div class="quiz-card">
+              <div id="quizArea">
+                <div class="progress" aria-label="問題の進み具合"><div id="progressBar"></div></div>
+                <div class="quiz-count" id="quizCount">1 / 8</div>
+                <div class="formula quiz-formula" id="quizFormula">(+3) × (+4) = ?</div>
+                <div class="answer-row">
+                  <label><span class="sr-only">答えの符号</span><select id="quizSign"><option value="">符号</option><option value="+">＋</option><option value="-">−</option></select></label>
+                  <label><span class="sr-only">答えの数字</span><input id="quizNumber" type="number" min="0" inputmode="numeric" placeholder="数字"></label>
+                  <button class="primary" type="button" id="quizCheck">答える</button>
+                </div>
+                <div class="feedback" id="quizFeedback" aria-live="polite"></div>
+                <button class="secondary" type="button" id="quizHint">ヒント：符号を見る</button>
+              </div>
+              <div class="summary" id="summary">
+                <div class="stage-head">できた！</div>
+                <h3 style="font-size:1.55rem">正負の数の掛け算</h3>
+                <p id="scoreText" class="lead" style="margin:0">8問に取り組みました。</p>
+                <div class="summary-steps">
+                  <div class="summary-step">① 符号を決める<br><small>同じなら＋／違えば−</small></div>
+                  <div class="down-arrow">→</div>
+                  <div class="summary-step">② 数字を掛ける<br><small>絶対値どうしを計算</small></div>
+                </div>
+                <button class="primary" type="button" id="retryQuiz">もう一度</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <script>
+    const tabs=[...document.querySelectorAll('.stage-tab')];
+    const stages=[...document.querySelectorAll('.stage')];
+    function showStage(n){
+      stages.forEach((s,i)=>s.classList.toggle('active',i===n-1));
+      tabs.forEach((t,i)=>t.setAttribute('aria-selected',String(i===n-1)));
+      window.scrollTo({top:0,behavior:'smooth'});
+      if(n===3) resetDemo();
+    }
+    tabs.forEach((t,i)=>t.addEventListener('click',()=>showStage(i+1)));
+    document.querySelectorAll('.go-next').forEach((b,i)=>b.addEventListener('click',()=>showStage(i+2)));
+    document.getElementById('homeBtn').addEventListener('click',()=>showStage(1));
+
+    const line=document.getElementById('numberline');
+    [-12,-9,-6,-3,0,3,6,9,12].forEach(n=>{
+      const tick=document.createElement('div'); tick.className='tick'+(n===0?' zero':'');
+      tick.style.left=((n+12)/24*100)+'%'; tick.innerHTML='<b>'+(n>0?'＋'+n:n)+'</b>'; line.appendChild(tick);
+    });
+    [-6,-3,3,6].forEach(n=>{const p=document.createElement('div');p.className='landing';p.id='land'+(n<0?'m'+(-n):'p'+n);p.style.left=((n+12)/24*100)+'%';line.appendChild(p)});
+
+    const demos={
+      plusminus:{tokens:['＋','3','−','2'],result:-6,steps:[
+        ['最初の符号「＋」','人物は右を向く','＋は、右向き。'],
+        ['最初の数字「3」','1回に3ずつ','移動の大きさは3。'],
+        ['後ろの符号「−」','向きと反対へ移動','右を向いたまま、後ろへ。'],
+        ['最後の数字「2」','3ずつ、2回移動','0 → −3 → −6'],
+        ['答え','3 × (−2) ＝ −6','実際にはマイナス方向へ6移動した。']
+      ]},
+      minusminus:{tokens:['−','3','−','2'],result:6,steps:[
+        ['最初の符号「−」','人物は左を向く','−は、左向き。'],
+        ['最初の数字「3」','1回に3ずつ','移動の大きさは3。'],
+        ['後ろの符号「−」','向きと反対へ移動','左を向いたまま、後ろへ。'],
+        ['最後の数字「2」','3ずつ、2回移動','0 → ＋3 → ＋6'],
+        ['答え','(−3) × (−2) ＝ ＋6','左向き＋後ろ向きで、プラス方向になった。']
+      ]}
+    };
+    let demoKey='plusminus',demoStep=-1;
+    const walker=document.getElementById('walker'),moveArrow=document.getElementById('moveArrow');
+    const tokenEls=[0,1,2,3].map(i=>document.getElementById('t'+i));
+    function pos(n){return ((n+12)/24*100)}
+    function setWalker(n){walker.style.left=pos(n)+'%'}
+    function resetDemo(){
+      demoStep=-1; tokenEls.forEach(x=>x.classList.remove('active')); setWalker(0); moveArrow.className='move-arrow';
+      document.querySelectorAll('.landing').forEach(x=>x.classList.remove('show'));
+      document.getElementById('meaningLabel').textContent='まず、最初の符号';
+      document.getElementById('meaningMain').textContent='「次へ」を押して、1つずつ見よう';
+      document.getElementById('meaningSub').textContent='式と動きがつながります。';
+      document.getElementById('visualCaption').textContent='0から考えます';
+      walker.classList.toggle('face-left',demoKey==='minusminus');
+      walker.setAttribute('aria-label',(demoKey==='minusminus'?'左':'右')+'を向いた人物');
+      document.getElementById('faceLabel').textContent='スタート：0';
+      document.getElementById('stepNext').textContent='次へ →';
+    }
+    function renderDemo(){
+      const d=demos[demoKey], s=d.steps[demoStep];
+      document.getElementById('meaningLabel').textContent=s[0]; document.getElementById('meaningMain').textContent=s[1]; document.getElementById('meaningSub').textContent=s[2];
+      tokenEls.forEach((x,i)=>x.classList.toggle('active',i===Math.min(demoStep,3)));
+      walker.classList.toggle('face-left',demoKey==='minusminus');
+      document.querySelectorAll('.landing').forEach(x=>x.classList.remove('show'));
+      moveArrow.className='move-arrow'; setWalker(0);
+      if(demoStep===0) document.getElementById('faceLabel').textContent=(demoKey==='minusminus'?'← 左を向く':'右を向く →');
+      if(demoStep>=1) document.getElementById('visualCaption').textContent='1回の大きさ：3';
+      if(demoStep>=2){
+        const left=d.result<0; moveArrow.classList.add('show'); moveArrow.classList.toggle('leftward',left);
+        moveArrow.style.left=left?'25%':'50%'; moveArrow.style.width='25%';
+        document.getElementById('visualCaption').textContent=(demoKey==='minusminus'?'左向きで後ろへ → 実際は右へ':'右向きで後ろへ → 実際は左へ');
+      }
+      if(demoStep>=3){
+        setWalker(d.result); const ids=d.result<0?['landm3','landm6']:['landp3','landp6']; ids.forEach(id=>document.getElementById(id).classList.add('show'));
+        document.getElementById('visualCaption').textContent=d.result<0?'0 → −3 → −6':'0 → ＋3 → ＋6';
+      }
+      if(demoStep===4){tokenEls.forEach(x=>x.classList.remove('active'));document.getElementById('stepNext').textContent='もう一度 ↻'} else document.getElementById('stepNext').textContent='次へ →';
+    }
+    document.getElementById('stepNext').addEventListener('click',()=>{if(demoStep>=4){resetDemo();return} demoStep++;renderDemo()});
+    document.getElementById('stepBack').addEventListener('click',()=>{if(demoStep<=0){resetDemo();return}demoStep--;renderDemo()});
+    document.querySelectorAll('[data-demo]').forEach(b=>b.addEventListener('click',()=>{
+      demoKey=b.dataset.demo;document.querySelectorAll('[data-demo]').forEach(x=>x.classList.toggle('active',x===b));
+      demos[demoKey].tokens.forEach((v,i)=>tokenEls[i].textContent=v);resetDemo();
+    }));
+    resetDemo();
+
+    const basicFeedback=document.getElementById('basicFeedback');
+    document.getElementById('basicCheck').addEventListener('click',()=>{
+      const s=document.getElementById('basicSign').value,n=Number(document.getElementById('basicNumber').value);
+      if(s==='+'&&n===12){basicFeedback.className='feedback good';basicFeedback.textContent='正解！ −×−だから＋。4×3＝12。だから＋12。'}
+      else{basicFeedback.className='feedback try';basicFeedback.textContent=s!=='+'?'まず、2つの符号を見てみよう。':'符号はOK！ 次は4×3を考えよう。'}
+    });
+    let hintLevel=0;
+    document.getElementById('hintBtn').addEventListener('click',e=>{
+      if(hintLevel<3)hintLevel++;
+      document.getElementById('hint'+hintLevel).classList.add('show');
+      if(hintLevel===3){document.getElementById('hintModel').classList.add('show');e.currentTarget.textContent='ヒントを3つ表示中'}
+      else e.currentTarget.textContent='次のヒントを見る（'+(hintLevel+1)+'/3）';
+    });
+
+    const questions=[
+      {a:3,b:4},{a:3,b:-4},{a:-3,b:4},{a:-3,b:-4},
+      {a:5,b:-2},{a:-6,b:3},{a:-4,b:-5},{a:7,b:2}
+    ];
+    let qi=0,correct=0;
+    const qFormula=document.getElementById('quizFormula'),qFeedback=document.getElementById('quizFeedback');
+    const signed=n=>'('+(n>=0?'+':'−')+Math.abs(n)+')';
+    function renderQuiz(){
+      const q=questions[qi]; qFormula.textContent=signed(q.a)+' × '+signed(q.b)+' = ?';
+      document.getElementById('quizCount').textContent=(qi+1)+' / '+questions.length;
+      document.getElementById('progressBar').style.width=((qi+1)/questions.length*100)+'%';
+      document.getElementById('quizSign').value='';document.getElementById('quizNumber').value='';qFeedback.className='feedback';qFeedback.textContent='';
+      document.getElementById('quizHint').textContent='ヒント：符号を見る';
+    }
+    document.getElementById('quizHint').addEventListener('click',e=>{
+      const q=questions[qi],same=(q.a>=0)===(q.b>=0);e.currentTarget.textContent=(same?'同じ符号だから ＋':'違う符号だから −');
+    });
+    document.getElementById('quizCheck').addEventListener('click',()=>{
+      const q=questions[qi],ans=q.a*q.b,s=document.getElementById('quizSign').value,n=Number(document.getElementById('quizNumber').value),rightSign=ans>=0?'+':'-';
+      if(s===rightSign&&n===Math.abs(ans)){
+        correct++;qFeedback.className='feedback good';qFeedback.textContent='正解！ '+(rightSign==='+'?'同じ符号だから＋。':'違う符号だから−。')+Math.abs(q.a)+'×'+Math.abs(q.b)+'＝'+Math.abs(ans)+'。';
+        setTimeout(()=>{qi++;if(qi<questions.length)renderQuiz();else finishQuiz()},650);
+      }else{qFeedback.className='feedback try';qFeedback.textContent=s!==rightSign?'まず、符号が同じか違うか見よう。':'符号はOK！ 数字だけ掛けてみよう。'}
+    });
+    function finishQuiz(){document.getElementById('quizArea').style.display='none';document.getElementById('summary').classList.add('show');document.getElementById('scoreText').textContent='8問中 '+correct+'問 正解しました。'}
+    document.getElementById('retryQuiz').addEventListener('click',()=>{qi=0;correct=0;document.getElementById('summary').classList.remove('show');document.getElementById('quizArea').style.display='block';renderQuiz()});
+    renderQuiz();
+  </script>
+</body>
+</html>

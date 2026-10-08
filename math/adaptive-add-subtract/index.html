@@ -1,0 +1,29 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="theme-color" content="#15304c">
+  <title>中学数学003｜正負の数の加法・減法</title>
+  <link rel="stylesheet" href="./style.css">
+</head>
+<body>
+  <header class="topbar">
+    <div class="brand"><span class="brand-mark">003</span><span>正負の数の加法・減法</span></div>
+    <div class="top-actions"><button id="homeButton" class="text-button" type="button">はじめに戻る</button><button id="settingsButton" class="icon-button" type="button" aria-label="先生用設定">⚙</button></div>
+  </header>
+  <main id="main" class="shell" aria-live="polite"></main>
+  <dialog id="settingsDialog" class="settings-dialog">
+    <form id="settingsForm" method="dialog">
+      <div class="dialog-head"><h2>先生用設定</h2><button class="icon-button" value="cancel" aria-label="閉じる">×</button></div>
+      <p class="muted">問題数の上下限を変更できます。変更は次の学習から反映されます。</p>
+      <label>最低問題数<input id="minQuestions" type="number" min="1" max="99" required></label>
+      <label>最大問題数<input id="maxQuestions" type="number" min="2" max="100" required></label>
+      <p id="settingsError" class="error" role="alert"></p>
+      <div class="dialog-actions"><button id="saveSettings" class="primary" type="button">保存</button></div>
+      <details class="teacher-details"><summary>判定の仕組み</summary><p id="engineStatus"></p><p>注意・ルール想起・式変換・意味の支援を別々に調整します。APIの接続先は運営側で設定します。</p><div id="teacherState"></div></details>
+    </form>
+  </dialog>
+  <script type="module" src="./app.js"></script>
+</body>
+</html>
