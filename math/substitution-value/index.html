@@ -22,13 +22,14 @@ function prompt(p){return '<div class="problem"><div class="muted">問題</div><
 function lines(p,count,active=-1){return solution(p).slice(0,count).map((r,i)=>'<div class="line '+(i===active?'active':'')+'"><span class="formula">'+r.f+'</span><small>'+r.n+'</small></div>').join('')}
 function changeTab(n){tab=n;document.querySelectorAll('nav button').forEach((b,i)=>b.setAttribute('aria-pressed',String(i===n-1)));render()}
 function selectLesson(i){lesson=i;focus=0;overview=false;render()}
+function advanceFocus(){if(overview){focus=0;overview=false}else if(focus<3){focus++}else{overview=true}render()}
 function moveFocus(delta){if(overview){overview=false;focus=3}else{focus=Math.max(0,Math.min(3,focus+delta))}render()}
 function step1(){
  const p=lessons[lesson],rows=solution(p),link=overview||focus===1;
  const display=rows.map((r,i)=>'<div class="line '+(!overview&&i===focus?'active':'')+'" '+(!overview&&i===focus?'aria-current="step"':'')+'><span class="formula">'+(link&&r.linked?r.linked:r.f)+'</span><small>'+r.n+'</small></div>').join('');
  const extra=!overview&&focus===1&&!p.power&&p.x>0?'<details><summary>2x の意味を確認</summary><p class="formula">2x = 2 × x</p></details>':!overview&&focus===1&&p.x<0?'<details><summary>括弧の意味を確認</summary><p>−3 を、符号も含めてひとまとまりで入れます。</p></details>':'';
  const power=p.power&&!overview&&(focus===1||focus===2)?'<details><summary>(−3)² と −3² の違いを確認</summary><p class="formula">(−3)² = (−3) × (−3) = 9</p><p class="formula">−3² = −(3 × 3) = −9</p><p>括弧があると、−3 全体を2回かけます。括弧がないと、3の2乗に − をつけます。</p></details>':'';
- return '<h2>STEP 1｜解き方を見る</h2><div class="tabs" aria-label="問題の種類">'+lessons.map((l,i)=>'<button aria-pressed="'+(i===lesson)+'" onclick="selectLesson('+i+')">'+l.name+'</button>').join('')+'</div>'+prompt(p)+'<p class="progress">'+(overview?'解き方全体を確認しよう':(focus+1)+' / 4 の行に注目しよう')+'</p><div class="'+(link?'correspondence':'')+'">'+display+'</div>'+extra+power+'<div class="actions"><button onclick="moveFocus(-1)" '+(focus===0&&!overview?'disabled':'')+'>戻る</button><button class="primary" onclick="if(overview){focus=0;overview=false}else if(focus<3){focus++}else{overview=true}render()">'+(overview?'最初から':focus===3?'全体を確認':'次へ')+'</button></div>';
+ return '<h2>STEP 1｜解き方を見る</h2><div class="tabs" aria-label="問題の種類">'+lessons.map((l,i)=>'<button aria-pressed="'+(i===lesson)+'" onclick="selectLesson('+i+')">'+l.name+'</button>').join('')+'</div>'+prompt(p)+'<p class="progress">'+(overview?'解き方全体を確認しよう':(focus+1)+' / 4 の行に注目しよう')+'</p><div class="'+(link?'correspondence':'')+'">'+display+'</div>'+extra+power+'<div class="actions"><button onclick="moveFocus(-1)" '+(focus===0&&!overview?'disabled':'')+'>戻る</button><button class="primary" onclick="advanceFocus()">'+(overview?'最初から':focus===3?'全体を確認':'次へ')+'</button></div>';
 }
 const bank=[{x:3,a:2,b:5,power:false},{x:4,a:2,b:5,power:false},{x:-3,a:2,b:5,power:false},{x:2,a:3,b:4,power:false},{x:-2,a:2,b:0,power:true},{x:-3,a:2,b:0,power:true},{x:5,a:2,b:3,power:false},{x:-4,a:3,b:2,power:false},{x:3,a:2,b:0,power:true}];
 function expected(p,ph){let s=solution(p);return s[ph+1].f.slice(1)}
