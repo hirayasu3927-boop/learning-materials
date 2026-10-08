@@ -1,5 +1,10 @@
 [
   {
+    "sourceSlug": "middle-math-001-signed-numbers",
+    "path": "/math/signed-numbers/",
+    "sourceCommit": "3f97aa1f95ee364d860a0de6f9f01862cc829b37"
+  },
+  {
     "sourceSlug": "math-number-line-002",
     "path": "/math/number-line/",
     "sourceCommit": "c0ae366bda4b3151ea81f8bb1b689c93f8d9b9fb"
@@ -43,15 +48,5 @@
     "sourceSlug": "signed-number-add-subtract",
     "path": "/math/add-subtract-original/",
     "sourceCommit": "e334acde696dfde642980fdc4f24e51da896138d"
-  },
-  {
-    "sourceSlug": "math003-adaptive-plus-minus",
-    "path": "/math/adaptive-add-subtract/",
-    "sourceCommit": "ddd3509f48ee9b0fa01f783022db4e7da6f25081",
-    "adaptations": [
-      "Relative API endpoint",
-      "Next.js edge route converted to Pages Function"
-    ],
-    "needs": "Cloudflare Pages OPENAI_API_KEY secret for optional AI decisions"
   }
 ]
