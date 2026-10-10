@@ -1,0 +1,79 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>段ボール積みチャレンジ｜得点表</title>
+<style>
+*{box-sizing:border-box}body{margin:0;background:#fff;color:#171717;font-family:"Noto Sans JP","Yu Gothic",Meiryo,sans-serif}button,input{font:inherit}button{cursor:pointer;color:inherit;background:#fff;border:2px solid #b8bec5;border-radius:10px}button:focus-visible,input:focus-visible{outline:4px solid #e68a00;outline-offset:3px}button:hover{border-color:#1763a6}button:disabled{cursor:default;opacity:.45}main{max-width:1800px;margin:auto;height:100dvh;min-height:620px;padding:2vh 3vw;display:grid;grid-template-rows:auto 1fr auto;gap:1.4vh}header{display:flex;align-items:center;justify-content:space-between;gap:20px}h1{font-size:clamp(26px,2.8vw,52px);margin:0;line-height:1.3}.round-label{font-size:clamp(22px,2vw,38px);font-weight:700;color:#175d9a}.header-right{display:flex;align-items:center;gap:18px}#fullscreen{font-size:16px;padding:8px 12px}
+.board{display:grid;grid-template-columns:minmax(0,1fr) 21%;gap:2vw}.criteria{display:grid;grid-template-rows:1fr 1.25fr 1fr;gap:1.3vh}.card{border:2px solid #a8afb7;border-radius:12px;padding:1.1vh 1.3vw;display:flex;flex-direction:column;justify-content:center;gap:.8vh}.card-head{display:flex;align-items:center;justify-content:space-between}h2{font-size:clamp(23px,2.25vw,42px);margin:0;line-height:1.3}.part-score{font-weight:700;font-size:clamp(22px,2vw,38px)}.muted{font-size:.65em;color:#525b65}.options{display:grid;grid-template-columns:repeat(4,1fr);gap:.7vw}.option{padding:.7vh .3vw;line-height:1.25;min-height:66px}.option strong{font-size:clamp(25px,2.4vw,46px);display:block}.option small{font-size:clamp(14px,1.15vw,22px);display:block;margin-top:.3vh;font-weight:600}.option[aria-pressed=true]{background:#155f9f;color:white;border-color:#155f9f}.checks{display:grid;gap:.5vh}.check{display:flex;align-items:center;gap:1vw;font-size:clamp(19px,1.8vw,34px);font-weight:600;cursor:pointer;line-height:1.35;padding:.25vh .6vw;border-radius:7px}.check:has(input:checked){background:#e5f1fb;color:#124f84}input[type=checkbox]{width:clamp(24px,2.2vw,40px);height:clamp(24px,2.2vw,40px);accent-color:#155f9f;flex-shrink:0;margin:0}.total{border:3px solid #155f9f;border-radius:12px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1vh;background:#f3f8fc}.total h2{font-size:clamp(24px,2.2vw,42px)}#total-score{font-size:clamp(90px,10vw,190px);font-weight:800;line-height:1.1;color:#155f9f}.denominator{font-size:clamp(26px,2.6vw,48px);font-weight:700}.save-status{font-size:clamp(12px,1vw,18px);text-align:center;padding:0 8px;color:#4b5966}
+footer{display:grid;grid-template-columns:1fr auto;gap:2vw;align-items:center}.history{display:grid;grid-template-columns:repeat(3,1fr);gap:1vw}.history button{padding:.6vh 1vw;display:flex;justify-content:space-between;align-items:center;font-size:clamp(18px,1.65vw,32px);font-weight:700}.history button[aria-pressed=true]{border:3px solid #155f9f;background:#e5f1fb}.history strong{font-size:clamp(25px,2.5vw,46px)}.history small{font-size:.55em}.actions{display:flex;gap:.7vw;align-items:center}.actions button{padding:1.5vh 1vw;font-size:clamp(15px,1.3vw,24px);font-weight:700}#next{background:#155f9f;border-color:#155f9f;color:#fff}#reset{color:#5a2525}
+@media(max-width:900px){main{padding:14px;gap:12px;height:auto;min-height:100dvh}.board{grid-template-columns:1fr 150px;gap:12px}.criteria{gap:10px}.card{padding:12px;gap:8px}.actions{flex-direction:column}.history button{flex-direction:column}.header-right{gap:8px}h1{font-size:25px}.check{font-size:19px}}
+@media(max-width:600px){header{align-items:flex-start;flex-direction:column}.board{grid-template-columns:1fr}.total{flex-direction:row;padding:12px;gap:20px}#total-score{font-size:65px}.save-status{display:none}.option small{font-size:12px}h2{font-size:22px}footer{grid-template-columns:1fr}.actions{flex-direction:row;justify-content:space-between}}
+</style>
+</head>
+<body>
+<main>
+<header><h1>段ボール積みチャレンジ</h1><div class="header-right"><span id="round-label" class="round-label">第1回</span><button id="fullscreen" type="button">全画面</button></div></header>
+<div class="board">
+<div class="criteria">
+<section class="card" aria-labelledby="height-title"><div class="card-head"><h2 id="height-title">① 高く積む</h2><span class="part-score"><span id="height-score">0</span><span class="muted"> / 3点</span></span></div><div class="options" id="height-options" role="group" aria-label="高く積むの得点"></div></section>
+<section class="card" aria-labelledby="cooperation-title"><div class="card-head"><h2 id="cooperation-title">② 協力して積む</h2><span class="part-score"><span id="cooperation-score">0</span><span class="muted"> / 3点</span></span></div><div class="checks">
+<label class="check"><input type="checkbox" data-check="0">全員が活動に参加した（1点）</label>
+<label class="check"><input type="checkbox" data-check="1">友達と声をかけ合った（1点）</label>
+<label class="check"><input type="checkbox" data-check="2">話し合って決めた作戦を実行した（1点）</label>
+</div></section>
+<section class="card" aria-labelledby="stop-title"><div class="card-head"><h2 id="stop-title">③ 合図でやめる</h2><span class="part-score"><span id="stop-score">0</span><span class="muted"> / 3点</span></span></div><div class="options" id="stop-options" role="group" aria-label="合図でやめるの得点"></div></section>
+</div>
+<aside class="total" aria-label="合計点"><h2>合計</h2><output id="total-score" aria-live="polite">0</output><span class="denominator">/ 9点</span><span id="save-status" class="save-status">このブラウザに自動保存</span></aside>
+</div>
+<footer><nav class="history" aria-label="チャレンジの切り替え"></nav><div class="actions"><button type="button" id="next">次のチャレンジ →</button><button type="button" id="reset">最初からやり直す</button></div></footer>
+</main>
+<script>
+'use strict';
+const KEY='sst-cardboard-stacking-v1';
+const blank=()=>({height:null,stop:null,checks:[false,false,false]});
+const initial=()=>({current:0,rounds:[blank(),blank(),blank()]});
+const validScore=n=>Number.isInteger(n)&&n>=0&&n<=3?n:null;
+function sanitize(raw){
+ if(!raw||!Array.isArray(raw.rounds)||raw.rounds.length!==3)return initial();
+ return {current:Number.isInteger(raw.current)&&raw.current>=0&&raw.current<3?raw.current:0,
+ rounds:raw.rounds.map(r=>({height:validScore(r?.height),stop:validScore(r?.stop),checks:[0,1,2].map(i=>r?.checks?.[i]===true)}))};
+}
+let state=initial(),storageFailed=false;
+try{const saved=localStorage.getItem(KEY);if(saved)state=sanitize(JSON.parse(saved));}catch{storageFailed=true;}
+const score=r=>(r.height??0)+(r.stop??0)+r.checks.filter(Boolean).length;
+function save(){try{localStorage.setItem(KEY,JSON.stringify(state));storageFailed=false;}catch{storageFailed=true;}}
+const heights=['5個未満','5〜9個','10〜14個','15個以上'];
+const stops=['合図後も積み続けた','少し遅れてやめた','ほとんど同時にやめた','すぐにやめた'];
+for(const [kind,labels] of [['height',heights],['stop',stops]]){
+ const parent=document.getElementById(kind+'-options');
+ labels.forEach((label,n)=>{const b=document.createElement('button');b.type='button';b.className='option';b.dataset.score=n;b.innerHTML='<strong>'+n+'点</strong><small>'+label+'</small>';b.setAttribute('aria-pressed','false');b.onclick=()=>{state.rounds[state.current][kind]=n;save();render();};parent.append(b);});
+}
+const history=document.querySelector('.history');
+for(let i=0;i<3;i++){const b=document.createElement('button');b.type='button';b.onclick=()=>{state.current=i;save();render();};history.append(b);}
+document.querySelectorAll('[data-check]').forEach(input=>input.onchange=()=>{state.rounds[state.current].checks[Number(input.dataset.check)]=input.checked;save();render();});
+function render(){
+ const r=state.rounds[state.current];
+ document.getElementById('round-label').textContent='第'+(state.current+1)+'回';
+ for(const kind of ['height','stop']){
+ document.getElementById(kind+'-score').textContent=r[kind]??0;
+ document.querySelectorAll('#'+kind+'-options button').forEach(b=>b.setAttribute('aria-pressed',String(r[kind]===Number(b.dataset.score))));
+ }
+ document.querySelectorAll('[data-check]').forEach(input=>input.checked=r.checks[Number(input.dataset.check)]);
+ document.getElementById('cooperation-score').textContent=r.checks.filter(Boolean).length;
+ document.getElementById('total-score').textContent=score(r);
+ [...history.children].forEach((b,i)=>{b.setAttribute('aria-pressed',String(i===state.current));b.innerHTML='<span>第'+(i+1)+'回</span><strong>'+score(state.rounds[i])+' <small>/ 9点</small></strong>';});
+ const next=document.getElementById('next');next.disabled=state.current===2;next.textContent=state.current===2?'第3回まで終了':'次のチャレンジ →';
+ document.getElementById('save-status').textContent=storageFailed?'自動保存できません。画面を閉じると得点が消える場合があります。':'このブラウザに自動保存';
+}
+document.getElementById('next').onclick=()=>{if(state.current<2){state.current++;save();render();}};
+document.getElementById('reset').onclick=()=>{if(confirm('3回分の得点をすべて消して、最初からやり直しますか？')){state=initial();save();render();}};
+const full=document.getElementById('fullscreen');
+if(!document.documentElement.requestFullscreen)full.hidden=true;
+full.onclick=async()=>{try{if(document.fullscreenElement)await document.exitFullscreen();else await document.documentElement.requestFullscreen();}catch{full.textContent='ブラウザのF11で全画面';}};
+document.addEventListener('fullscreenchange',()=>full.textContent=document.fullscreenElement?'全画面を終了':'全画面');
+render();
+</script>
+</body>
+</html>
