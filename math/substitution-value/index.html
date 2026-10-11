@@ -68,12 +68,15 @@ function options(p,ph){
 }
 function practiceQuestion(){return bank[practice%bank.length]}
 function rowHtml(r,i,active,dim=false,showNote=true,linked=false){return '<div class="line '+(active?'active':dim?'dimmed':'')+'" '+(active?'aria-current="step"':'')+'><span class="formula">'+(linked&&r.linked?r.linked:r.f)+'</span>'+(showNote?'<small>'+r.n+'</small>':'')+'</div>'}
-function lines(p,count,active=-1){const link=active===1;return '<div class="'+(link?'correspondence':'')+'">'+solution(p).slice(0,count).map((r,i)=>rowHtml(r,i,i===active,i!==active&&!(link&&i===0),true,link)).join('')+'</div>'}
+function lines(p,count,active=-1){
+ const link=active===1;
+ return '<div class="'+(link?'correspondence':'')+'">'+solution(p).map((r,i)=>i<count?rowHtml(r,i,i===active,i!==active&&!(link&&i===0),true,link):'<div class="line dimmed"><span class="formula">= □</span><small>ノートで考えよう</small></div>').join('')+'</div>';
+}
 function practiceRender(){
  const p=practiceQuestion(),rows=solution(p),multi=support<=1;
- const showNote=support===3;const link=support>=2&&phase===1;
+ const showNote=support===3;const link=support>=2&&(phase===0||phase===1);
  const visible=rows.map((r,i)=>{
-  if(i===0||completed||(!multi&&i<=phase))return rowHtml(r,i,false,!completed&&i!==phase,true===showNote||completed,link);
+  if(i===0||completed||(!multi&&i<=phase))return rowHtml(r,i,false,!completed&&!(link&&i<=1),showNote||completed,link);
   const ph=i-1,val=drafts[ph];const isCurrent=multi?ph===selectedRow:ph===phase;
   const entry=val!==null?'= '+options(p,ph)[val]:'= □';
   return '<div class="line '+(isCurrent?'active':'dimmed')+'"><span class="formula">'+entry+'</span>'+(multi?'<button onclick="chooseRow('+ph+')" aria-label="'+i+'行目を選ぶ">'+i+'行目</button>':showNote?'<small>'+r.n+'</small>':'')+'</div>';
@@ -83,7 +86,7 @@ function practiceRender(){
  const ph=multi?selectedRow:phase;
  if(support===1)out+='<p class="muted">'+rows[ph+1].n+'</p>';
  if(support===2&&phase===0)out+='<p class="muted">文字を数に置き換えよう。</p>';
- out+='<p><strong>'+(ph+1)+'行目の □ に入る式を選ぼう</strong></p><div class="choices">'+options(p,ph).map((o,i)=>'<button aria-pressed="'+(drafts[ph]===i)+'" onclick="pickPractice('+i+')">= <span class="formula">'+o+'</span></button>').join('')+'</div>';
+ out+='<p><strong>'+(ph+1)+'行目の □ に入る式を選ぼう</strong></p><div class="choices">'+options(p,ph).map((o,i)=>'<button aria-pressed="'+(drafts[ph]===i)+'" onclick="pickPractice('+i+')"><span class="formula">= '+o+'</span></button>').join('')+'</div>';
  if(multi)out+='<button class="primary" onclick="checkPractice()" '+(drafts.some(v=>v===null)?'disabled':'')+'>途中式を確かめる</button>';
  return out+'<p class="status">'+feedback+'</p>';
 }
