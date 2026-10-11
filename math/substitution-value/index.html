@@ -24,26 +24,22 @@ function prompt(p){return '<div class="problem"><div class="muted">問題</div><
 function oldLines(p,count,active=-1){return solution(p).slice(0,count).map((r,i)=>'<div class="line '+(i===active?'active':'')+'"><span class="formula">'+r.f+'</span><small>'+r.n+'</small></div>').join('')}
 function changeTab(n){if(tab===3)saveAnswer();tab=n;document.querySelectorAll('nav button').forEach((b,i)=>b.setAttribute('aria-pressed',String(i===n-1)));render()}
 function selectLesson(i){lesson=i;focus=0;overview=false;render()}
-function advanceFocus(){const last=lesson===0?6:3;if(overview){focus=0;overview=false}else if(focus<last){focus++}else{overview=true}render()}
-function moveFocus(delta){const last=lesson===0?6:3;if(overview){overview=false;focus=last}else{focus=Math.max(0,Math.min(last,focus+delta))}render()}
+function advanceFocus(){const last=lesson===0?4:3;if(overview){focus=0;overview=false}else if(focus<last){focus++}else{overview=true}render()}
+function moveFocus(delta){const last=lesson===0?4:3;if(overview){overview=false;focus=last}else{focus=Math.max(0,Math.min(last,focus+delta))}render()}
 function applePicture(){return '<svg viewBox="0 0 90 90" aria-hidden="true"><path d="M46 24 Q44 12 52 5" fill="none" stroke="#705039" stroke-width="5" stroke-linecap="round"/><path d="M49 16 Q68 0 72 15 Q64 28 49 16" fill="#528247"/><path d="M45 27 C12 9 4 43 17 67 C26 87 36 84 45 79 C56 86 66 85 76 65 C89 39 75 9 45 27Z" fill="#c94f39"/><path d="M26 35 Q17 44 23 57" fill="none" stroke="#ffe1cc" stroke-width="5" stroke-linecap="round"/></svg>'}
 function bagPicture(){return '<svg class="bag-picture" viewBox="0 0 90 90" aria-hidden="true"><path d="M29 29 V22 C29 3 61 3 61 22 V29" fill="none" stroke="#816142" stroke-width="5"/><path d="M18 27 H72 L78 83 H12Z" fill="#e3c296" stroke="#99764e" stroke-width="3"/><path d="M25 39 H65" stroke="#b28a58" stroke-width="3"/></svg>'}
 function replacedValue(oldValue,newValue,animate){return animate?'<span class="replacement"><span class="old-value" aria-hidden="true">'+oldValue+'</span><span class="new-value">'+newValue+'</span></span>':newValue}
 function meaningStep(){
- const stage=overview?6:focus,priceSet=stage>=3,calculating=stage>=5;
- const appleFocus=!overview&&stage===1,bagFocus=!overview&&stage===2,xFocus=!overview&&(stage===3||stage===4);
- const notes=['x が50のとき、この式の値を求めよう。','3x は、りんご3個分の代金。','＋20 は、袋1枚の代金。','りんご1個が50円だったら？ x が表す数は50。','x を50に置き換えよう。3x は、3 × x のこと。','先に、りんご3個分の代金を計算しよう。','りんごと袋の代金を合わせよう。'];
- const original='<span class="meaning-token '+(appleFocus?'apple-token':bagFocus?'soft':'')+'"><span class="'+(xFocus?'soft':'')+'">3</span><span class="meaning-token '+(xFocus?'value-token':'')+'">x</span></span> <span class="meaning-token '+(bagFocus?'bag-token':appleFocus||xFocus?'soft':'')+'">＋ 20</span>';
- const applePrice=priceSet?replacedValue('x','50',stage===3&&!overview):'x';
- const scene=stage>=1||overview?'<div class="meaning-scene '+(calculating?'soft':'')+'"><div class="object-group '+(appleFocus?'focus-apple':bagFocus?'soft':'')+'" aria-label="りんご3個、1個'+(priceSet?'50':'x')+'円"><div class="apples">'+Array.from({length:3},()=>'<div class="object">'+applePicture()+'<div class="object-label '+(xFocus?'value-token':'')+'">'+applePrice+'円</div></div>').join('')+'</div><div class="muted">りんご3個</div></div><div class="object-group '+(bagFocus?'focus-bag':appleFocus||xFocus?'soft':'')+'" aria-label="袋1枚、20円">'+bagPicture()+'<div class="object-label">20円</div><div class="muted">袋1枚</div></div></div>':'';
- let equations='<div class="meaning-formula '+(calculating&&!overview?'soft':'')+'" aria-label="3x たす20">'+original+'</div>';
- if(stage===3&&!overview)equations+='<div class="meaning-formula"><span class="soft">3</span><span class="meaning-token value-token">x</span><span class="soft"> ＝ 3 × </span><span class="meaning-token value-token">x</span></div>';
- if(stage>=4||overview){
-  equations+='<div class="meaning-arrow" aria-hidden="true">↓</div><div class="meaning-formula '+(stage>4&&!overview?'soft':'')+'"><span class="'+(!overview&&stage===4?'soft':'')+'">3 × </span><span class="meaning-token '+(stage===4?'value-token':'')+'">'+replacedValue('x','50',stage===4&&!overview)+'</span><span class="'+(!overview&&stage===4?'soft':'')+'"> ＋ 20</span></div>';
- }
- if(stage>=5||overview)equations+='<div class="meaning-formula '+(stage>5&&!overview?'soft':'')+'">＝ <span class="meaning-token '+(stage===5&&!overview?'apple-token':'')+'">150</span> ＋ 20</div>';
- if(stage>=6||overview)equations+='<div class="meaning-formula">＝ <span class="meaning-token value-token">170</span></div>';
- return '<div class="meaning-lesson"><div class="problem"><div class="muted">今日の式</div><div class="formula">3x ＋ 20</div><p>x が50のとき、この式の値を求めよう。</p></div><p class="progress">'+(overview?'全体を確認しよう':(stage+1)+' / 7')+'</p><p class="meaning-note">'+(overview?'文字が表す数が決まると、式全体の値が決まります。':notes[stage])+'</p>'+scene+'<div class="meaning-equations">'+equations+'</div>'+(stage>=6?'<p class="meaning-result">式の値は170（代金は170円）</p>':'')+'<div class="actions"><button onclick="moveFocus(-1)" '+(focus===0&&!overview?'disabled':'')+'>戻る</button><button class="primary" onclick="advanceFocus()">'+(overview?'最初から':stage===6?'全体を確認':'次へ')+'</button></div></div>';
+ const stage=overview?4:focus;
+ const notes=['x が50のとき、式の値を求めよう。','x に50を当てはめることを「代入」といいます。','3x は3 × x。x を50に置き換えよう。','先に、かけ算を計算しよう。','たし算をして、式の値を求めよう。'];
+ const dim=condition=>condition?'soft':'';
+ const original='<span class="'+dim(!overview&&(stage===1||stage===2))+'">3</span><span class="meaning-token '+(!overview&&(stage===1||stage===2)?'value-token':'')+'">x</span><span class="'+dim(!overview&&(stage===1||stage===2))+'"> ＋ 20</span>';
+ let equations='<div class="meaning-formula '+dim(!overview&&stage>=3)+'">'+original+'</div>';
+ if(stage===1&&!overview)equations+='<div class="meaning-formula"><span class="meaning-token value-token">x</span><span class="soft"> → </span><span class="meaning-token value-token">50</span></div>';
+ if(stage>=2||overview)equations+='<div class="meaning-formula '+dim(!overview&&stage>=3)+'">＝ <span class="'+dim(!overview&&stage===2)+'">3 × </span><span class="meaning-token '+(!overview&&stage===2?'value-token':'')+'">'+replacedValue('x','50',stage===2&&!overview)+'</span><span class="'+dim(!overview&&stage===2)+'"> ＋ 20</span></div>';
+ if(stage>=3||overview)equations+='<div class="meaning-formula '+dim(!overview&&stage===4)+'">＝ <span class="meaning-token '+(!overview&&stage===3?'value-token':'')+'">150</span> ＋ 20</div>';
+ if(stage>=4||overview)equations+='<div class="meaning-formula">＝ <span class="meaning-token value-token">170</span></div>';
+ return '<div class="meaning-lesson"><div class="problem"><div class="muted">今日の式</div><div class="formula">3x ＋ 20</div><p>x が50のとき、この式の値を求めよう。</p></div><p class="progress">'+(overview?'全体を確認しよう':(stage+1)+' / 5')+'</p><p class="meaning-note">'+(overview?'文字に数を代入して計算した結果を「式の値」といいます。':notes[stage])+'</p><div class="meaning-equations">'+equations+'</div>'+(stage>=4?'<p class="meaning-result">式の値は170</p>':'')+'<div class="actions"><button onclick="moveFocus(-1)" '+(focus===0&&!overview?'disabled':'')+'>戻る</button><button class="primary" onclick="advanceFocus()">'+(overview?'最初から':stage===4?'全体を確認':'次へ')+'</button></div></div>';
 }
 function step1(){
  if(lesson===0)return '<h2>STEP 1｜解き方を見る</h2><div class="tabs" aria-label="問題の種類">'+lessons.map((l,i)=>'<button aria-pressed="'+(i===lesson)+'" onclick="selectLesson('+i+')">'+l.name+'</button>').join('')+'</div>'+meaningStep();
