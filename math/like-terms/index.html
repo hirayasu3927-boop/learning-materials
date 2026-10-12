@@ -1,5 +1,7 @@
 <!doctype html><html lang="ja"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>同類項をまとめる｜まなびの教材室</title><style>
 :root{font-family:"Noto Sans JP",system-ui,sans-serif;color:#183044;background:#f4f8fb}*{box-sizing:border-box}body{margin:0}main{max-width:950px;margin:auto;padding:20px}h1{font-size:1.7rem;margin:8px 0}h2{font-size:1.15rem}p{line-height:1.7}.muted{color:#607589;font-size:.9rem}a{color:#246ba7}.panel{background:white;border:1px solid #dbe5ed;border-radius:18px;padding:24px;margin:16px 0;box-shadow:0 2px 8px #203a5010}.tabs,.actions{display:flex;flex-wrap:wrap;gap:9px;margin:16px 0}button{font:inherit;cursor:pointer;border:1px solid #adc2d3;background:white;color:#234a66;border-radius:11px;padding:11px 15px;min-height:44px}button.primary{background:#246ba7;border-color:#246ba7;color:white}button:disabled{opacity:.4;cursor:default}button[aria-pressed=true]{background:#dceeff;border-color:#367fbd}button:focus-visible,input:focus-visible{outline:3px solid #b55d00;outline-offset:3px}.formula{font:inherit;font-size:clamp(1.65rem,4.8vw,2.6rem);font-variant-numeric:lining-nums tabular-nums;line-height:1.8;letter-spacing:.01em}.equations{min-height:215px;padding:15px 0}.row{text-align:center;margin:9px 0;min-height:65px}.term{display:inline-block;border:3px solid transparent;border-radius:8px;padding:0 6px;font:inherit;color:inherit;background:none;min-height:0}.focus{border-color:#377dbe;background:#eef5fb}.dim{opacity:.3}.token{background:#d8eaff;border-radius:4px}.note{min-height:55px}.hint{border-top:1px solid #dbe5ed;padding-top:14px}.chunks{display:flex;flex-wrap:wrap;justify-content:center;gap:8px}.chunk{border:2px solid #377dbe;border-radius:7px;padding:3px 12px}.status{min-height:30px;color:#234a66}input{font:inherit;font-size:1.5rem;border:1px solid #a6baca;border-radius:10px;padding:12px;width:250px;max-width:100%}.label{display:block;margin:12px 0}.progress{color:#607589;font-size:.9rem}.good{color:#19714d}@media(max-width:520px){main{padding:12px}.panel{padding:14px}.term{padding:0 2px}.equations{min-height:190px}}
+
+.overview-lesson h2{margin:0 0 8px}.overview-lesson>p.muted{margin:8px 0 12px}.flow{border:1px solid #dbe5ed;border-radius:14px;padding:8px 12px}.flow-line{display:grid;grid-template-columns:1.1em minmax(0,1fr) 175px;align-items:center;gap:8px;border:3px solid transparent;border-radius:9px;padding:2px 8px;min-height:60px}.flow .formula{font-size:clamp(1.45rem,3.3vw,2rem);line-height:1.5;letter-spacing:0}.flow-expression{white-space:nowrap}.flow-label{font-size:.9rem;color:#546c7f}.flow-active{border-color:#377dbe;background:#f4f9fd}.flow-token{display:inline-block;border-bottom:3px solid transparent}.flow-focus{border-bottom-color:#377dbe;background:#d8eaff}.flow-muted{color:#718496}.flow-note{min-height:3em;margin:12px 0 0;line-height:1.6}.overview-lesson .actions{margin:8px 0 12px}.overview-lesson details{border-top:1px solid #dbe5ed;padding:8px 0}.overview-lesson summary{cursor:pointer;min-height:32px;padding:5px 0}.overview-lesson summary:focus-visible{outline:3px solid #b55d00;outline-offset:3px}@media(max-width:650px){.flow-line{grid-template-columns:1em minmax(0,1fr);gap:4px;padding:4px}.flow-label{grid-column:2;font-size:.82rem}.flow{padding:5px}.flow .formula{font-size:clamp(1.35rem,4.9vw,1.9rem)}.flow-note{min-height:4.2em}}
 </style></head><body><main><header><a href="/materials/junior-math/">← 中学数学の教材一覧</a><h1>一次式の計算①｜同類項をまとめる</h1><p class="muted">解き方を見る → 一緒に解く → 自力で解く</p></header><nav class="tabs" aria-label="学習ステップ"><button onclick="changeTab(1)" aria-pressed="true">STEP 1｜解き方を見る</button><button onclick="changeTab(2)" aria-pressed="false">STEP 2｜一緒に解く</button><button onclick="changeTab(3)" aria-pressed="false">STEP 3｜自力で解く</button></nav><section class="panel" id="content" aria-live="polite"></section></main><script>
 // Design: stable equation positions, one judgment per phase, minimal initial support.
 // A hint-assisted answer never counts as independent mastery. Signs belong to terms.
@@ -7,8 +9,8 @@ const $=id=>document.getElementById(id);let tab=1,slide=0,diagram=false;
 const goal=[{n:3,x:true},{n:2,x:false},{n:2,x:true},{n:4,x:false}];
 const guided=[[4,3,2,5],[3,2,4,1],[6,2,-3,4]].map(a=>a.map((n,i)=>({n,x:i%2===0})));
 const problems=[[[2,1],[4,1]],[[5,1],[3,0],[-2,1]],[[4,1],[2,0],[3,1],[5,0]],[[7,1],[-3,1],[6,0]],[[2,1],[5,0],[4,1],[-2,0]]].map(p=>p.map(([n,x])=>({n,x:!!x})));
-const titles=['今日のゴール','x の項を見つける','共通する x に注目','前の数を足す','x の項をまとめる','種類が違う項','離れている x の項','数だけの項','種類ごとにまとめる','それぞれ計算する','式の変形を確認','引き算も同じ考え方'];
-const notes=['同じ種類の項をまとめて、式を簡単にしよう。','3x と 2x は、どちらも x の項。','共通する文字は x。','x が同じだから、前の数を足す。','3 ＋ 2 ＝ 5。文字 x はそのまま。','3x は x の項。2 は数だけの項。一つの項にはまとめられない。','同じ種類の項は、離れていてもまとめられる。','次は、数だけの 2 と 4 に注目。','x の項どうし、数だけの項どうしを集める。','x の前の数と、数だけの項をそれぞれ足す。','同じ文字の項を「同類項」といいます。数だけの項どうしもまとめられます。','−2x は、符号も含めて一つの項。5 − 2 を計算する。'];
+const titles=['全体を見る','x の項を集める','前の数を足す','数だけの項を集める','数だけの項を足す'];
+const notes=['問題から答えまで、同じ式がどう変わるか見てみよう。','3x と 2x は同じ x の項。離れていてもまとめられる。','x が同じだから、前の数を足す。3 ＋ 2 ＝ 5。','数だけの 2 と 4 をまとめる。x の項とは分けて考える。','2 ＋ 4 ＝ 6。整理した式は 5x ＋ 6。'];
 function esc(s){return String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
 function textTerm(t,i){return (t.n<0?'−':i?'＋':'')+(Math.abs(t.n)===1&&t.x?'':Math.abs(t.n))+(t.x?'x':'')}
 function equation(p,kind=null,selectable=false,selected=[]){return '<div class="row formula">'+p.map((t,i)=>{const focus=kind!==null&&t.x===kind;return '<'+(selectable?'button':'span')+' class="term '+(kind===null?'':focus?'focus':'dim')+'" '+(selectable?'onclick="choose('+i+')" aria-pressed="'+selected.includes(i)+'" aria-label="項 '+textTerm(t,i)+'"':'')+'>'+textTerm(t,i)+'</'+(selectable?'button':'span')+'>'}).join('')+'</div>'}
@@ -16,20 +18,24 @@ function row(s){return '<div class="row formula">'+s+'</div>'}
 function sums(p){return [p.filter(t=>t.x).reduce((s,t)=>s+t.n,0),p.filter(t=>!t.x).reduce((s,t)=>s+t.n,0)]}
 function simplified(p){const [a,b]=sums(p);return (a?(a===1?'x':a===-1?'−x':a+'x'):'')+(b?(a&&b>0?'＋':'')+String(b).replace('-','−'):'')||'0'}
 function xChunks(p){return '<div class="chunks">'+p.filter(t=>t.x).map(t=>'<div><p class="muted">'+textTerm(t,0)+' のまとまり'+(t.n<0?'（引く分）':'')+'</p>'+Array.from({length:Math.abs(t.n)},()=>'<span class="chunk">x</span>').join('')+'</div>').join('<span class="formula">'+(p.some(t=>t.x&&t.n<0)?'−':'＋')+'</span>')+'</div>'}
-function lesson(){let eq='';const basic=[goal[0],goal[2]];
-if(slide===0)eq=equation(goal);
-if(slide===1)eq=equation(basic,true);
-if(slide===2)eq=row('3<span class="token">x</span> ＋ 2<span class="token">x</span>');
-if(slide===3)eq=row('<span class="token">3</span>x ＋ <span class="token">2</span>x')+row('＝ (<span class="token">3 ＋ 2</span>)x');
-if(slide===4)eq=row('3x ＋ 2x')+row('＝ (3 ＋ 2)x')+row('＝ 5x');
-if(slide===5)eq=equation([goal[0],goal[1]])+row('<span class="muted">x の項　　数だけの項</span>');
-if(slide===6)eq=equation(goal,true);
-if(slide===7)eq=equation(goal,false);
-if(slide===8)eq=equation(goal,true)+row('＝ <span class="focus term">(3x ＋ 2x)</span> ＋ <span class="dim">(2 ＋ 4)</span>');
-if(slide===9)eq=equation(goal,false)+row('＝ <span class="dim">5x</span> ＋ <span class="focus term">(2 ＋ 4)</span>')+row('＝ 5x ＋ 6');
-if(slide===10)eq=equation(goal)+row('＝ (3x ＋ 2x) ＋ (2 ＋ 4)')+row('＝ 5x ＋ 6');
-if(slide===11)eq=equation([{n:5,x:true},{n:-2,x:true},{n:3,x:false}],true)+row('＝ (5 − 2)x ＋ 3')+row('＝ 3x ＋ 3');
-return '<h2>STEP 1｜'+titles[slide]+'</h2><p class="progress">'+(slide+1)+' / '+titles.length+'</p><p class="note">'+notes[slide]+'</p><div class="equations">'+eq+'</div>'+((slide>=1&&slide<=4||slide===11)?'<button onclick="diagram=!diagram;render()" aria-expanded="'+diagram+'">'+(diagram?'補助を閉じる':'x のまとまりを確認')+'</button>'+(diagram?xChunks(slide===11?[{n:5,x:true},{n:-2,x:true}]:basic):''):'')+'<div class="actions"><button onclick="move(-1)" '+(slide===0?'disabled':'')+'>戻る</button><button class="primary" onclick="'+(slide===11?'changeTab(2)':'move(1)')+'">'+(slide===11?'一緒に解く':'次へ')+'</button></div>'}
+// STEP 1 always exposes the complete worked example, including the answer.
+// Navigation changes attention only; no row is hidden, replaced or repositioned.
+function lesson(){
+ const active=slide>0;
+ const token=(text,on)=>'<span class="flow-token '+(on?'flow-focus':active?'flow-muted':'')+'">'+text+'</span>';
+ const x=slide===1||slide===2,number=slide===3||slide===4;
+ const expressions=[
+  token('3x',x)+token(' ＋ 2',number)+token(' ＋ 2x',x)+token(' ＋ 4',number),
+  token('(3 ＋ 2)x',x)+token(' ＋ 2 ＋ 4',number),
+  token('5x',x)+token(' ＋ 2 ＋ 4',number),
+  token('5x',x)+token(' ＋ (2 ＋ 4)',number),
+  token('5x',x)+token(' ＋ 6',number)
+ ];
+ const labels=['もとの式','x の項を集める','前の数を足す','数だけの項を集める','数だけの項を足す'];
+ const steps=expressions.map((f,i)=>'<div class="flow-line '+(active&&i===slide?'flow-active':'')+'" '+(active&&i===slide?'aria-current="step"':'')+'><span class="flow-equals formula">'+(i?'＝':'')+'</span><span class="formula flow-expression">'+f+'</span><span class="flow-label">'+labels[i]+'</span></div>').join('');
+ return '<div class="overview-lesson"><h2>STEP 1｜解き方を見る</h2><p class="muted">同じ種類の項をまとめて、式を簡単にしよう。</p><div class="flow" aria-label="問題から答えまでの思考の流れ">'+steps+'</div><p class="flow-note">'+notes[slide]+'</p><div class="actions"><button onclick="move(-1)" '+(slide===0?'disabled':'')+'>戻る</button><button class="primary" onclick="'+(slide===4?'showOverview()':'move(1)')+'">'+(slide===4?'全体を確認':'次へ')+'</button><button onclick="showOverview()" aria-pressed="'+(slide===0)+'">全体を見る</button><button onclick="changeTab(2)">一緒に解く</button></div><details><summary>まとめられる項・まとめられない項を確認</summary><p>同じ文字の項を「同類項」といいます。数だけの項どうしもまとめられます。</p><p class="formula">3x ＋ 2x ＝ (3 ＋ 2)x ＝ 5x</p><p>3x は x の項、2 は数だけの項。3x ＋ 2 は一つの項にまとめられません。</p><button onclick="diagram=!diagram;render()">'+(diagram?'x のまとまりを閉じる':'x のまとまりを見る')+'</button>'+(diagram?xChunks([goal[0],goal[2]]):'')+'</details><details><summary>引き算がある場合を確認</summary><p>−2x は符号も含めて一つの項。前の数を 5 − 2 で計算します。</p><p class="formula">5x − 2x ＋ 3<br>＝ (5 − 2)x ＋ 3<br>＝ 3x ＋ 3</p></details></div>';
+}
+function showOverview(){slide=0;render()}
 let gi=0,phase=0,support=0,selected=[],value='',feedback='',solved=false,clean=0,mistake=false;
 let selfFocus=true;let pi=0,retry=false,selfSupport=0,selfValue='',selfSolved=false,selfFeedback='',passed=new Set(),ended=false;
 function current(){if(tab===2)return guided[gi%guided.length];if(pi===5)return goal;let p=problems[pi];return retry?p.map(t=>({...t,n:t.n+(t.n>0?1:-1)})):p}
