@@ -10,6 +10,8 @@ main{max-width:850px}.panel{padding:20px}.flow{border:0;padding:0}.flow-line{bor
 .formula{font-weight:600}
 
 .term-select .row{margin:8px 0;min-height:48px}.term-select .formula{font-size:1.65rem}.self-problem{background:#eef5fb;border-radius:12px;padding:14px 17px;margin:14px 0}.self-problem .row{margin:0}.self-problem .formula{font-size:1.65rem}
+
+.guided-choices{display:flex;flex-wrap:wrap;gap:10px;margin:14px 0}.guided-choices button{min-width:110px}.guided-choices .formula{font-size:1.4rem}.log-scroll{overflow:auto}table{border-collapse:collapse;font-size:.85rem;width:100%}th,td{border:1px solid #dbe5ed;padding:7px;text-align:left}details{margin-top:14px}summary{cursor:pointer;padding:8px 0}
 </style></head><body><main><header><a href="/materials/junior-math/">← 中学数学の教材一覧</a><h1>一次式の計算①｜同類項をまとめる</h1><p class="muted">解き方を見る → 一緒に解く → 自力で解く</p></header><nav class="tabs" aria-label="学習ステップ"><button onclick="changeTab(1)" aria-pressed="true">STEP 1｜解き方を見る</button><button onclick="changeTab(2)" aria-pressed="false">STEP 2｜一緒に解く</button><button onclick="changeTab(3)" aria-pressed="false">STEP 3｜自力で解く</button></nav><section class="panel" id="content" aria-live="polite"></section></main><script>
 // Design: stable equation positions, one judgment per phase, minimal initial support.
 // A hint-assisted answer never counts as independent mastery. Signs belong to terms.
@@ -57,12 +59,35 @@ function practiceFlow(p,done,kind=null,level=0){
  const labels=['もとの式','x の項を集める','前の数を計算する','数だけの項を集める','数だけの項を計算する'];
  return '<div class="flow">'+rows.map((f,i)=>'<div class="flow-line '+(i===Math.min(4,done+1)?'flow-active':'flow-dimmed')+'"><span class="formula">'+(i?'＝':'')+'</span><span class="formula">'+(i===0&&level>=2?p.map((t,j)=>'<span class="'+(t.x===kind?'token':'')+'">'+textTerm(t,j)+'</span>').join(' '):f)+'</span><span class="flow-label">'+labels[i]+'</span></div>').join('')+'</div>';
 }
-function together(){const p=current(),kind=phase<2?true:phase<4?false:null;
+// Error categories are hypotheses for follow-up, not diagnoses.
+let choiceFeedback='',choiceKind=null;const assessmentLog=[];
+function guidedOptions(){
+ const p=current(),[a,b]=sums(p),x=p.filter(t=>t.x),n=p.filter(t=>!t.x);
+ const item=(label,tag,kind,message)=>({label,tag,kind,message});
+ const correct=item(phase===4?simplified(p):String(phase===1?a:b),'correct',null,'');
+ let wrong;
+ if(phase===1||phase===3){const group=phase===1?x:n,kind=phase===1;
+ wrong=[item(String(kind?b:a),'term-mix',kind,kind?'x が付いている項の前の数に注目しよう。':'x が付いていない、数だけの項に注目しよう。'),
+ item(String(group[0].n-group[1].n),'operation-sign',kind,'項の間の ＋・− を確かめよう。符号も項と一緒に見よう。'),
+ item(String(group[0].n*group[1].n),'multiply-instead',kind,'今回は掛け算かな？ 元の式の ＋・− に注目しよう。')];
+ }else{
+ const format=(aa,bb)=>simplified([{n:aa,x:true},{n:bb,x:false}]);
+ wrong=[item(format(b,a),'swapped',true,'x の項をまとめた数と、数だけの項をまとめた数を対応させよう。'),
+ item(format(a+b,0),'merged-types',true,'x の項と数だけの項は、一つの項にはまとめられない。まず x の項を見よう。'),
+ item(String(a+b),'lost-x',true,'x の前の数を計算しても、文字 x はそのまま残るよ。')];
+ }
+ const seen=new Set([correct.label]);wrong=wrong.filter(o=>{if(seen.has(o.label))return false;seen.add(o.label);return true});
+ // Coinciding numeric values cannot identify an error category; omit those distractors.
+ return [correct,...wrong].sort((aa,bb)=>aa.label.localeCompare(bb.label,'ja'));
+}
+function pickGuidedChoice(index){const option=guidedOptions()[index];if(!option||solved)return;value=option.label;choiceKind=option.kind;choiceFeedback=option.message;checkGuided(option.tag)}
+function assessmentView(){return '<details><summary>先生用：解答の記録</summary><p class="muted">誤答の分類はつまずきの可能性です。支援後の反応と合わせて確認してください。記録はこのページを開いている間のみ保持します。</p><div class="log-scroll"><table><thead><tr><th>問題</th><th>段階</th><th>選択</th><th>判定・手がかり</th><th>回答前の支援</th></tr></thead><tbody>'+assessmentLog.map(r=>'<tr><td>'+esc(r.problem)+'</td><td>'+esc(r.phase)+'</td><td>'+esc(r.answer)+'</td><td>'+esc(r.result)+'</td><td>'+r.support+'</td></tr>').join('')+'</tbody></table></div></details>'}
+function together(){const p=current(),kind=choiceKind===null?(phase<2?true:phase<4?false:null):choiceKind;
  const prompts=['まとめられる x の項を選ぼう。','x の前の数を計算しよう。','まとめられる数だけの項を選ぼう。','数だけの項を計算しよう。','整理した式を入力しよう。'];
  const selecting=phase===0||phase===2;
  return '<h2>STEP 2｜一緒に解く</h2><div class="lesson-problem"><div class="muted">今日の式</div><div class="formula">'+plain(p)+'</div></div><p class="progress">問題 '+(gi+1)+' ・ '+(phase+1)+' / 5</p><p class="flow-note">'+(solved?'式を整理できたね。':prompts[phase])+'</p>'+
  (!solved&&selecting?'<div class="term-select">'+equation(p,support>=2?kind:null,true,selected)+'</div>':'')+practiceFlow(p,solved?4:Math.min(phase,3),kind,support)+
- (!solved?(selecting?'<button class="primary" onclick="checkGuided()">選んだ項を確かめる</button>':'<label class="label" for="answer">'+(phase===4?'整理した式':'計算した数')+'</label><div class="actions"><input id="answer" value="'+esc(value)+'" autocomplete="off" oninput="value=this.value" onkeydown="if(event.key===\'Enter\')checkGuided()"><button class="primary" onclick="checkGuided()">確かめる</button></div>')+hint(p,support,kind)+'<button onclick="addHint()">ヒント</button>':'<div class="actions"><button class="primary" onclick="nextGuided()">次の問題</button><button onclick="changeTab(3)">自力で解く</button></div>')+'<p class="status">'+feedback+'</p>';
+ (!solved?(selecting?'<button class="primary" onclick="checkGuided()">選んだ項を確かめる</button>':'<div class="guided-choices" aria-label="解答の選択肢">'+guidedOptions().map((o,i)=>'<button onclick="pickGuidedChoice('+i+')"><span class="formula">'+esc(o.label)+'</span></button>').join('')+'</div>')+hint(p,support,kind)+'<button onclick="addHint()">ヒント</button>':'<div class="actions"><button class="primary" onclick="nextGuided()">次の問題</button><button onclick="changeTab(3)">自力で解く</button></div>')+'<p class="status">'+feedback+'</p>'+assessmentView();
 }
 // Strict simplified form, never evaluate user JavaScript. Accept fullwidth characters,
 // optional coefficient 1, either term order, and signed constants; reject uncollected terms.
@@ -70,8 +95,8 @@ function parseAnswer(s){s=s.normalize('NFKC').replace(/[−－]/g,'-').replace(/
 function answerMatches(s,p){const got=parseAnswer(s),want=sums(p);return got&&got[0]===want[0]&&got[1]===want[1]}
 function choose(i){if(selected.includes(i))selected=selected.filter(n=>n!==i);else selected.push(i);render()}
 function addHint(){if(tab===2){support=Math.min(4,support+1);mistake=true;clean=0}else{selfSupport=Math.min(4,selfSupport+1)}render()}
-function checkGuided(){if(solved)return;const p=current();let ok;if(phase===0||phase===2){const ids=p.map((t,i)=>t.x===(phase===0)?i:-1).filter(i=>i>=0);ok=selected.length===ids.length&&ids.every(i=>selected.includes(i))}else if(phase<4){const s=value.normalize('NFKC').replace(/[−－]/g,'-').trim();ok=/^[+-]?\d+$/.test(s)&&Number(s)===sums(p)[phase===1?0:1]}else ok=answerMatches(value,p);if(ok){feedback='確認できたね。';selected=[];value='';if(phase===4){solved=true;if(!mistake)clean++;if(clean>=2){support=Math.max(0,support-1);clean=0}}else{phase++;support=Math.max(0,support-1)}}else{support=Math.min(4,support+1);mistake=true;clean=0;feedback='もう一度、注目する項を確かめよう。'}render()}
-function nextGuided(){gi++;phase=0;selected=[];value='';feedback='';solved=false;mistake=false;render()}
+function checkGuided(errorTag=null){if(solved)return;const p=current();let ok;if(phase===0||phase===2){const ids=p.map((t,i)=>t.x===(phase===0)?i:-1).filter(i=>i>=0);ok=selected.length===ids.length&&ids.every(i=>selected.includes(i))}else if(phase<4){const s=value.normalize('NFKC').replace(/[−－]/g,'-').trim();ok=/^[+-]?\d+$/.test(s)&&Number(s)===sums(p)[phase===1?0:1]}else ok=answerMatches(value,p);assessmentLog.push({problem:plain(p),phase:phase+1,answer:phase===0||phase===2?selected.map(i=>textTerm(p[i],i)).join('・'):value,result:ok?'正解':({'term-mix':'係数・定数の取り違えの可能性','operation-sign':'演算・符号の取り違えの可能性','multiply-instead':'掛け算との混同の可能性','swapped':'係数・定数の対応を確認','merged-types':'異なる項をまとめた可能性','lost-x':'文字を落とした可能性'}[errorTag]||'項の選択を確認'),support});if(ok){choiceKind=null;choiceFeedback='';feedback='確認できたね。';selected=[];value='';if(phase===4){solved=true;if(!mistake)clean++;if(clean>=2){support=Math.max(0,support-1);clean=0}}else{phase++;support=Math.max(0,support-1)}}else{support=Math.min(4,support+1);mistake=true;clean=0;feedback=choiceFeedback||'同じ種類の項を、符号も含めて確かめよう。'}render()}
+function nextGuided(){gi++;phase=0;selected=[];value='';feedback='';choiceFeedback='';choiceKind=null;solved=false;mistake=false;render()}
 function self(){if(ended)return '<h2>STEP 3｜学習完了</h2><p class="good">5種類の問題とゴール問題を、支援なしで整理できました。</p>'+equation(goal)+row('＝ 5x ＋ 6')+'<button onclick="restart()">もう一度取り組む</button>';const p=current();return '<h2>STEP 3｜自力で解く</h2><p class="progress">'+(pi===5?'最後のゴール問題':'問題 '+(pi+1)+' / 5')+' ・ 支援なしで確認済み '+passed.size+' / 6'+(retry?' ・ 類題で再挑戦':'')+'</p><p class="note">式を簡単にして、答えを入力しよう。</p><div class="self-problem">'+equation(p,selfSupport>=2?selfFocus:null)+'</div><label class="label" for="answer">整理した式（例：5x+6）</label><div class="actions"><input id="answer" value="'+esc(selfValue)+'" '+(selfSolved?'disabled':'')+' autocomplete="off" autocapitalize="off" oninput="selfValue=this.value" onkeydown="if(event.key===\'Enter\')checkSelf()"><button class="primary" onclick="checkSelf()" '+(selfSolved?'disabled':'')+'>答え合わせ</button></div>'+(selfSupport>=2?'<button onclick="selfFocus=!selfFocus;render()">'+(selfFocus?'数だけの項に注目':'x の項に注目')+'</button>':'')+(selfSupport>=3?practiceFlow(p,1,selfFocus,selfSupport):'')+hint(p,selfSupport,selfFocus)+'<p class="status">'+selfFeedback+'</p>'+(selfSolved?'<button class="primary" onclick="nextSelf()">'+(selfSupport?'支援なしで再挑戦':'次へ')+'</button>':'<button onclick="addHint()">ヒント</button>')}
 function checkSelf(){if(selfSolved||ended)return;if(answerMatches(selfValue,current())){selfSolved=true;selfFeedback=selfSupport?'正解。次は支援なしで確かめよう。':'正解。支援なしで解けたね。';if(!selfSupport){passed.add(pi);if(pi===5)ended=true}}else{selfSupport=Math.min(4,selfSupport+1);selfFeedback=parseAnswer(selfValue)===null?'同じ種類の項をまとめた式を入力してね。':'もう一度、符号と同じ種類の項を確かめよう。'}render()}
 function nextSelf(){if(!selfSolved)return;if(selfSupport){retry=pi!==5}else{pi++;retry=false}selfSupport=0;selfFocus=true;selfValue='';selfSolved=false;selfFeedback='';render()}
