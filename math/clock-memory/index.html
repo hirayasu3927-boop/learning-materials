@@ -9,7 +9,7 @@
 <body><main>
 <header><a href="/materials/">← まなびの教材室</a><h1>とけいの しんけいすいじゃく</h1><p>とけいと「分」を 1まいずつ めくろう。<br>ながい はりの ばしょと、分が あえば ペア！</p></header>
 <div class="controls"><label for="level">むずかしさ </label><select id="level"><option value="6">やさしい｜6くみ</option><option value="12">ふつう｜12くみ</option></select><button class="restart" id="restart">もういちど</button></div>
-<div class="timing"><span>じかん <strong id="elapsed" role="timer" aria-live="off">0:00</strong></span><span id="record"></span></div>
+<div class="timing"><span>じかん <strong id="elapsed" role="timer" aria-live="off">0:00</strong></span><span>ミス <strong id="mistakes">0</strong> かい</span><span id="record"></span></div>
 <section id="board" class="board easy" aria-label="カード"></section>
 <div class="status" role="status" aria-live="polite" aria-atomic="true"><span id="count" class="count"></span><p id="message"></p></div>
 <p class="note">さいしょの 1まいを めくると スタート。じかんの せいげんは ありません。<br>このゲームでは、12の ところは「60分」と あわせます。</p>
@@ -19,15 +19,16 @@
 const board=document.querySelector('#board'),level=document.querySelector('#level'),count=document.querySelector('#count'),message=document.querySelector('#message');
 let cards=[],selected=[],pairs=0,locked=false,timer=null;
 const elapsed=document.querySelector('#elapsed'),record=document.querySelector('#record');
-let startedAt=null,elapsedMs=0,ticker=null;
+let startedAt=null,elapsedMs=0,ticker=null,mistakes=0;
+const mistakesDisplay=document.querySelector('#mistakes');
 const recordKey='clock-memory-times-v1';
 let records={};
 try{const saved=JSON.parse(localStorage.getItem(recordKey)||'{}');if(saved&&typeof saved==='object'&&!Array.isArray(saved))records=saved;}catch{}
 function timeText(ms){const seconds=Math.floor(ms/1000);return Math.floor(seconds/60)+':'+String(seconds%60).padStart(2,'0');}
-function showRecords(){const r=records[level.value];record.textContent=r&&Number.isFinite(r.last)&&Number.isFinite(r.best)?'まえの きろく '+timeText(r.last)+' ／ ベスト '+timeText(r.best):'クリアすると きろくが のこるよ';}
+function showRecords(){const r=records[level.value];record.textContent=r&&Number.isFinite(r.last)&&Number.isFinite(r.best)?'まえの きろく '+timeText(r.last)+(Number.isInteger(r.mistakes)?'・ミス '+r.mistakes+'かい':'')+' ／ ベスト '+timeText(r.best):'クリアすると きろくが のこるよ';}
 function tick(){elapsedMs=performance.now()-startedAt;elapsed.textContent=timeText(elapsedMs);}
 function beginTiming(){if(startedAt!==null)return;startedAt=performance.now();ticker=setInterval(tick,200);}
-function finishTiming(){tick();clearInterval(ticker);ticker=null;const old=records[level.value];records[level.value]={last:elapsedMs,best:old&&Number.isFinite(old.best)?Math.min(old.best,elapsedMs):elapsedMs};try{localStorage.setItem(recordKey,JSON.stringify(records));}catch{}showRecords();}
+function finishTiming(){tick();clearInterval(ticker);ticker=null;const old=records[level.value];records[level.value]={last:elapsedMs,mistakes,best:old&&Number.isFinite(old.best)?Math.min(old.best,elapsedMs):elapsedMs};try{localStorage.setItem(recordKey,JSON.stringify(records));}catch{}showRecords();}
 function shuffle(items){const a=[...items];for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a;}
 function point(n,r){const a=n*Math.PI/6;return [100+Math.sin(a)*r,100-Math.cos(a)*r];}
 function clock(n){let s='<svg viewBox="0 0 200 200" aria-hidden="true"><circle cx="100" cy="100" r="96" fill="white" stroke="#aabed1" stroke-width="2"/>';
@@ -37,7 +38,7 @@ const [x,y]=point(n,51);return s+`<line x1="100" y1="100" x2="${x}" y2="${y}" st
 const backClock='<svg viewBox="0 0 80 80" aria-hidden="true"><circle cx="40" cy="40" r="31" fill="none" stroke="currentColor" stroke-width="4"/><path d="M40 20v20l14 9" fill="none" stroke="currentColor" stroke-width="4" stroke-linecap="round"/><circle cx="40" cy="40" r="3" fill="currentColor"/></svg>';
 function paint(c){const shown=c.open||c.matched;c.el.className=`card ${c.kind}${shown?' open':''}${c.matched?' matched':''}`;c.el.setAttribute('aria-label',shown?(c.kind==='clock'?`長針が ${c.n} を指す時計`:`${c.n*5}分`)+(c.matched?'、そろったペア':''):c.kind==='clock'?'うらむきの とけいカード':'うらむきの 分カード');c.el.setAttribute('aria-disabled',String(shown));c.el.innerHTML=shown?(c.kind==='clock'?clock(c.n):`<span class="minutes">${c.n*5}<small>分</small></span>`):`<span class="back" aria-hidden="true">${c.kind==='clock'?backClock:'分'}</span>`;}
 function updateCount(){count.textContent=`そろった ペア ${pairs} / ${level.value}`;}
-function start(){clearInterval(ticker);ticker=null;startedAt=null;elapsedMs=0;elapsed.textContent='0:00';showRecords();clearTimeout(timer);timer=null;selected=[];pairs=0;locked=false;const ns=shuffle(Array.from({length:12},(_,i)=>i+1)).slice(0,Number(level.value));cards=shuffle(ns.flatMap(n=>[{n,kind:'clock'},{n,kind:'minute'}]));board.replaceChildren();board.classList.toggle('easy',level.value==='6');for(const c of cards){c.open=false;c.matched=false;c.el=document.createElement('button');c.el.type='button';c.el.addEventListener('click',()=>choose(c));paint(c);board.append(c.el);}updateCount();message.textContent='とけいと「分」を さがそう。';}
-function choose(c){if(locked||c.open||c.matched)return;beginTiming();c.open=true;paint(c);selected.push(c);if(selected.length!==2)return;const [a,b]=selected;locked=true;if(a.kind!==b.kind&&a.n===b.n){a.matched=b.matched=true;pairs++;if(pairs===Number(level.value))finishTiming();paint(a);paint(b);a.el.classList.add('flash');b.el.classList.add('flash');updateCount();message.textContent=`${a.n} の ところは ${a.n*5}分！`+(pairs===Number(level.value)?' ぜんぶ そろったね！ クリアじかん '+timeText(elapsedMs):'');timer=setTimeout(()=>{a.el.classList.remove('flash');b.el.classList.remove('flash');selected=[];locked=false;},700);}else{message.textContent='もういちど さがしてみよう。';timer=setTimeout(()=>{a.open=b.open=false;paint(a);paint(b);selected=[];locked=false;},1500);}}
+function start(){clearInterval(ticker);ticker=null;startedAt=null;elapsedMs=0;elapsed.textContent='0:00';mistakes=0;mistakesDisplay.textContent='0';showRecords();clearTimeout(timer);timer=null;selected=[];pairs=0;locked=false;const ns=shuffle(Array.from({length:12},(_,i)=>i+1)).slice(0,Number(level.value));cards=shuffle(ns.flatMap(n=>[{n,kind:'clock'},{n,kind:'minute'}]));board.replaceChildren();board.classList.toggle('easy',level.value==='6');for(const c of cards){c.open=false;c.matched=false;c.el=document.createElement('button');c.el.type='button';c.el.addEventListener('click',()=>choose(c));paint(c);board.append(c.el);}updateCount();message.textContent='とけいと「分」を さがそう。';}
+function choose(c){if(locked||c.open||c.matched)return;beginTiming();c.open=true;paint(c);selected.push(c);if(selected.length!==2)return;const [a,b]=selected;locked=true;if(a.kind!==b.kind&&a.n===b.n){a.matched=b.matched=true;pairs++;if(pairs===Number(level.value))finishTiming();paint(a);paint(b);a.el.classList.add('flash');b.el.classList.add('flash');updateCount();message.textContent=`${a.n} の ところは ${a.n*5}分！`+(pairs===Number(level.value)?' ぜんぶ そろったね！ クリアじかん '+timeText(elapsedMs)+'・ミス '+mistakes+'かい':'');timer=setTimeout(()=>{a.el.classList.remove('flash');b.el.classList.remove('flash');selected=[];locked=false;},700);}else{mistakes++;mistakesDisplay.textContent=String(mistakes);message.textContent='もういちど さがしてみよう。';timer=setTimeout(()=>{a.open=b.open=false;paint(a);paint(b);selected=[];locked=false;},1500);}}
 level.addEventListener('change',start);document.querySelector('#restart').addEventListener('click',start);start();
 </script></body></html>
