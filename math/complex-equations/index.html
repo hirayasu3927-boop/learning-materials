@@ -1,0 +1,37 @@
+<!doctype html><html lang="ja"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>複雑な一次方程式｜まなびの教材室</title><style>
+:root{font-family:"Noto Sans JP",system-ui,sans-serif;color:#183044;background:#f4f8fb}*{box-sizing:border-box}body{margin:0}main{max-width:1120px;margin:auto;padding:16px}a{color:#246ba7}h1{font-size:1.65rem;margin:8px 0}h2{font-size:1.05rem;margin:12px 0 6px}.muted{color:#607589;font-size:.9rem}.panel{background:white;border:1px solid #dbe5ed;border-radius:18px;padding:16px;margin-top:12px}.tabs,.actions{display:flex;gap:8px;flex-wrap:wrap}button{line-height:1.4;font-family:inherit;font-size:1rem;font-weight:600;min-height:46px;padding:9px 16px;border:1px solid #adc2d3;background:white;color:#234a66;border-radius:10px;cursor:pointer}button.primary{background:#246ba7;color:white;border-color:#246ba7}button[aria-pressed=true]{background:#dceeff;border:2px solid #377dbe}button:disabled{opacity:.45;cursor:default}button:focus-visible,a:focus-visible{outline:3px solid #b55d00;outline-offset:3px}.progress{min-height:1.5em;margin:10px 0;font-weight:650}.row{display:grid;grid-template-columns:160px minmax(210px,.85fr) minmax(300px,1.5fr);align-items:center;gap:12px;border:3px solid #dbe5ed;border-radius:11px;min-height:70px;margin:6px 0;padding:7px 12px;opacity:.45}.row.active{opacity:1;border-color:#377dbe;background:#f2f8ff}.overview .row{opacity:1}.phase-label{font-size:.87rem;font-weight:650}.formula,.math{font-family:"Noto Sans JP",system-ui,sans-serif;font-weight:650;font-variant-numeric:lining-nums tabular-nums}.formula{font-size:1.85rem;line-height:1.4;white-space:nowrap}.caption{font-size:.92rem;line-height:1.55}.caption p{margin:0}.support{margin-top:4px;font-size:1.05rem;color:#205f98}.frac{display:inline-flex;flex-direction:column;vertical-align:middle;text-align:center;line-height:1.05;gap:3px;margin:0 3px}.frac>span:first-child{border-bottom:2px solid;padding:0 4px 3px}.frac>span:last-child{padding:1px 4px}.cancel{text-decoration:line-through;text-decoration-thickness:2px}.factor{border-bottom:2px solid #377dbe}.actions{margin-top:12px}.rule{font-size:.88rem;line-height:1.5;color:#546c7f;margin:10px 0 0}details{margin-top:12px}summary{cursor:pointer;padding:8px}.check{padding:10px;line-height:1.6}.check .math{font-size:1.3rem}@media(max-width:900px){.row{grid-template-columns:130px minmax(190px,1fr) minmax(260px,1.4fr);gap:8px}.formula{font-size:1.65rem}}@media(max-width:700px){main{padding:12px}.panel{padding:12px}h1{font-size:1.4rem}.row{grid-template-columns:1fr;gap:4px;padding:10px 12px}.formula{font-size:1.85rem}.caption{font-size:1rem}}@media(min-width:701px) and (max-height:800px){main{padding:8px 16px}.panel{padding:12px;margin-top:8px}.row{min-height:64px;padding:5px 10px}.formula{font-size:1.65rem}.progress{margin:7px 0}h1{margin:5px 0}.actions{margin-top:8px}}
+</style></head><body><main><header><a href="/materials/junior-math/">← 中学数学の教材一覧</a><h1>複雑な一次方程式</h1><div class="tabs"><button aria-pressed="true">STEP 1｜解き方を見る</button></div></header><section class="panel" aria-label="一次方程式の解き方"><nav class="tabs" id="chapters" aria-label="代表問題"></nav><h2 id="title"></h2><p class="progress" id="progress" aria-live="polite"></p><div id="flow"></div><nav class="actions" aria-label="説明の操作"><button id="back">戻る</button><button id="next" class="primary">次へ</button><button id="reset">はじめから</button></nav><p class="rule">等式の性質：左右に同じ数をかけたり、同じ0でない数で割ったりしても、等しい関係は保たれる。</p><details><summary>元の式に代入して確かめる</summary><div id="check" class="check"></div></details></section></main><script>
+// Shared rows define the sequence, expressions, purposes and visual cues for future STEP 2 choices / STEP 3 hints.
+// Mount all expressions once per problem; navigation changes emphasis only. No padding or duplicate equation rows.
+const frac=(n,d)=>`<span class="frac"><span>${n}</span><span>${d}</span></span>`;
+const row=(phase,formula,text,support='')=>({phase,formula,text,support});
+const problems=[
+{name:'① 括弧',title:'括弧を外して、解きやすい式に直そう',rows:[
+row('問題','3(x ＋ 2) ＝ 15','まずは括弧を外し、いつもの一次方程式の形にしよう。'),
+row('① 解きやすい式に直す','3x ＋ 6 ＝ 15','分配法則で、外の3を括弧内の両方の項にかける。','3 → x：3 × x　／　3 → 2：3 × 2'),
+row('② 移項して整理する','3x ＝ 15 − 6','xの項だけを左辺に残すため、＋6を右辺へ移項。両辺から6を引くことと同じ。'),
+row('② 移項して整理する','3x ＝ 9','右辺の15 − 6を計算する。'),
+row('③ xの値を求める','x ＝ 3','xの係数を1にするため3で割る。等しい関係を保つため、両辺とも3で割る。')
+],check:'x ＝ 3 を代入：3 × (3 ＋ 2) ＝ 15'},
+{name:'② 小数',title:'小数を整数に直してから解こう',rows:[
+row('問題','0.3x ＋ 0.6 ＝ 1.5','小数第1位までなので、10倍すれば整数に直せる。'),
+row('① 解きやすい式に直す','3x ＋ 6 ＝ 15','小数をなくすため、左右のすべての項を10倍する。左右に同じ10をかけ、等しい関係を保つ。','<span class="factor">0.3x × 10</span> ＋ <span class="factor">0.6 × 10</span> ＝ <span class="factor">1.5 × 10</span>'),
+row('② 移項して整理する','3x ＝ 15 − 6','xの項だけを左辺に残すため、＋6を右辺へ移項。両辺から6を引くことと同じ。'),
+row('② 移項して整理する','3x ＝ 9','右辺の15 − 6を計算する。'),
+row('③ xの値を求める','x ＝ 3','xの係数を1にするため3で割る。等しい関係を保つため、両辺とも3で割る。')
+],check:'x ＝ 3 を代入：0.3 × 3 ＋ 0.6 ＝ 1.5'},
+{name:'③ 分数',title:'分母を払って、解きやすい式に直そう',rows:[
+row('問題',frac('x ＋ 2','3')+' ＝ '+frac('5','2'),'分母3と2の最小公倍数は6。両辺に6をかけよう。'),
+row('① 解きやすい式に直す','2(x ＋ 2) ＝ 15','分母3と2をなくすため、両辺に6をかける。左右に同じ数をかけ、等しい関係を保つ。',frac('6 × (x ＋ 2)','3')+' ＝ '+frac('6 × 5','2')+'<br>6 ÷ 3 ＝ 2　／　6 ÷ 2 ＝ 3'),
+row('① 解きやすい式に直す','2x ＋ 4 ＝ 15','括弧を外す。外の2をxと2の両方にかける。','2 → x：2 × x　／　2 → 2：2 × 2'),
+row('② 移項して整理する','2x ＝ 15 − 4','xの項だけを左辺に残すため、＋4を右辺へ移項。両辺から4を引くことと同じ。'),
+row('② 移項して整理する','2x ＝ 11','右辺の15 − 4を計算する。'),
+row('③ xの値を求める','x ＝ '+frac('11','2'),'xの係数を1にするため2で割る。等しい関係を保つため、両辺とも2で割る。')
+],check:'x ＝ '+frac('11','2')+' を代入：'+frac(frac('11','2')+' ＋ 2','3')+' ＝ '+frac('15','6')+' ＝ '+frac('5','2')}
+];
+let chapter=0,phase=0;const $=id=>document.getElementById(id);
+function mount(){const p=problems[chapter];$('title').textContent=p.title;$('chapters').querySelectorAll('button').forEach((b,i)=>b.setAttribute('aria-pressed',String(chapter===i)));$('flow').innerHTML=p.rows.map((r,i)=>`<div class="row" data-row="${i}"><div class="phase-label">${r.phase}</div><div class="formula">${r.formula}</div><div class="caption"><p>${r.text}</p>${r.support?`<div class="support math">${r.support}</div>`:''}</div></div>`).join('');$('check').innerHTML=`<div class="math">${p.check}</div><p>左右が等しくなり、解であることを確かめられた。</p>`;document.querySelector('details').open=false;render();}
+function render(){const p=problems[chapter],overview=phase===p.rows.length;$('flow').classList.toggle('overview',overview);$('flow').querySelectorAll('.row').forEach((r,i)=>{r.classList.toggle('active',!overview&&i===phase);if(!overview&&i===phase)r.setAttribute('aria-current','step');else r.removeAttribute('aria-current');});$('progress').textContent=overview?'全体を確認｜解きやすい式に直す → 移項して整理する → xの値を求める':`${phase+1} / ${p.rows.length} ｜ ${p.rows[phase].phase}に注目`;$('back').disabled=phase===0;$('next').disabled=overview;$('next').textContent=phase===p.rows.length-1?'全体を確認':'次へ';}
+problems.forEach((p,i)=>{const b=document.createElement('button');b.textContent=p.name;b.onclick=()=>{chapter=i;phase=0;mount();};$('chapters').append(b);});
+$('back').onclick=()=>{if(phase>0){phase--;render();}};$('next').onclick=()=>{if(phase<problems[chapter].rows.length){phase++;render();}};$('reset').onclick=()=>{phase=0;render();};mount();
+</script></body></html>
