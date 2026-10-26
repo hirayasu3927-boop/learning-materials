@@ -1,10 +1,15 @@
 <!doctype html>
 <html lang="ja"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>一次方程式の利用①｜文章題</title><style>
 :root{font-family:"Noto Sans JP",system-ui,sans-serif;color:#183044;background:#f4f8fb}*{box-sizing:border-box}body{margin:0}main{max-width:1040px;margin:auto;padding:12px 22px}a{color:#246ba7;font-size:.88rem}h1{font-size:1.4rem;margin:6px 0}.badge{display:inline-block;font-size:.9rem;font-weight:650;color:#205f98;background:#dceeff;border-radius:7px;padding:6px 10px}.problem{font-size:1rem;line-height:1.7;margin:12px 0 10px}.problem p{margin:0}.paper{background:white;border:1px solid #dbe5ed;border-radius:16px;padding:14px 24px}.line{border:2px solid transparent;border-radius:7px;padding:4px 10px;opacity:.45;min-height:40px}.line.active{border-color:#377dbe;opacity:1;background:#f2f8ff}.line.related{opacity:1}.line.active [data-key]:not(.lit){opacity:.45}.line.active .lit{opacity:1}.math{font-size:1.55rem;font-weight:600;font-variant-numeric:tabular-nums lining-nums;line-height:1.35}.math i{font-style:normal}.relationship{display:grid;grid-template-columns:1.2fr 32px 1.2fr 32px 1fr;align-items:center;text-align:center;gap:0}.graphic{min-height:116px}.item{display:flex;align-items:center;justify-content:center;gap:12px}.pencils{display:flex;align-items:center;gap:3px}.pencil{width:20px;height:65px}.eraser{width:72px;height:65px}.price{font-size:.9rem;margin:0 0 5px}.count{font-size:1.25rem;font-weight:650}.count small{font-size:.85rem;font-weight:400;display:block;margin-bottom:3px}.words{font-size:1rem;font-weight:650;min-height:42px}.definition{font-size:1rem;min-height:40px}.note{font-size:.88rem;color:#405c72;line-height:1.45;font-weight:400}.equation-note{display:grid;grid-template-columns:1fr 1fr;gap:16px;align-items:center}.working{display:grid;grid-template-columns:1.2fr 32px 1.2fr 32px 1fr}.working .eq{grid-column:1 / 4;text-align:center}.working .note{grid-column:4 / 6}.result{font-size:1.15rem;font-weight:700}.check{margin-top:4px}.check .note{margin-left:16px}.actions{display:flex;align-items:center;gap:9px;margin-top:10px;flex-wrap:wrap}button{font:600 .95rem system-ui,sans-serif;border:1px solid #adc2d3;border-radius:9px;background:white;color:#234a66;min-height:44px;padding:9px 16px;cursor:pointer}.primary{background:#246ba7;color:white;border-color:#246ba7}button:disabled{opacity:.4;cursor:default}button:focus-visible,a:focus-visible{outline:3px solid #b55d00;outline-offset:3px}#status{margin-left:auto;font-size:.9rem;color:#405c72}.overview .line{opacity:1}.lit{color:#183044}.divider{height:7px}.check .math{font-size:1.35rem}@media(max-width:650px){main{padding:12px}.paper{padding:10px 6px}h1{font-size:1.2rem}.problem{font-size:.95rem}.line{padding:5px 3px}.relationship{grid-template-columns:1fr 20px 1fr 20px 1fr}.graphic{min-height:100px}.item{flex-direction:column;gap:0}.pencil{height:44px;width:15px}.eraser{height:44px;width:48px}.price{font-size:.8rem}.count{font-size:1.1rem}.words{font-size:.8rem}.math{font-size:1.2rem}.equation-note{grid-template-columns:1fr;gap:4px}.working{grid-template-columns:1fr}.working .eq,.working .note{grid-column:1;text-align:left}.note{font-size:.82rem}.definition{font-size:.93rem}.check .note{display:block;margin:4px 0 0}.check .math{font-size:1.15rem}#status{width:100%;margin:0}.result{font-size:1.05rem}}@media print{.actions,a,.badge{display:none}.line{opacity:1}}
-</style></head><body><main><a href="/materials/junior-math/">← 中学数学の教材一覧</a><h1>一次方程式の利用①｜文章題</h1><span class="badge">STEP 1｜解き方を見る</span>
-<section class="problem" aria-label="問題"><p><span data-problem="pencil">1本80円の鉛筆を何本か</span>買い、<span data-problem="eraser">120円の消しゴムを1個</span>買ったところ、<span data-problem="total">代金は全部で600円</span>でした。</p><p><strong>鉛筆は何本買いましたか？</strong></p></section>
+[hidden]{display:none!important}.tabs{display:flex;gap:8px;flex-wrap:wrap}.tabs button[aria-pressed="true"]{background:#dceeff;border-color:#377dbe}.choices{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;margin-top:10px}.choices button{font-size:1.05rem;overflow-wrap:anywhere}.practice-title{font-weight:650;margin:10px 0 5px}.feedback{min-height:1.5em;line-height:1.5;margin:8px 0}.feedback.error{color:#8c490e}.feedback.success{color:#205f98}.input-grid{display:flex;gap:12px;flex-wrap:wrap;margin:12px 0}.input-grid label{display:flex;flex-direction:column;gap:5px}input{font:600 1.15rem system-ui,sans-serif;width:245px;max-width:100%;padding:9px;border:2px solid #91a9be;border-radius:8px}.hint-summary{font-size:.85rem;color:#607589;margin:7px 0}.placeholder{min-height:40px;font-size:1.2rem}.practice-flow .graphic{min-height:86px}.practice-flow .line{min-height:34px;padding-top:2px;padding-bottom:2px}.practice-flow .math{font-size:1.3rem}.practice-flow .definition{min-height:30px}.practice-flow .words{min-height:32px}.practice-flow .line.done{opacity:1}.hint-label{font-size:.85rem;color:#405c72;margin-right:12px}details{margin-top:12px;font-size:.85rem}summary{cursor:pointer}@media(max-width:650px){.choices{grid-template-columns:1fr}.choices button{font-size:1rem}.practice-flow .math{font-size:1.1rem}.tabs button{padding:8px 10px}.input-grid label{width:100%}input{width:100%}}
+</style></head><body><main><a href="/materials/junior-math/">← 中学数学の教材一覧</a><h1>一次方程式の利用①｜文章題</h1><nav class="tabs" aria-label="学習ステップ"><button data-mode="1" aria-pressed="true">STEP 1｜解き方を見る</button><button data-mode="2" aria-pressed="false">STEP 2｜一緒に解く</button><button data-mode="3" aria-pressed="false">STEP 3｜自力で解く</button></nav>
+<div id="example"><section class="problem" aria-label="問題"><p><span data-problem="pencil">1本80円の鉛筆を何本か</span>買い、<span data-problem="eraser">120円の消しゴムを1個</span>買ったところ、<span data-problem="total">代金は全部で600円</span>でした。</p><p><strong>鉛筆は何本買いましたか？</strong></p></section>
 <section class="paper" aria-label="文章から方程式へ"><div id="flow"></div></section>
-<nav class="actions" aria-label="注目箇所の操作"><button id="back">戻る</button><button id="next" class="primary">次へ</button><button id="reset">もう一度</button><span id="status" aria-live="polite"></span></nav>
+<nav class="actions" aria-label="注目箇所の操作"><button id="back">戻る</button><button id="next" class="primary">次へ</button><button id="reset">もう一度</button><span id="status" aria-live="polite"></span></nav></div>
+<section id="practice" hidden aria-label="文章題の練習"><p id="practiceTitle" class="practice-title"></p><div class="problem" id="practiceProblem"></div><p id="instruction" class="note"></p><div id="practicePaper" class="paper practice-flow"><div id="practiceFlow"></div></div><div id="choices" class="choices"></div>
+<form id="answerForm" hidden><div class="input-grid"><label>立てた方程式<input id="equationInput" autocomplete="off" spellcheck="false" placeholder="例：80x+120=600"></label><label><span id="answerLabel">答え</span><input id="answerInput" inputmode="decimal" autocomplete="off" placeholder="数を入力"></label></div><button class="primary">答え合わせ</button></form>
+<p id="feedback" class="feedback" aria-live="polite"></p><div class="actions"><button id="advance" class="primary" hidden>次の式へ</button><button id="hint">ヒントを見る</button><button id="hideHint" hidden>ヒントを隠す</button><button id="nextProblem" hidden>次の問題へ</button><button id="retry">もう一度</button></div><p id="support" class="hint-summary"></p>
+<details><summary>学習の記録</summary><p>問題・回答・正誤・ヒント使用は、このページを開いている間だけ記録します。再読み込みで消えます。</p><pre id="records"></pre></details></section>
 </main><script>
 // Reuse these ordered rows for STEP 2 choices and STEP 3 hints.
 // Every row stays visible and fixed; navigation changes emphasis only.
@@ -13,19 +18,24 @@ const {unitPrice:a,fixedPrice:b,total:c}=problem,n=(c-b)/a;
 const part=(text,key)=>`<span data-key="${key}">${text}</span>`;
 const relation=(p,e,t,extra='')=>`<div class="relationship ${extra}">${part(p,'pencil')}<span>＋</span>${part(e,'eraser')}<span>＝</span>${part(t,'total')}</div>`;
 const pencil=`<svg class="pencil" viewBox="0 0 24 90" aria-hidden="true"><path d="M4 4H20V66L12 86 4 66Z" fill="#d9e9f6" stroke="#315b78" stroke-width="2"/><path d="M4 66H20L12 86Z" fill="#eee1c9" stroke="#315b78" stroke-width="2"/><path d="M12 9V65M9 79L12 86 15 79" stroke="#315b78" stroke-width="2"/></svg>`,eraser=`<svg class="eraser" viewBox="0 0 100 92" role="img" aria-label="消しゴム1個"><path d="M15 25L73 17 88 34V65L30 73 15 57Z" fill="#eef2f5" stroke="#315b78" stroke-width="2"/><path d="M33 23L63 19 78 36V67L48 71 33 54Z" fill="#a9c8df" stroke="#315b78" stroke-width="2"/><path d="M15 25L30 42 88 34M30 42V73" fill="none" stroke="#315b78" stroke-width="2"/></svg>`;
-const rows=[
- {id:'scene',html:relation(`<div class="price">1本 ${a}円</div><div class="item"><div class="pencils">${pencil}${pencil}<span>…</span></div><div class="count"><small>本数は？</small>x 本</div></div>`,`<div class="price">1個 ${b}円</div><div class="item">${eraser}<div class="count">1個</div></div>`,`<div class="price">全部の代金</div><div class="math">${c}円</div>`,'graphic')},
- {id:'define',html:'<div class="definition">鉛筆の本数を <span class="math">x</span> 本とする。</div>'},
- {id:'words',html:relation('鉛筆の代金','消しゴムの代金','全部の代金','words')},
- {id:'quantities',html:relation(a+'円 × x本',b+'円 × 1個',c+'円','math')},
+function buildRows(p){
+const {unitPrice:a,fixedPrice:b,total:c,item='鉛筆',fixed='消しゴム',unit='本',fixedUnit='個'}=p,n=(c-b)/a;
+const scene = item==='鉛筆' ? null : relation(`<div class="price">${item}：1${unit} ${a}円</div><div class="count">x ${unit}</div>`,`<div class="price">${fixed}：1${fixedUnit} ${b}円</div><div class="count">1${fixedUnit}</div>`,`<div class="price">全部の代金</div><div class="math">${c}円</div>`,'graphic');
+return [
+ {id:'scene',html:scene||relation(`<div class="price">1本 ${a}円</div><div class="item"><div class="pencils">${pencil}${pencil}<span>…</span></div><div class="count"><small>本数は？</small>x 本</div></div>`,`<div class="price">1個 ${b}円</div><div class="item">${eraser}<div class="count">1個</div></div>`,`<div class="price">全部の代金</div><div class="math">${c}円</div>`,'graphic')},
+ {id:'define',html:`<div class="definition">${item}の${unit==='本'?'本数':'数'}を <span class="math">x</span> ${unit}とする。</div>`},
+ {id:'words',html:relation(item+'の代金',fixed+'の代金','全部の代金','words')},
+ {id:'quantities',html:relation(a+'円 × x'+unit,b+'円 × 1'+fixedUnit,c+'円','math')},
  {id:'build',html:relation(a+' × x',b+' × 1',c,'math')},
  {id:'simplify',html:relation(a+'x',b,c,'math')},
- {id:'move',html:`<div class="working"><span class="eq math">${a}x ＝ ${c} − ${b}</span><span class="note">＋120をなくすため、両辺から120を引く。</span></div>`},
+ {id:'move',html:`<div class="working"><span class="eq math">${a}x ＝ ${c} − ${b}</span><span class="note">＋${b}をなくすため、両辺から${b}を引く。</span></div>`},
  {id:'subtract',html:`<div class="working"><span class="eq math">${a}x ＝ ${c-b}</span><span class="note">右辺を計算する。</span></div>`},
- {id:'divide',html:`<div class="working"><span class="eq math">x ＝ ${n}</span><span class="note">xを求めるため、両辺を80で割る。</span></div>`},
- {id:'check',html:`<div class="check"><span class="math">${a} × ${n} ＋ ${b} ＝ ${c}</span><span class="note">全部で600円になる。</span></div>`},
- {id:'answer',html:`<div class="result">答え：鉛筆を ${n} 本買った。</div>`}
+ {id:'divide',html:`<div class="working"><span class="eq math">x ＝ ${n}</span><span class="note">xを求めるため、両辺を${a}で割る。</span></div>`},
+ {id:'check',html:`<div class="check"><span class="math">${a} × ${n} ＋ ${b} ＝ ${c}</span><span class="note">全部で${c}円になる。</span></div>`},
+ {id:'answer',html:`<div class="result">答え：${item}を ${n} ${unit}買った。</div>`}
 ];
+}
+const rows=buildRows(problem);
 const phases=[
  {rows:['scene'],keys:['pencil','eraser','total'],label:'場面を捉える'},
  {rows:['define'],related:['scene'],keys:['pencil'],label:'求める本数を x とする'},
@@ -43,4 +53,76 @@ const $=id=>document.getElementById(id);let phase=0;
 $('flow').innerHTML=rows.map(r=>`<div class="line" data-row="${r.id}">${r.html}</div>`).join('');
 function render(){const p=phases[phase];document.querySelector('.paper').classList.toggle('overview',!!p.all);document.querySelectorAll('.line').forEach(r=>{const active=p.rows.includes(r.dataset.row),related=(p.related||[]).includes(r.dataset.row);r.classList.toggle('active',active&&!p.all);r.classList.toggle('related',related);r.toggleAttribute('aria-current',active&&!p.all);r.querySelectorAll('[data-key]').forEach(t=>{const highlight=(active||related)&&(p.keys||[]).includes(t.dataset.key);t.classList.toggle('lit',highlight);t.style.opacity=!p.all&&related&&p.keys?.length&&!highlight?'.45':'';});});document.querySelectorAll('[data-problem]').forEach(e=>{e.style.opacity=p.all||!p.keys?.length||p.keys.includes(e.dataset.problem)?'1':'.45';});$('status').textContent=`${phase+1} / ${phases.length}　${p.label}`;$('back').disabled=phase===0;$('next').disabled=phase===phases.length-1;}
 $('next').onclick=()=>{phase=Math.min(phases.length-1,phase+1);render();};$('back').onclick=()=>{phase=Math.max(0,phase-1);render();};$('reset').onclick=()=>{phase=0;render();};render();
+// Each problem uses the same ordered rows for guided choices and independent hints.
+const sets={2:[
+ {item:'鉛筆',unit:'本',fixed:'消しゴム',fixedUnit:'個',unitPrice:60,fixedPrice:100,total:400},
+ {item:'ノート',unit:'冊',fixed:'定規',fixedUnit:'本',unitPrice:120,fixedPrice:150,total:750},
+ {item:'パン',unit:'個',fixed:'牛乳',fixedUnit:'本',unitPrice:90,fixedPrice:160,total:520},
+ {item:'カード',unit:'枚',fixed:'ケース',fixedUnit:'個',unitPrice:40,fixedPrice:180,total:460},
+ {item:'リボン',unit:'本',fixed:'袋',fixedUnit:'枚',unitPrice:12.5,fixedPrice:20,total:82.5}
+],3:[
+ {item:'ノート',unit:'冊',fixed:'ペン',fixedUnit:'本',unitPrice:100,fixedPrice:180,total:780},
+ {item:'パン',unit:'個',fixed:'飲み物',fixedUnit:'本',unitPrice:130,fixedPrice:180,total:700},
+ {item:'鉛筆',unit:'本',fixed:'消しゴム',fixedUnit:'個',unitPrice:70,fixedPrice:140,total:490},
+ {item:'カード',unit:'枚',fixed:'ケース',fixedUnit:'個',unitPrice:50,fixedPrice:120,total:520},
+ {item:'リボン',unit:'本',fixed:'袋',fixedUnit:'枚',unitPrice:6.5,fixedPrice:24,total:50}
+]};
+const labels={define:'求めたい数を文字にする',words:'代金の関係を言葉の式にする',quantities:'単位をつけて数量を表す',build:'数字と文字の式にする',simplify:'方程式を整理する',move:'移項する',subtract:'計算する',divide:'xを求める',check:'場面に戻して確かめる',answer:'答える'};
+function expressions(p){const {item:t,unit:u,fixed:f,fixedUnit:v,unitPrice:a,fixedPrice:b,total:c}=p,n=(c-b)/a;return [
+ `${t}の数を x ${u}とする。`,`${t}の代金 ＋ ${f}の代金 ＝ 全部の代金`,`${a}円 × x${u} ＋ ${b}円 × 1${v} ＝ ${c}円`,`${a} × x ＋ ${b} × 1 ＝ ${c}`,`${a}x ＋ ${b} ＝ ${c}`,`${a}x ＝ ${c} − ${b}`,`${a}x ＝ ${c-b}`,`x ＝ ${n}`,`${a} × ${n} ＋ ${b} ＝ ${c}`,`${t}を ${n} ${u}買った。`
+];}
+function optionsFor(p,k){const {item:t,unit:u,fixed:f,fixedUnit:v,unitPrice:a,fixedPrice:b,total:c}=p,n=(c-b)/a,correct=expressions(p)[k];const wrong=[
+ [[`${t}の代金を x 円とする。`,'求めたいのは代金ではなく、買った数です。'],[`${f}の数を x ${v}とする。`,'数が分からない品物はどちらですか？']],
+ [[`${t}の代金 − ${f}の代金 ＝ 全部の代金`,'2種類の買い物の代金を合わせます。演算記号を見直そう。'],[`${t}の代金 ＋ 全部の代金 ＝ ${f}の代金`,'全部の代金は、2種類の代金を合わせたものです。等号の左右を見直そう。']],
+ [[`${a}円 ＋ x${u} ＋ ${b}円 × 1${v} ＝ ${c}円`,'1つ分の値段がx個分あります。値段と個数を足してよいかな？'],[`${a}円 × x${u} ＋ ${b}円 × x${v} ＝ ${c}円`,`${f}は1${v}です。両方の品物をx個にしていないか見よう。`]],
+ [[`${a} ＋ x ＋ ${b} × 1 ＝ ${c}`,'単位を外しても、「値段×数」のかけ算は残します。'],[`${a} × x ＋ ${b} × x ＝ ${c}`,`${f}の数は1です。単位つきの行と対応させよう。`]],
+ [[`${a} ＋ x ＋ ${b} ＝ ${c}`,'80×xのようなかけ算は、数字とxを続けて書きます。足し算にはなりません。'],[`${a}x ＋ ${b}x ＝ ${c}`,`${f}は1${v}です。定数の代金にxをつける必要があるかな？`]],
+ [[`${a}x ＝ ${c} ＋ ${b}`,'左辺の足された代金をなくすには、両辺から引きます。右辺の符号に注目しよう。'],[`${a}x ＋ ${b} ＝ ${c} − ${b}`,'両辺から同じ数を引くと、左辺の定数項はなくなります。']],
+ [[`${a}x ＝ ${c+b}`,'直前の行の右辺は引き算です。符号を確かめよう。'],[`x ＝ ${c-b}`,'まだ左辺には係数が残っています。計算後もxの前の数を残そう。']],
+ [[`x ＝ ${c-b}`,'左辺はxの何倍ですか？ xだけにする操作を考えよう。'],[`x ＝ ${(c-b)*a}`,'係数をなくすには、かける・割るのどちらを使うかな？']],
+ [[`${a} ＋ ${n} ＋ ${b} ＝ ${c}`,'買った数を戻すときも「値段×数」です。'],[`${a} × ${n} ＝ ${c}`,'もう1種類の買い物の代金が抜けていないかな？']],
+ [[`${t}の代金は ${n} 円。`,'求めたxは代金ではなく、買った数です。'],[`${f}を ${n} ${v}買った。`,'xと決めたのは、どちらの品物の数でしたか？']]
+ ][k];const all=[{text:correct,correct:true},...wrong.map(([text,reason])=>({text,reason}))];const shift=(k+indices[mode])%3;return all.slice(shift).concat(all.slice(0,shift));}
+let mode=1;const indices={2:0,3:0},states={2:[],3:[]},logs=[];
+const fresh=()=>({stage:0,accepted:false,solved:false,message:'',tone:'',hintCount:0,hintVisible:false,hintUsed:false,eq:'',answer:''});
+const state=()=>states[mode][indices[mode]]||(states[mode][indices[mode]]=fresh());
+const currentProblem=()=>sets[mode][indices[mode]];
+const log=(event,extra={})=>{logs.push({step:mode,problem:indices[mode]+1,event,...extra});};
+function practiceRows(p,reveal,active,complete){const rr=buildRows(p);return rr.map((r,i)=>`<div class="line ${complete?'done':i===active?'active':i<=reveal?'done':''}" data-practice-row="${r.id}">${i<=reveal?r.html:`<div class="placeholder"><span class="hint-label">${labels[r.id]||'場面'}</span>□</div>`}</div>`).join('');}
+function renderPractice(){const p=currentProblem(),s=state(),guided=mode===2,rr=buildRows(p);$('practiceTitle').textContent=`STEP ${mode}｜${guided?'一緒に解く':'自力で解く'}　${indices[mode]+1} / ${sets[mode].length}`;
+$('practiceProblem').textContent=`1${p.unit}${p.unitPrice}円の${p.item}を何${p.unit}か買い、${p.fixedPrice}円の${p.fixed}を1${p.fixedUnit}買いました。代金は全部で${p.total}円でした。${p.item}は何${p.unit}買いましたか？`;
+$('instruction').textContent=guided?`${labels[rr[s.stage+1].id]}｜□に入る次の式を選ぼう。`:'ノートに、単位つきの式から途中式・確認まで書こう。立てた方程式と答えを入力しよう。';
+$('practicePaper').hidden=!guided&&!s.hintVisible&&!s.solved;
+$('practiceFlow').innerHTML=guided?practiceRows(p,s.solved?10:s.stage+(s.accepted?1:0),s.stage+1,s.solved):practiceRows(p,s.solved?10:s.hintCount-1,s.hintCount-1,s.solved);
+$('choices').hidden=!guided||s.accepted||s.solved;$('choices').innerHTML='';
+if(guided&&!s.accepted&&!s.solved)for(const o of optionsFor(p,s.stage)){const button=document.createElement('button');button.textContent=o.text;button.onclick=()=>{log('choice',{stage:rr[s.stage+1].id,answer:o.text,correct:!!o.correct,hintUsed:s.hintUsed});if(o.correct){s.accepted=true;s.message='合っています。';s.tone='success';if(s.stage===9){s.solved=true;s.message='場面から答えまで、同じ流れで解けました。';}}else{s.message=o.reason;s.tone='error';}renderPractice();};$('choices').append(button);}
+$('answerForm').hidden=guided;$('equationInput').value=s.eq;$('answerInput').value=s.answer;$('equationInput').disabled=s.solved;$('answerInput').disabled=s.solved;$('answerForm').querySelector('button').disabled=s.solved;$('answerLabel').textContent=`答え（${p.item}の数・${p.unit}）`;
+$('feedback').textContent=s.message;$('feedback').className='feedback '+s.tone;$('advance').hidden=!guided||!s.accepted||s.solved;$('hint').hidden=s.solved;$('hint').disabled=!guided&&s.hintVisible&&s.hintCount>=rr.length;
+$('hint').textContent=guided?'ヒントを見る':s.hintCount&&!s.hintVisible?'ヒントを再表示':s.hintCount?'次のヒント':'ヒントを見る';$('hideHint').hidden=guided||!s.hintVisible;
+$('nextProblem').hidden=!s.solved;$('nextProblem').disabled=indices[mode]>=sets[mode].length-1;$('nextProblem').textContent=indices[mode]>=sets[mode].length-1?'このステップは完了':mode===3&&s.hintUsed?'類題をヒントなしで解く':'次の問題へ';
+$('support').textContent=guided?'':s.hintUsed?'この問題はヒントを使用しました。隠しても使用記録は残ります。':'この問題では、まだヒントを使っていません。';$('records').textContent=logs.length?logs.map(x=>JSON.stringify(x)).join('\n'):'まだ回答はありません。';}
+function switchMode(value){mode=value;document.querySelectorAll('[data-mode]').forEach(b=>b.setAttribute('aria-pressed',String(Number(b.dataset.mode)===mode)));$('example').hidden=mode!==1;$('practice').hidden=mode===1;if(mode!==1)renderPractice();}
+document.querySelectorAll('[data-mode]').forEach(b=>b.onclick=()=>switchMode(Number(b.dataset.mode)));
+$('advance').onclick=()=>{const s=state();if(s.accepted&&!s.solved){s.stage++;s.accepted=false;s.message='';s.tone='';renderPractice();}};
+const help=[
+ '求めたいのは、何の数ですか？ 単位も確かめよう。',
+ '2種類の代金を合わせると、全部の代金になります。',
+ 'それぞれ「1つ分の値段×買った数」です。単位もつけよう。',
+ '単位つきの行から、数字・x・演算記号をそのまま取り出そう。',
+ 'かけ算の記号を省き、1をかけた数を整理しよう。',
+ 'xの項だけを残すため、足された定数をなくそう。',
+ '移項した行の右辺を計算しよう。',
+ 'xの前にある係数で、両辺を割ろう。',
+ 'xに求めた数を入れ、2種類の代金を合わせよう。',
+ '最初にxと決めた品物と単位に戻そう。'
+];
+$('hint').onclick=()=>{const s=state();s.hintUsed=true;if(mode===2){s.message=help[s.stage];s.tone='';log('hint',{stage:buildRows(currentProblem())[s.stage+1].id});}else{if(s.hintVisible||s.hintCount===0)s.hintCount=Math.min(11,s.hintCount+1);s.hintVisible=true;log('hint',{rows:s.hintCount});}renderPractice();};
+$('hideHint').onclick=()=>{state().hintVisible=false;renderPractice();};
+$('equationInput').oninput=e=>state().eq=e.target.value;$('answerInput').oninput=e=>state().answer=e.target.value;
+const normalize=t=>t.normalize('NFKC').toLowerCase().replace(/[−–]/g,'-').replace(/[×·*]/g,'').replace(/\s/g,'');
+function validEquation(raw,p){const t=normalize(raw),a=String(p.unitPrice),b=String(p.fixedPrice),c=String(p.total);return [`${a}x+${b}=${c}`,`${b}+${a}x=${c}`,`${c}=${a}x+${b}`,`${c}=${b}+${a}x`].includes(t);}
+$('answerForm').onsubmit=e=>{e.preventDefault();const p=currentProblem(),s=state();if(s.solved)return;const eqOK=validEquation(s.eq,p),answerText=normalize(s.answer).replace(new RegExp(p.unit+'$'),'');const answerOK=/^\d+(\.\d+)?$/.test(answerText)&&Number(answerText)===(p.total-p.fixedPrice)/p.unitPrice;log('answer',{equation:s.eq,answer:s.answer,correct:eqOK&&answerOK,hintUsed:s.hintUsed});if(eqOK&&answerOK){s.solved=true;s.tone='success';s.message=s.hintUsed?'正解です。次の類題ではヒントを使わずに確かめよう。':'正解です。ヒントなしで方程式を立てて解けました。';if(s.hintUsed&&indices[mode]===sets[mode].length-1)sets[mode].push({...p,total:p.total+p.unitPrice*2});}else{s.tone='error';s.message=!eqOK?'立てた方程式を見直そう。「1つ分の値段×数」と、もう1種類の代金が入っているかな？':'方程式は合っています。途中式と、求めた数を代入した合計を確かめよう。';}renderPractice();};
+$('nextProblem').onclick=()=>{if(state().solved&&indices[mode]<sets[mode].length-1){indices[mode]++;renderPractice();}};
+$('retry').onclick=()=>{const old=state(),next=fresh();next.hintUsed=old.hintUsed;states[mode][indices[mode]]=next;log('retry',{hintUsed:next.hintUsed});renderPractice();};
+
 </script></body></html>
