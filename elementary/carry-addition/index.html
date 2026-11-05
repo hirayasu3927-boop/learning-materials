@@ -1,0 +1,407 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="color-scheme" content="light">
+<title>10をつくろう｜くりあがりの たしざん</title>
+<style>
+:root{--ink:#243c48;--muted:#607781;--blue:#277b99;--orange:#b56519;--purple:#794695;--line:#d7e3e6;--teal:#246d75;--dot:42px;--gap:8px;--pad:10px}
+*{box-sizing:border-box}body{margin:0;color:var(--ink);background:#f3f7f7;font-family:system-ui,-apple-system,'Noto Sans JP',sans-serif;font-variant-numeric:tabular-nums}button,input,select{font:inherit;color:inherit}button{cursor:pointer;touch-action:manipulation}button:disabled{cursor:default;opacity:.5}button:focus-visible,input:focus-visible,select:focus-visible,summary:focus-visible{outline:3px solid #305f9c;outline-offset:4px}[hidden]{display:none!important}.blue{color:var(--blue)}.orange{color:var(--orange)}.purple{color:var(--purple)}.sr-only{position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%);white-space:nowrap}
+main{max-width:980px;margin:auto;padding:14px 22px 22px}header{display:flex;gap:12px;align-items:center;justify-content:space-between;min-height:44px}h1{font-size:21px;margin:0}.subtitle{font-size:12px;font-weight:500;color:var(--muted);margin-left:10px}.header-actions{display:flex;align-items:center;gap:12px}.badge{font-size:14px;color:var(--muted)}.small-button{border:1px solid #b7cdd1;border-radius:10px;background:white;padding:10px 14px;min-height:42px;font-size:14px;font-weight:650}
+.support-bar{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin:10px 0 12px}.support-title{font-size:14px;margin-right:4px}.support-button{min-height:46px;padding:8px 15px;border:1px solid #b5cbcf;border-radius:12px;background:white;font-size:16px;font-weight:650}.support-button[aria-pressed=true]{background:#e9f4f5;border-color:#5b969d}.support-button .switch{font-size:12px;font-weight:500;margin-left:5px;color:#526e76}.support-status{margin-left:auto;font-size:12px;color:var(--muted)}
+article{padding:14px 24px 12px;background:white;border:1px solid #dce6e9;border-radius:24px}.prompt{margin:0;min-height:36px;display:grid;place-items:center;text-align:center;font-size:22px;font-weight:700;line-height:1.5}.choice-line{display:flex;justify-content:center;align-items:center;gap:8px;min-height:42px;margin-top:2px}.choice-line label{font-size:14px}.target-button{border:1px solid #b7cbd1;background:white;border-radius:9px;padding:7px 13px;font-size:15px;min-height:38px}.target-button[aria-pressed=true]{background:#edf6fa;border-color:var(--blue);font-weight:750}.choice-space{visibility:hidden}
+.board{display:grid;grid-template-columns:minmax(0,1fr) 52px minmax(0,1fr) 58px 84px;grid-template-rows:66px 104px 162px 258px;align-items:start;justify-items:center;position:relative}.number,.sign,.answer{font-size:53px;font-weight:750;line-height:1.2;align-self:center}.answer{width:100%;min-width:0;min-height:65px;display:grid;place-items:center;border:2px dashed #bdcfd3;border-radius:13px;padding:2px 5px}.answer.solved{border-style:solid;border-color:#78a4ad;background:#eff8f8}.number-input{width:76px;height:59px;border:2px solid #91aeb6;border-radius:10px;text-align:center;font-size:40px;font-weight:750;background:white;padding:0 4px}.number-input:focus{border-color:var(--teal)}.answer .number-input{max-width:100%}.answer:has(input){border-color:transparent;padding:0}.number-label{font-size:12px;font-weight:500;color:var(--muted);position:absolute;transform:translateY(-24px)}
+.split{grid-row:2;position:relative;width:min(238px,100%);height:102px;text-align:center;align-self:start}.split svg{position:absolute;inset:0;width:100%;height:45px;pointer-events:none}.leaves{display:flex;gap:32px;justify-content:center;padding-top:30px}.leaf-wrap{display:flex;flex-direction:column;align-items:center;gap:4px}.leaf{display:grid;place-items:center;width:70px;height:44px;border:2px solid #d3e0e4;border-radius:11px;background:white;font-size:29px;font-weight:750;line-height:1}.leaf.take{color:var(--purple)}.leaf.rest{color:var(--orange)}.split.touched .leaf.take{background:#f4edf9;border-color:#9864b7}.split.touched .leaf.rest{background:#fff5e8;border-color:#e5a650}.split.rest-blue.touched .leaf.rest{background:#eef7fa;border-color:#75a7bb}.leaf-label{font-size:12px;color:var(--muted);white-space:nowrap}.leaf input{width:100%;height:100%;text-align:center;border:0;background:transparent;font-size:inherit;font-weight:inherit;color:inherit;padding:0;outline-offset:3px;border-radius:8px}.leaf input::placeholder{opacity:1;color:#94a8af}.reserved{visibility:hidden!important;pointer-events:none!important}
+.group{grid-row:3;text-align:center;position:relative;align-self:start;max-width:100%}.group.left{grid-column:1}.group.right{grid-column:3}.frame{position:relative;width:calc(var(--dot)*5 + var(--gap)*4 + var(--pad)*2 + 4px);height:calc(var(--dot)*2 + var(--gap) + var(--pad)*2 + 4px);border:2px solid var(--line);border-radius:15px;background:white;transition:background .25s,border-color .25s;max-width:100%}.frame.ten{border-color:var(--blue);background:#eff8fb}.frame.ten.target-right{border-color:var(--orange);background:#fff8ee}.slots{position:absolute;inset:0;display:grid;grid-template-columns:repeat(5,var(--dot));grid-template-rows:repeat(2,var(--dot));gap:var(--gap);padding:var(--pad)}.slot{border:2px dashed #dce6e9;border-radius:50%;width:var(--dot);height:var(--dot)}.dot{position:absolute;left:calc(var(--pad) + var(--x)*(var(--dot) + var(--gap)));top:calc(var(--pad) + var(--y)*(var(--dot) + var(--gap)));width:var(--dot);height:var(--dot);border-radius:50%;border:2px solid #23758d;background:#3389a4;box-shadow:inset 0 -3px 0 #0000000d;padding:0;opacity:1!important}.dot.orange-dot{background:#ecaa53;border-color:#bb7926}.dot.selected,.dot.donated{background:#9864b7;border-color:#75448f}.dot.selected{box-shadow:0 0 0 3px #eadff1}.dot.selected:after{content:'✓';position:absolute;inset:0;display:grid;place-items:center;color:white;font-size:24px;font-weight:750}.dot[aria-disabled=true]{cursor:default}.caption{min-height:25px;margin-top:6px;font-size:15px;font-weight:650}.down-arrow{height:27px;line-height:27px;font-size:24px;color:#8cabb6}.frame.hinted .slot.empty{border-color:#9864b7;background:#f2e8f8}.sum-focus .frame.ten{box-shadow:0 0 0 3px #deedf2}.sum-focus .frame.donor{border-color:#c99043;box-shadow:0 0 0 3px #fff0da}
+.flow{grid-row:4;grid-column:1/4;position:relative;width:min(360px,100%);display:grid;grid-template-columns:1fr .5fr 1fr .5fr 1fr;grid-template-rows:53px 22px 56px 31px 64px;align-items:center;justify-items:center;line-height:1.2;font-size:36px;font-weight:750;padding-top:2px}.bundle{grid-row:1;display:grid;grid-template-columns:1fr .5fr 1fr;width:100%;align-items:center;justify-items:center}.bundle-mark{grid-row:2;align-self:start;height:15px;width:92%;border:2px solid #70a1b4;border-top:0;border-radius:0 0 9px 9px}.flow-ten{grid-row:3;color:var(--blue)}.flow-rest-top{grid-row:1}.flow-plus-top{grid-row:1}.flow-rest-bottom,.flow-plus-bottom{grid-row:3}.flow.rest-blue .flow-rest-top,.flow.rest-blue .flow-rest-bottom{color:var(--blue)}.flow-arrow{grid-column:1/-1;grid-row:4;font-size:24px;font-weight:500;color:#8cabb6}.final-line{grid-column:1/-1;grid-row:5;display:flex;align-items:center;justify-content:center;gap:14px;min-height:60px;padding:3px 12px;border:2px solid transparent;border-radius:12px}.final-line.active{border-color:#5b929d;background:#f3f9fa}.final-line input{font-size:35px;width:76px;height:52px}.future-part{visibility:hidden}.flow-ten.target-right{color:var(--orange)}
+footer{display:grid;grid-template-columns:auto 1fr auto;gap:12px;align-items:center;margin-top:12px;min-height:62px}.control{min-height:52px;padding:10px 18px;border:1px solid #b2c8ce;border-radius:13px;background:white;font-size:17px;font-weight:700}.primary{background:var(--teal);color:white;border-color:var(--teal);min-width:168px}.feedback{font-size:15px;line-height:1.6;margin:0;min-height:25px}.storage-status{font-size:12px;color:#a44632;margin:6px 0}.session-note{text-align:center;font-size:12px;color:var(--muted);margin:8px 0 0}
+/* Adult record view stays outside the child's problem layout. */
+dialog{width:min(1050px,calc(100% - 28px));max-height:91dvh;padding:0;border:1px solid #c6d8dd;border-radius:20px;color:var(--ink);background:#f7fafb}dialog::backdrop{background:#203c4859}.record-header{display:flex;gap:14px;justify-content:space-between;align-items:center;position:sticky;top:0;padding:17px 23px;background:white;border-bottom:1px solid var(--line);z-index:2}.record-header h2{font-size:21px;margin:0}.record-body{padding:20px 23px}.record-body h3{font-size:17px;margin:24px 0 10px}.record-body p{font-size:14px;line-height:1.75}.profile-row{display:flex;flex-wrap:wrap;align-items:center;gap:10px}.profile-row input,.profile-row select{min-height:42px;border:1px solid #b1c7ce;border-radius:9px;padding:8px;background:white;max-width:210px}.profile-row form{display:flex;gap:7px;align-items:center}.profile-row input{width:170px}.metrics{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-top:18px}.metric{padding:15px;border:1px solid var(--line);border-radius:13px;background:white}.metric strong{font-size:27px;display:block;margin:4px 0}.metric span,.metric small{font-size:12px;color:var(--muted);line-height:1.55}.analysis-note{background:#eaf3f5;padding:12px 15px;border-radius:11px;min-height:47px}.table-wrap{overflow:auto;max-width:100%;border:1px solid var(--line);border-radius:12px;background:white}table{width:100%;border-collapse:collapse;font-size:13px;text-align:left}th,td{padding:11px 12px;border-bottom:1px solid #e6edef;white-space:nowrap;line-height:1.55}th{background:#eff5f7;font-weight:650}tbody tr:last-child td{border-bottom:0}.record-actions{display:flex;flex-wrap:wrap;gap:9px;margin-top:16px}.table-empty{text-align:center;padding:25px;color:var(--muted)}details{margin-top:20px;background:white;padding:14px 16px;border:1px solid var(--line);border-radius:12px}summary{cursor:pointer;font-size:14px;font-weight:650}.record-rules{font-size:13px;line-height:1.85;padding-left:22px}.success-tag{color:#246d75}.record-meta{font-size:12px!important;color:var(--muted)}.help-text{margin:6px 0!important;font-size:12px!important;color:var(--muted)}
+@media(max-width:850px){main{padding:10px 14px 18px}article{padding:12px 16px}.subtitle{display:none}.board{grid-template-columns:minmax(0,1fr) 42px minmax(0,1fr) 52px 75px}.support-status{flex-basis:100%;text-align:right;font-size:11px;line-height:1.1}.number,.sign,.answer{font-size:47px}.primary{min-width:150px}.control{padding:10px 14px}.feedback{font-size:14px}}
+@media(max-width:760px){:root{--dot:36px;--gap:6px;--pad:8px}.board{grid-template-rows:64px 104px 148px 248px}.prompt{font-size:20px}.choice-line{min-height:40px}.frame{border-radius:12px}.split{width:206px}.leaves{gap:24px}.leaf{width:64px}.caption{font-size:13px}.flow{font-size:34px}.number,.sign,.answer{font-size:43px}.number-input{width:68px;font-size:36px}.support-button{padding:8px 12px}.support-title{font-size:13px}.support-status{margin-left:0}.header-actions{gap:8px}.badge{font-size:12px}.metrics{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:620px){:root{--dot:clamp(16px,calc((100vw - 248px)/10),29px);--gap:4px;--pad:7px}main{padding:8px}h1{font-size:18px}article{padding:12px 8px;border-radius:18px}.board{grid-template-columns:minmax(0,1fr) 30px minmax(0,1fr) 42px 59px;grid-template-rows:62px 101px 131px 242px}.number,.sign,.answer{font-size:35px}.answer{min-width:57px;min-height:52px}.number-input{width:57px;height:51px;font-size:32px}.split{width:min(164px,100%)}.leaves{gap:12px}.leaf{width:50px}.prompt{font-size:18px}.caption{font-size:11px}.flow{font-size:31px;grid-template-rows:48px 22px 54px 30px 62px}.dot.selected:after{font-size:19px}.support-title{display:none}.support-button{font-size:14px;min-height:44px;padding:7px 10px}.support-button .switch{font-size:11px}.support-status{font-size:10px}.small-button{font-size:12px;padding:8px 10px}.badge{font-size:11px}footer{grid-template-columns:auto auto;gap:8px}.feedback{grid-column:1/-1;grid-row:1;min-height:24px}.primary{justify-self:end}.control{font-size:15px}.record-body,.record-header{padding:15px}.profile-row form{flex-wrap:wrap}.metrics{gap:7px}.metric{padding:11px}.target-button{padding:6px 9px;font-size:13px}.choice-line label{font-size:12px}}
+@media(max-width:410px){:root{--dot:clamp(10px,calc((100vw - 215px)/10),21px);--gap:3px;--pad:5px}.board{grid-template-columns:minmax(0,1fr) 26px minmax(0,1fr) 36px 51px}.number,.sign,.answer{font-size:30px}.number-input{width:49px;font-size:30px}.answer{min-width:49px}.split{width:min(133px,100%)}.leaves{gap:8px}.leaf{width:43px}.support-button{padding:6px 8px}.support-button .switch{display:none}.header-actions{gap:6px}h1{font-size:16px}.frame{border-radius:10px}.caption{font-size:10px}.flow{font-size:28px}}
+@media(prefers-reduced-motion:reduce){*,*::before,*::after{transition:none!important;scroll-behavior:auto!important}}
+</style>
+</head>
+<body>
+<main>
+<header><h1>10をつくろう<span class="subtitle">くりあがりの たしざん</span></h1><div class="header-actions"><span class="badge" id="problemNumber">1もんめ</span><button class="small-button" id="recordsButton">学習きろく</button></div></header>
+<div class="support-bar" role="group" aria-label="ヒントをじぶんでえらぶ">
+<span class="support-title">たすけを えらぶ</span>
+<button class="support-button" id="dotsToggle" aria-pressed="true">まる<span class="switch" id="dotsSwitch">あり</span></button>
+<button class="support-button" id="splitToggle" aria-pressed="true">わけかた<span class="switch" id="splitSwitch">あり</span></button>
+<button class="support-button" id="hint">ヒント</button>
+<span class="support-status" id="supportStatus">はじめは いっしょに</span>
+</div>
+<article>
+<p class="prompt" id="prompt" aria-live="polite">10をつくるには、5から なんこ もらう？</p>
+<div class="choice-line choice-space" id="targetChoice" role="group" aria-label="10をつくるほう"><label>10をつくるのは</label><button class="target-button" id="targetLeft" aria-pressed="true">ひだりの8</button><button class="target-button" id="targetRight" aria-pressed="false">みぎの5</button></div>
+<div class="board" id="board">
+<span class="number blue" id="operandLeft" style="grid-area:1/1">8</span><span class="sign" style="grid-area:1/2">＋</span><span class="number orange" id="operandRight" style="grid-area:1/3">5</span><span class="sign" style="grid-area:1/4">＝</span><span class="answer" id="total" style="grid-area:1/5">□</span>
+<div class="split" id="split" aria-label="5の分解"><svg viewBox="0 0 238 45" preserveAspectRatio="none" aria-hidden="true"><path d="M119 0 L68 30 M119 0 L170 30" stroke="#b7c9ce" stroke-width="2.5" fill="none"/></svg><div class="leaves"><div class="leaf-wrap" id="takeWrap"><span class="leaf take" id="take">□</span><span class="leaf-label">もらう</span></div><div class="leaf-wrap" id="restWrap"><span class="leaf rest" id="rest">□</span><span class="leaf-label">のこる</span></div></div></div>
+<div class="group left" id="leftGroup"><div class="frame" id="left"></div><div class="caption blue" id="leftCaption">10まで あと なんこ？</div><div class="down-arrow reserved" id="leftArrow" aria-hidden="true">↓</div></div>
+<div class="group right" id="rightGroup"><div class="frame" id="right"></div><div class="caption orange" id="rightCaption">まるを タップしてね</div><div class="down-arrow reserved" id="rightArrow" aria-hidden="true">↓</div></div>
+<div class="flow reserved" id="flow" aria-label="10をつくる しきのながれ">
+<span class="bundle" id="bundle"><span id="bundleFirst" class="blue">8</span><span>＋</span><span id="bundleLast" class="purple">2</span></span><span class="flow-plus-top" id="flowPlusTop">＋</span><span class="flow-rest-top orange" id="flowRestTop">3</span>
+<span class="bundle-mark" id="bundleMark" aria-hidden="true"></span><span class="flow-ten" id="flowTen">10</span><span class="flow-plus-bottom" id="flowPlusBottom">＋</span><span class="flow-rest-bottom orange" id="flowRestBottom">3</span><span class="flow-arrow future-part" id="flowArrow" aria-hidden="true">↓</span><span class="final-line future-part" id="finalLine"><span>＝</span><span id="flowResult">□</span></span>
+</div>
+</div>
+</article>
+<footer><button class="control" id="reset">やりなおす</button><p class="feedback" id="feedback" role="status" aria-live="polite"></p><button class="control primary" id="confirm">けってい</button></footer>
+<p class="session-note" id="sessionNote">ヒントは いつでも つかっていいよ。</p>
+<p class="storage-status" id="storageStatus" role="status" hidden></p>
+</main>
+<dialog id="records" aria-labelledby="recordsTitle">
+<div class="record-header"><h2 id="recordsTitle">学習きろく</h2><button class="small-button" id="closeRecords">もどる</button></div>
+<div class="record-body">
+<div class="profile-row"><label for="learnerSelect">きろく</label><select id="learnerSelect" aria-label="学習者のきろくをえらぶ"></select><form id="addLearnerForm"><input id="newLearner" aria-label="新しいきろくの名前" placeholder="新しいきろく（Aなど）" maxlength="20" autocomplete="off"><button class="small-button" type="submit">追加する</button></form></div>
+<p class="help-text" id="profileMessage" role="status">児童ごとに記号などで分けられます。</p>
+<div class="metrics" id="metrics"></div>
+<p class="analysis-note" id="analysisNote"></p>
+<h3>どの段階で考え直したか</h3>
+<div class="table-wrap"><table><thead><tr><th>段階</th><th>確認した問題</th><th>1回目でできた</th><th>答え直し</th></tr></thead><tbody id="stageRows"></tbody></table></div>
+<p class="help-text">丸の操作では「のこり」が自動表示されるため、のこりを自分で入力した場合だけ別に集計します。</p>
+<h3>支援と正答の関係</h3>
+<div class="table-wrap"><table><thead><tr><th>開始時の支援</th><th>完了</th><th>初回でできた</th><th>途中で支援を追加</th></tr></thead><tbody id="supportRows"></tbody></table></div>
+<h3>最近の問題 <span class="badge">30問まで表示・書き出しは全件</span></h3>
+<div class="table-wrap"><table><thead><tr><th>問題</th><th>10にした側</th><th>開始時 → 最大支援</th><th>結果</th><th>ヒント追加</th><th>考えた時間</th></tr></thead><tbody id="recentRows"></tbody></table></div>
+<div class="record-actions"><button class="small-button" id="exportCSV">CSVで保存</button><button class="small-button" id="exportJSON">操作記録も保存（JSON）</button></div>
+<p class="record-meta" id="recordMeta"></p>
+<details><summary>支援の調整・記録の見方</summary>
+<ul class="record-rules"><li>開始時の支援は「フル → まる＋分解図 → 分解図 → 支援なし」の4段階です。</li><li>現在の開始支援で、途中に支援を追加せず、3問続けて一度で正解すると、次の問題から1段階減らします。今の問題の表示は途中で変えません。</li><li>ヒントを追加した問題は失敗にせず、支援を減らす判定をいったん区切ります。同じ問題で2回以上答え直すと、次の問題は1段階支援を増やします。</li><li>「初回でできた」は全ての確認が1回目で正解した問題です。「支援なし」は問題開始から正解まで、丸・分解図・説明ヒントを一度も表示しなかった問題です。</li><li>8問以上進み、直近5問のうち4問以上が初回正答になると、左右の数の大小が入れ替わる問題も出ます。両方の数について、どちらを10にする方法も選べます。</li><li>時間は画面が見えている間だけを数えます。記録画面・丸の移動中・別タブにいる時間は除きます。速さは支援を減らす条件に使いません。</li><li>このブラウザの端末内に記録します。固定の保存期限は設けず、ブラウザのサイトデータが保持されている間保存されます。端末やブラウザを変えた場合は引き継がれません。CSVは集計用、JSONは操作と途中の記録も含む保存用です。</li></ul>
+<p id="adaptiveState" class="record-meta"></p>
+</details>
+</div>
+</dialog>
+<script>
+'use strict';
+/* Pure learning/record logic; independent of the display. */
+const Learning = (() => {
+  const LEVELS = ['支援なし','分解図','まる＋分解図','フル'];
+  const BANK = [];
+  for(let a=2;a<=9;a++) for(let b=2;b<=9;b++) if(a+b>10) BANK.push({a,b,key:`${a}+${b}`});
+  const SEED = ['8+5','9+7','7+5','8+6','9+3','7+6','8+7','9+4'];
+  function flags(level){return {dots:level>=2,split:level>=1,guide:level>=3};}
+  function levelOf(f){return f.guide?3:f.dots?2:f.split?1:0;}
+  function totalErrors(record){return new Set(record.attempts.map((a,i)=>({...a,submission:a.submission??`legacy-${i}`})).filter(a=>!a.correct).map(a=>a.submission)).size;}
+  function firstTry(record){return record.status==='completed' && totalErrors(record)===0;}
+  function independent(record){return firstTry(record) && record.maxSupport===0;}
+  function adapt(state,record){
+    const next={level:state.level,streak:state.streak};let reason='same';
+    if(totalErrors(record)>=2){next.level=Math.min(3,next.level+1);next.streak=0;reason=next.level===state.level?'same':'more';}
+    else if(firstTry(record) && !record.addedSupport && !record.restarts && record.startSupport===state.level){
+      next.streak++;
+      if(next.streak>=3 && next.level>0){next.level--;next.streak=0;reason='less';}
+      else if(next.level===0)next.streak=Math.min(3,next.streak);
+    } else next.streak=0;
+    return {...next,reason};
+  }
+  function mixedReady(records){const done=records.filter(r=>r.status==='completed');return done.length>=8 && done.slice(-5).filter(firstTry).length>=4;}
+  function chooseQuestion(records,random=Math.random){
+    const done=records.filter(r=>r.status==='completed');const mixed=mixedReady(done);
+    const recent=done.slice(-4).map(r=>`${r.a}+${r.b}`);
+    const last=recent.at(-1);
+    if(done.length<SEED.length){const seed=BANK.find(p=>p.key===SEED[done.length]);if(seed&&seed.key!==last)return {...seed,mixed};}
+    const eligible=BANK.filter(p=>mixed||p.a>=p.b);
+    let candidates=eligible.filter(p=>!recent.includes(p.key));if(!candidates.length)candidates=eligible.filter(p=>p.key!==last);
+    // Prefer questions with fewer appearances; mixed practice alternates the larger operand.
+    if(mixed && done.length%2===0){const reversed=candidates.filter(p=>p.a<p.b);if(reversed.length)candidates=reversed;}
+    const counts=new Map();for(const r of done){const k=`${r.a}+${r.b}`;counts.set(k,(counts.get(k)||0)+1);}
+    const min=Math.min(...candidates.map(p=>counts.get(p.key)||0));candidates=candidates.filter(p=>(counts.get(p.key)||0)===min);
+    const previous=done.at(-1);if(previous){const differentTotal=candidates.filter(p=>p.a+p.b!==previous.a+previous.b);if(differentTotal.length)candidates=differentTotal;}
+    return {...candidates[Math.min(candidates.length-1,Math.floor(random()*candidates.length))],mixed};
+  }
+  function stageStats(records,stage){const groups=records.map(r=>r.attempts.filter(a=>a.stage===stage)).filter(a=>a.length);return {problems:groups.length,first:groups.filter(a=>a[0].correct).length,errors:groups.flat().filter(a=>!a.correct).length};}
+  function median(values){if(!values.length)return null;const s=[...values].sort((a,b)=>a-b),m=Math.floor(s.length/2);return s.length%2?s[m]:(s[m-1]+s[m])/2;}
+  function csvCell(value){let s=String(value??'');if(/^[=+@\-\t\r]/.test(s))s="'"+s;return '"'+s.replaceAll('"','""')+'"';}
+  function csv(profile){
+    const rows=[['きろく','問題番号','開始日時','完了日時','左の数','右の数','10にした側','開始支援','最大支援','初回正答','支援なし初回正答','支援追加回数','10づくり答え直し','のこり答え直し','最終加算答え直し','考えた秒数','解答経路','やりなおし回数']];
+    for(const r of profile.records.filter(r=>r.status==='completed'))rows.push([profile.label,r.number,r.startedAt,r.completedAt,r.a,r.b,r.path==='direct'?'—':r.target==='left'?'左':'右',LEVELS[r.startSupport],LEVELS[r.maxSupport],firstTry(r)?1:0,independent(r)?1:0,r.supportRequests,stageStats([r],'need').errors,stageStats([r],'rest').errors,stageStats([r],'sum').errors,Math.round(r.activeMs/100)/10,r.path,r.restarts]);
+    return '\ufeff'+rows.map(row=>row.map(csvCell).join(',')).join('\r\n');
+  }
+  return {BANK,LEVELS,flags,levelOf,totalErrors,firstTry,independent,adapt,mixedReady,chooseQuestion,stageStats,median,csv};
+})();
+/* UI and browser-local persistence. No network requests or identifiers for children. */
+const $=id=>document.getElementById(id);
+const STORE_KEY='ten-maker.learning.v1';
+const APP_VERSION='2.0.0';
+const uuid=()=>globalThis.crypto?.randomUUID?.()||`r${Date.now().toString(36)}${Math.random().toString(36).slice(2)}`;
+const now=()=>new Date().toISOString();
+const clone=value=>JSON.parse(JSON.stringify(value));
+let db,profile,current,epoch=0,activeSince=null,saveFailed=false,readBlocked=false;
+let selected=new Set(),donorDots=[],allDots=[];
+function newProfile(label){return {id:uuid(),label,level:3,streak:0,records:[],current:null,createdAt:now()};}
+function loadDatabase(){
+  try{
+    const raw=localStorage.getItem(STORE_KEY);
+    if(raw){const parsed=JSON.parse(raw);if(parsed.schema!==1||!Array.isArray(parsed.profiles)||!parsed.profiles.length||parsed.profiles.some(p=>!p.id||!Array.isArray(p.records)||!Number.isInteger(p.level)||p.level<0||p.level>3))throw Error('形式');return parsed;}
+  }catch(error){readBlocked=true;showStorageError('前の記録を読み込めませんでした。元の記録を残して、今回は保存せずに動作します。');}
+  const p=newProfile('きろく1');return {schema:1,selectedId:p.id,profiles:[p],savedAt:null};
+}
+function showStorageError(message){$('storageStatus').hidden=false;$('storageStatus').textContent=message;}
+function syncClock(){if(activeSince!==null){current.activeMs+=Math.max(0,performance.now()-activeSince);activeSince=performance.now();}}
+function clockShouldRun(){return current && current.phase!=='done' && current.phase!=='moving' && !document.hidden && !$('records').open;}
+function updateClock(){syncClock();activeSince=clockShouldRun()?performance.now():null;}
+function elapsed(){return Math.round(current.activeMs+(activeSince===null?0:Math.max(0,performance.now()-activeSince)));}
+function save(){
+  if(!profile||!current)return;syncClock();current.selected=[...selected];profile.current=current;db.selectedId=profile.id;db.savedAt=now();
+  if(readBlocked)return;
+  try{localStorage.setItem(STORE_KEY,JSON.stringify(db));if(saveFailed){saveFailed=false;$('storageStatus').hidden=true;}}
+  catch(error){saveFailed=true;showStorageError('このブラウザに保存できていません。学習きろくからCSVまたはJSONで保存できます。');}
+}
+function event(type,detail={}){current.events.push({type,atMs:elapsed(),...detail});}
+function isCommitted(){return ['ten','answer','done'].includes(current.phase);}
+function targetValue(){return current.target==='left'?current.a:current.b;}
+function donorValue(){return current.target==='left'?current.b:current.a;}
+function donorSide(){return current.target==='left'?'right':'left';}
+function need(){return 10-targetValue();}
+function remainder(){return current.a+current.b-10;}
+function direct(){return current.phase==='select' && !current.support.dots && !current.support.split;}
+function makeCurrent(question){
+    return {id:uuid(),number:profile.records.length+1,a:question.a,b:question.b,target:'left',mixed:question.mixed,startedAt:now(),completedAt:null,status:'in_progress',phase:'select',startSupport:profile.level,maxSupport:profile.level,support:Learning.flags(profile.level),supportRequests:0,addedSupport:false,attempts:[],events:[],activeMs:0,selected:[],touched:false,typedTake:'',typedRest:'',answerDraft:'',path:null,restarts:0,highlight:false,feedback:'',adaptation:null,checkNumber:0};
+}
+function startNext(){
+  epoch++;allDots.forEach(d=>d.getAnimations().forEach(a=>a.cancel()));current=makeCurrent(Learning.chooseQuestion(profile.records));selected=new Set();profile.current=current;
+  event('problem_start',{a:current.a,b:current.b,level:profile.level});renderProblem();updateClock();save();
+}
+function resumeProfile(p){
+  epoch++;allDots.forEach(d=>d.getAnimations().forEach(a=>a.cancel()));profile=p;current=p.current;
+  if(!current){startNext();return;}
+  if(current.phase==='moving'){current.phase='ten';current.path=current.path||'dots';}
+  selected=new Set(current.selected||[]);renderProblem();updateClock();save();
+}
+function setVisible(el,visible){el.classList.toggle('reserved',!visible);el.inert=!visible;el.setAttribute('aria-hidden',String(!visible));}
+function makeDot(side,index,button){
+  const el=document.createElement(button?'button':'span');el.className='dot'+(side==='right'?' orange-dot':'');position(el,index);el.dataset.index=index;
+  if(button){el.type='button';el.setAttribute('aria-label',`${side==='left'?current.a:current.b}このまるの ${index+1}こめ`);el.setAttribute('aria-pressed','false');el.onclick=()=>toggleDot(index);}
+  return el;
+}
+function position(el,index){el.style.setProperty('--x',index%5);el.style.setProperty('--y',Math.floor(index/5));}
+function buildDots(){
+  donorDots=[];allDots=[];
+  for(const side of ['left','right']){
+    const frame=$(side);frame.replaceChildren();frame.className='frame'+(side===donorSide()?' donor':'');
+    const count=side==='left'?current.a:current.b;
+    if(side===current.target){const slots=document.createElement('div');slots.className='slots';for(let i=0;i<10;i++){const slot=document.createElement('span');slot.className='slot'+(i>=count?' empty':'');slots.append(slot);}frame.append(slots);}
+    for(let i=0;i<count;i++){const el=makeDot(side,i,side===donorSide());frame.append(el);allDots.push(el);if(side===donorSide())donorDots.push(el);}
+  }
+  if(isCommitted()){
+    const indices=selected.size===need()?[...selected]:Array.from({length:need()},(_,i)=>i);
+    indices.forEach((i,j)=>{const d=donorDots[i];if(!d)return;$(current.target).append(d);position(d,targetValue()+j);d.classList.add('donated');});
+    donorDots.filter((d,i)=>!indices.includes(i)).forEach((d,i)=>position(d,i));
+    $(current.target).classList.add('ten');$(current.target).classList.toggle('target-right',current.target==='right');
+  }
+  refreshDots();
+}
+function refreshDots(){
+  donorDots.forEach((d,i)=>{const selectable=current.phase==='select'&&current.support.dots;d.classList.toggle('selected',selectable&&selected.has(i));d.setAttribute('aria-pressed',String(selected.has(i)));d.setAttribute('aria-disabled',String(!selectable));d.tabIndex=selectable?0:-1;});
+  $(current.target).classList.toggle('hinted',current.highlight&&!isCommitted());
+}
+function buildSplit(){
+  const donor=donorSide();$('split').style.gridColumn=donor==='left'?'1':'3';$('split').setAttribute('aria-label',`${donorValue()}の分解`);
+  $('split').classList.toggle('rest-blue',current.target==='right');
+  $('takeWrap').style.order=current.target==='left'?'0':'1';$('restWrap').style.order=current.target==='left'?'1':'0';
+  const numerical=current.phase==='select'&&!current.support.dots;
+  for(const kind of ['take','rest']){
+    const span=$(kind);span.replaceChildren();
+    if(numerical){const input=document.createElement('input');input.id=kind+'Input';input.inputMode='numeric';input.maxLength=1;input.autocomplete='off';input.placeholder='□';input.setAttribute('aria-label',kind==='take'?'10をつくるために もらうかず':'のこるかず');input.value=current[kind==='take'?'typedTake':'typedRest'];input.oninput=()=>{current[kind==='take'?'typedTake':'typedRest']=input.value;current.touched=true;clearFeedback();save();};input.onkeydown=e=>{if(e.key==='Enter'){e.preventDefault();confirm();}};span.append(input);}
+    else span.textContent=isCommitted()?kind==='take'?need():remainder():current.touched?kind==='take'?selected.size:donorValue()-selected.size:'□';
+  }
+  refreshSplit();
+}
+function refreshSplit(){
+  $('split').classList.toggle('touched',current.touched||isCommitted());
+  if(current.support.dots&&current.phase==='select'){$('take').textContent=current.touched?selected.size:'□';$('rest').textContent=current.touched?donorValue()-selected.size:'□';}
+  $('rest').style.color=current.target==='left'?'var(--orange)':'var(--blue)';
+}
+function buildFlow(){
+  const left=current.target==='left';const bundleCols=left?'1/4':'3/6',plusCol=left?'4':'2',restCol=left?'5':'1';
+  for(const id of ['bundle','bundleMark','flowTen'])$(id).style.gridColumn=bundleCols;
+  for(const id of ['flowPlusTop','flowPlusBottom'])$(id).style.gridColumn=plusCol;
+  for(const id of ['flowRestTop','flowRestBottom'])$(id).style.gridColumn=restCol;
+  $('bundleFirst').textContent=left?current.a:need();$('bundleFirst').className=left?'blue':'purple';
+  $('bundleLast').textContent=left?need():current.b;$('bundleLast').className=left?'purple':'orange';
+  $('flowRestTop').textContent=remainder();$('flowRestBottom').textContent=remainder();
+  $('flow').classList.toggle('rest-blue',!left);$('flowTen').classList.toggle('target-right',!left);
+  $('flow').setAttribute('aria-label',left?`${current.a}と${need()}で10。10と${remainder()}`:`${need()}と${current.b}で10。${remainder()}と10`);
+  const show=isCommitted()&&current.path!=='direct';setVisible($('flow'),show);
+  const showFinal=['answer','done'].includes(current.phase);$('flowArrow').classList.toggle('future-part',!showFinal);$('finalLine').classList.toggle('future-part',!showFinal);$('finalLine').classList.toggle('active',current.phase==='answer');
+  $('flowResult').replaceChildren();
+  if(current.phase==='answer'){$('flowResult').append(makeAnswerInput('answer','10とのこりのこたえ'));}
+  else $('flowResult').textContent=current.phase==='done'?current.a+current.b:'□';
+}
+function makeAnswerInput(id,label){const input=document.createElement('input');input.id=id;input.className='number-input';input.inputMode='numeric';input.autocomplete='off';input.maxLength=2;input.setAttribute('aria-label',label);input.value=current.answerDraft;input.oninput=()=>{current.answerDraft=input.value;clearFeedback();save();};input.onkeydown=e=>{if(e.key==='Enter'){e.preventDefault();confirm();}};return input;}
+function renderTop(){
+  $('operandLeft').textContent=current.a;$('operandRight').textContent=current.b;$('total').replaceChildren();$('total').classList.toggle('solved',current.phase==='done');
+  if(current.phase==='done')$('total').textContent=current.a+current.b;
+  else if(direct())$('total').append(makeAnswerInput('directAnswer',`${current.a}たす${current.b}のこたえ`));
+  else $('total').textContent='□';
+}
+function renderProblem(){
+  $('problemNumber').textContent=`${current.number}もんめ`;
+  renderTop();buildDots();buildSplit();buildFlow();renderVisibility();renderCopy();
+}
+function renderVisibility(){
+  setVisible($('leftGroup'),current.support.dots);setVisible($('rightGroup'),current.support.dots);setVisible($('split'),current.support.split);
+  setVisible($('leftArrow'),isCommitted()&&current.path!=='direct');setVisible($('rightArrow'),isCommitted()&&current.path!=='direct');
+  $('board').classList.toggle('sum-focus',current.phase==='answer');
+  for(const key of ['dots','split']){$(key+'Toggle').setAttribute('aria-pressed',String(current.support[key]));$(key+'Toggle').firstChild.textContent=`${key==='dots'?'まる':'わけかた'}を${current.support[key]?'かくす':'みる'}`;$(key+'Switch').textContent='';$(key+'Toggle').disabled=current.phase==='moving';}
+  $('hint').disabled=current.phase==='moving';$('recordsButton').disabled=current.phase==='moving';
+  const choiceAllowed=current.mixed&&current.phase==='select'&&!direct();$('targetChoice').classList.toggle('choice-space',!choiceAllowed);$('targetChoice').inert=!choiceAllowed;$('targetChoice').setAttribute('aria-hidden',String(!choiceAllowed));
+  $('targetLeft').textContent=`ひだりの${current.a}`;$('targetRight').textContent=`みぎの${current.b}`;
+  $('targetLeft').setAttribute('aria-pressed',String(current.target==='left'));$('targetRight').setAttribute('aria-pressed',String(current.target==='right'));
+  $('supportStatus').textContent=current.startSupport===3?'はじめは いっしょに':`はじめの たすけ：${['なし','わけかた','まると わけかた','ぜんぶ'][current.startSupport]}`;
+}
+function renderCopy(){
+  const phase=current.phase;const t=targetValue(),d=donorValue();
+  if(phase==='select'){
+    $('prompt').textContent=direct()?'こたえを いれてみよう':current.support.guide?`10をつくるには、${d}から なんこ もらう？`:`${t}を10にしよう`;
+    $(current.target+'Caption').textContent=current.support.guide?'10まで あと なんこ？':'10を つくる';
+    $(donorSide()+'Caption').textContent=current.support.guide?'まるを タップしてね':'もらう かずを えらぼう';
+    $('confirm').textContent=direct()?'こたえあわせ':'けってい';
+  }else if(phase==='moving'){$('prompt').textContent='10を つくっているよ';$('confirm').textContent='いどうちゅう';}
+  else if(phase==='ten'){
+    $('prompt').textContent=`${t}に${need()}を たして、10が できたね。`;
+    $(current.target+'Caption').textContent='10の まとまり';$(donorSide()+'Caption').textContent=`${remainder()}こ のこったね`;$('confirm').textContent='のこりを たす';
+  }else if(phase==='answer'){
+    $('prompt').textContent=`10と のこりの${remainder()}で、いくつ？`;
+    $(current.target+'Caption').textContent='10の まとまり';$(donorSide()+'Caption').textContent=`のこりの ${remainder()}こ`;$('confirm').textContent='こたえあわせ';
+  }else{
+    $('prompt').textContent=`${current.a} ＋ ${current.b} ＝ ${current.a+current.b}　できたね！`;
+    $(current.target+'Caption').textContent='10の まとまり';$(donorSide()+'Caption').textContent=`のこりの ${remainder()}こ`;$('confirm').textContent='つぎの もんだい';
+  }
+  $('confirm').disabled=phase==='moving';$('feedback').textContent=current.feedback;
+  $('reset').textContent=phase==='done'?'みなおす':'やりなおす';
+  $('sessionNote').textContent=phase==='done'&&current.adaptation?.reason==='less'?'つぎは たすけを すこし へらすよ。ボタンで もどせるよ。':'ヒントは いつでも つかっていいよ。';
+}
+function clearFeedback(){current.feedback='';$('feedback').textContent='';}
+function feedback(text){current.feedback=text;$('feedback').textContent=text;}
+function toggleDot(index){
+  if(current.phase!=='select'||!current.support.dots)return;
+  selected.has(index)?selected.delete(index):selected.add(index);current.touched=true;current.typedTake=String(selected.size);current.typedRest=String(donorValue()-selected.size);
+  event('dot_toggle',{index,selected:[...selected]});clearFeedback();refreshDots();refreshSplit();save();
+}
+function markSupport(type){
+  const level=Learning.levelOf(current.support);current.maxSupport=Math.max(current.maxSupport,level);
+  current.addedSupport=true;current.supportRequests++;event('support_request',{kind:type,visible:clone(current.support)});
+}
+function setSupport(kind){
+  if(current.phase==='moving')return;
+  // Completed steps stay visible; support changes during review do not change the scored record.
+  const review=current.phase==='done';const show=!current.support[kind];
+  current.support[kind]=show;
+  if(kind==='dots'&&show)current.support.split=true;
+  if(show&&review&&current.path==='direct'){current.path='review';selected=new Set(Array.from({length:need()},(_,i)=>i));}
+  if(kind==='split'&&!show&&current.support.dots)current.support.dots=false;
+  if(!current.support.dots&&!current.support.split)current.support.guide=false;
+  if(show&&!review)markSupport(kind);else event(review?'review_support':'support_hide',{kind,visible:clone(current.support)});
+  if(show&&kind==='dots'&&current.phase==='select'&&current.typedTake!==''){
+    const amount=parseNumber(current.typedTake,0,donorValue());if(amount!==null){selected=new Set(Array.from({length:amount},(_,i)=>i));current.touched=true;current.typedRest=String(donorValue()-amount);}
+  }
+  clearFeedback();renderProblem();save();
+}
+function hint(){
+  if(current.phase==='moving')return;
+  if(current.phase==='done'){
+    current.support={dots:true,split:true,guide:true};if(current.path==='direct'){current.path='review';selected=new Set(Array.from({length:need()},(_,i)=>i));}
+    event('review_hint');current.feedback=`${targetValue()}と${need()}で10。10と${remainder()}で${current.a+current.b}。`;renderProblem();save();return;
+  }
+  current.support={dots:true,split:true,guide:true};current.highlight=current.phase==='select';markSupport('hint');
+  if(current.phase==='select'&&current.typedTake!==''){const amount=parseNumber(current.typedTake,0,donorValue());if(amount!==null){selected=new Set(Array.from({length:amount},(_,i)=>i));current.touched=true;current.typedRest=String(donorValue()-amount);}}
+  if(current.phase==='select')current.feedback=`${targetValue()}の あいている ところを みてみよう。`;
+  else current.feedback=`10の まとまりと、のこりの${remainder()}こを あわせよう。`;
+  renderProblem();save();
+}
+function chooseTarget(side){
+  if(current.phase!=='select'||side===current.target||!current.mixed)return;
+  current.target=side;current.typedTake='';current.typedRest='';current.touched=false;current.highlight=false;selected.clear();event('target_choice',{side});clearFeedback();renderProblem();save();
+}
+function parseNumber(text,min,max){const s=String(text).normalize('NFKC').trim();if(!/^\d+$/.test(s))return null;const n=Number(s);return Number.isInteger(n)&&n>=min&&n<=max?n:null;}
+function attempt(stage,value,correct,source){const submission=current.checkNumber||1;current.attempts.push({stage,value,correct,source,submission,atMs:elapsed()});event('check',{stage,value,correct,source,submission});}
+async function confirm(){
+  if(current.phase==='moving')return;
+  if(current.phase==='done'){startNext();return;}
+  if(direct()||current.phase==='answer'){
+    const answer=parseNumber(current.answerDraft,0,99);
+    if(answer===null){feedback('こたえの すうじを いれてね。');return;}
+    current.checkNumber=(current.checkNumber||0)+1;const ok=answer===current.a+current.b;attempt('sum',answer,ok,direct()?'direct':'guided');
+    if(!ok){feedback(direct()?'もういちど たしかめよう。ヒントも つかえるよ。':`10と${remainder()}で いくつかな？`);save();return;}
+    current.path=current.path||(direct()?'direct':'numbers');finish();return;
+  }
+  if(current.phase==='ten'){
+    current.phase='answer';event('sum_start');current.feedback='10が できたね！';buildFlow();renderVisibility();renderCopy();updateClock();save();return;
+  }
+  const dotMode=current.support.dots;
+  const take=dotMode?selected.size:parseNumber(current.typedTake,0,donorValue());
+  const rest=dotMode?donorValue()-selected.size:parseNumber(current.typedRest,0,donorValue());
+  if(take===null||rest===null){feedback('もらう かずと、のこる かずを いれてね。');return;}
+  current.checkNumber=(current.checkNumber||0)+1;const takeOK=take===need();attempt('need',take,takeOK,dotMode?'dots':'numbers');
+  const restOK=rest===donorValue()-take;if(!dotMode)attempt('rest',rest,restOK,'numbers');
+  if(!takeOK||!restOK){feedback(!takeOK?`${targetValue()}は あと なんこで10かな？`:`${donorValue()}こから ${take}こ もらったら、なんこ のこる？`);save();return;}
+  current.path=dotMode?'dots':'numbers';current.touched=true;
+  if(!dotMode)selected=new Set(Array.from({length:take},(_,i)=>i));
+  current.phase='moving';updateClock();renderVisibility();renderCopy();save();const ticket=++epoch;
+  const moved=[...selected].map(i=>donorDots[i]);
+  const animations=moved.map((d,j)=>{
+    if(!d)return Promise.resolve();const before=d.getBoundingClientRect();d.classList.remove('selected');d.classList.add('donated');$(current.target).append(d);position(d,targetValue()+j);const after=d.getBoundingClientRect();
+    if(!dotMode||matchMedia('(prefers-reduced-motion: reduce)').matches)return Promise.resolve();
+    return d.animate([{transform:`translate(${before.x-after.x}px,${before.y-after.y}px)`},{transform:'translate(0,0)'}],{duration:600,easing:'ease-in-out'}).finished;
+  });
+  donorDots.filter((d,i)=>!selected.has(i)).forEach((d,i)=>{const before=d.getBoundingClientRect();position(d,i);const after=d.getBoundingClientRect();if(dotMode&&!matchMedia('(prefers-reduced-motion: reduce)').matches)animations.push(d.animate([{transform:`translate(${before.x-after.x}px,${before.y-after.y}px)`},{transform:'translate(0,0)'}],{duration:600,easing:'ease-in-out'}).finished);});
+  await Promise.allSettled(animations);if(ticket!==epoch)return;
+  current.phase='ten';current.feedback=`${donorValue()}は ${need()}と${remainder()}。${remainder()}こ のこっているね。`;event('ten_made',{target:current.target,take:need(),rest:remainder()});
+  renderProblem();updateClock();save();
+}
+function finish(){
+  syncClock();current.phase='done';current.status='completed';current.completedAt=now();activeSince=null;
+  event('problem_completed',{firstTry:Learning.firstTry(current),independent:Learning.independent(current)});
+  const adaptive=Learning.adapt({level:profile.level,streak:profile.streak},current);current.adaptation=adaptive;profile.level=adaptive.level;profile.streak=adaptive.streak;
+  current.feedback=Learning.totalErrors(current)===0?'できたね！': 'たしかめて できたね！';
+  // Keep a scored snapshot. Review controls cannot retrospectively alter the result.
+  profile.records.push(clone(current));renderProblem();save();
+}
+function restart(){
+  epoch++;allDots.forEach(d=>d.getAnimations().forEach(a=>a.cancel()));
+  if(current.phase==='done'){hint();return;}
+  syncClock();current.phase='select';current.path=null;current.restarts++;current.selected=[];selected.clear();current.touched=false;current.typedTake='';current.typedRest='';current.answerDraft='';current.highlight=false;current.feedback='もういちど やってみよう。';
+  event('restart');renderProblem();updateClock();save();
+}
+function rate(n,d){return d?Math.round(n/d*100)+'%':'—';}
+function duration(ms){const sec=Math.round(ms/1000);return sec>=60?`${Math.floor(sec/60)}分${sec%60}秒`:`${sec}秒`;}
+function cell(row,text){const td=document.createElement('td');td.textContent=String(text);row.append(td);return td;}
+function tableRow(body,values){const row=document.createElement('tr');values.forEach(v=>cell(row,v));body.append(row);}
+function metric(label,value,note){const div=document.createElement('div');div.className='metric';const l=document.createElement('span'),v=document.createElement('strong'),n=document.createElement('small');l.textContent=label;v.textContent=value;n.textContent=note;div.append(l,v,n);$('metrics').append(div);}
+function renderRecords(){
+  const records=profile.records.filter(r=>r.status==='completed');const count=records.length,first=records.filter(Learning.firstTry).length;
+  const noSupport=records.filter(r=>r.maxSupport===0),independent=records.filter(Learning.independent).length;
+  $('learnerSelect').replaceChildren();for(const p of db.profiles){const opt=document.createElement('option');opt.value=p.id;opt.textContent=p.label;opt.selected=p.id===profile.id;$('learnerSelect').append(opt);}
+  $('metrics').replaceChildren();metric('解いた問題',`${count}問`,`現在 ${current.number}問目${current.phase==='done'?'まで完了':'に取り組み中'}`);metric('初回でできた',rate(first,count),`${first} / ${count}問（支援ありを含む）`);metric('支援なしで初回正答',`${independent}問`,noSupport.length?`支援なしで解いた ${noSupport.length}問中 ${rate(independent,noSupport.length)}`:'支援なしで解いた問題はまだありません');metric('ヒントを追加した問題',`${records.filter(r=>r.addedSupport).length}問`,'支援の利用は失敗に数えません');
+  const stages=[['need','10づくり（もらう数）'],['rest','のこり（自分で入力）'],['sum','最後のたし算']];$('stageRows').replaceChildren();
+  stages.forEach(([key,label])=>{const s=Learning.stageStats(records,key);tableRow($('stageRows'),[label,`${s.problems}問`,`${s.first}問 / ${rate(s.first,s.problems)}`,`${s.errors}回`]);});
+  const stageStats=stages.map(([key,label])=>({key,label,...Learning.stageStats(records,key)}));const most=[...stageStats].sort((a,b)=>b.errors-a.errors)[0];const med=Learning.median(records.map(r=>r.activeMs));
+  $('analysisNote').textContent=count===0?'問題に取り組むと、できたところ・答え直したところ・支援の使い方がここに残ります。':most.errors>0?`記録上、答え直しが最も多いのは「${most.label}」の${most.errors}回です。考えた時間の中央値は${duration(med)}です。`:`${count}問を通して、確認した答えはすべて1回目で正解しています。考えた時間の中央値は${duration(med)}です。`;
+  $('supportRows').replaceChildren();for(let level=3;level>=0;level--){const rs=records.filter(r=>r.startSupport===level);tableRow($('supportRows'),[Learning.LEVELS[level],`${rs.length}問`,`${rs.filter(Learning.firstTry).length}問 / ${rate(rs.filter(Learning.firstTry).length,rs.length)}`,`${rs.filter(r=>r.addedSupport).length}問`]);}
+  $('recentRows').replaceChildren();if(!count){const row=document.createElement('tr');const td=cell(row,'まだ完了した問題はありません。');td.colSpan=6;td.className='table-empty';$('recentRows').append(row);}
+  for(const r of records.slice(-30).reverse())tableRow($('recentRows'),[`${r.number}. ${r.a}＋${r.b}＝${r.a+r.b}`,r.path==='direct'?'—':r.target==='left'?'左':'右',`${Learning.LEVELS[r.startSupport]} → ${Learning.LEVELS[r.maxSupport]}`,Learning.firstTry(r)?Learning.independent(r)?'支援なし・初回正答':'初回正答':`答え直し ${Learning.totalErrors(r)}回`,`${r.supportRequests}回`,duration(r.activeMs)]);
+  $('recordMeta').textContent=`${profile.label} ／ 問題は${Learning.BANK.length}通り。記録はこのブラウザに自動保存します。${saveFailed||readBlocked?' 現在は自動保存できていません。書き出して保管してください。':''}`;
+  $('adaptiveState').textContent=`次の開始支援：${Learning.LEVELS[profile.level]} ／ 今の支援での連続初回正答：${profile.streak}問 ／ 左右を入れ替えた出題：${Learning.mixedReady(records)?'開始条件を満たしています':'定着を確認してから始めます'}`;
+  $('exportCSV').disabled=!count;$('exportJSON').disabled=false;
+}
+function openRecords(){updateClock();$('records').showModal();updateClock();save();renderRecords();}
+function closeRecords(){$('records').close();updateClock();save();}
+function download(text,mime,extension){const blob=new Blob([text],{type:mime}),url=URL.createObjectURL(blob),anchor=document.createElement('a');anchor.href=url;anchor.download=`ten-maker-${new Date().toISOString().slice(0,10)}.${extension}`;document.body.append(anchor);anchor.click();anchor.remove();setTimeout(()=>URL.revokeObjectURL(url),1000);}
+$('confirm').onclick=()=>void confirm();$('reset').onclick=restart;$('dotsToggle').onclick=()=>setSupport('dots');$('splitToggle').onclick=()=>setSupport('split');$('hint').onclick=hint;$('targetLeft').onclick=()=>chooseTarget('left');$('targetRight').onclick=()=>chooseTarget('right');
+$('recordsButton').onclick=openRecords;$('closeRecords').onclick=closeRecords;$('records').addEventListener('close',()=>{updateClock();save();});
+$('learnerSelect').onchange=()=>{save();const p=db.profiles.find(p=>p.id===$('learnerSelect').value);if(p){resumeProfile(p);renderRecords();$('profileMessage').textContent=`${p.label}の記録に切り替えました。`;}};
+$('addLearnerForm').onsubmit=e=>{e.preventDefault();const label=$('newLearner').value.trim();if(!label){$('profileMessage').textContent='記号など、きろくの名前を入れてください。';return;}if(db.profiles.some(p=>p.label===label)){$('profileMessage').textContent='同じ名前の記録があります。上の一覧から選べます。';return;}save();const p=newProfile(label);db.profiles.push(p);resumeProfile(p);$('newLearner').value='';$('profileMessage').textContent=`${label}の記録を始めました。`;renderRecords();};
+$('exportCSV').onclick=()=>{save();download(Learning.csv(profile),'text/csv;charset=utf-8','csv');$('profileMessage').textContent='CSVを保存しました。';};
+$('exportJSON').onclick=()=>{save();download(JSON.stringify({schema:1,appVersion:APP_VERSION,exportedAt:now(),rules:{fadeAfterFirstTry:3,increaseAfterErrors:2,timeExcludes:['hidden','records','animation'],levels:Learning.LEVELS},profile},null,2),'application/json','json');$('profileMessage').textContent='操作記録を保存しました。';};
+document.addEventListener('visibilitychange',()=>{updateClock();save();});window.addEventListener('pagehide',()=>{updateClock();save();});
+// Debounced input saves above plus a checkpoint keep active time across refreshes.
+setInterval(()=>{if(activeSince!==null)save();},10000);
+db=loadDatabase();profile=db.profiles.find(p=>p.id===db.selectedId)||db.profiles[0];resumeProfile(profile);
+</script>
+</body>
+</html>
