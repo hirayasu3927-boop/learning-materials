@@ -59,7 +59,7 @@ input.entry-active{outline:none!important;box-shadow:0 0 0 4px var(--entry-halo,
 </head>
 <body>
 <main>
-<header><h1>10をつくろう<span class="subtitle">くりあがりの たしざん</span></h1><div class="header-actions"><span class="badge" id="problemNumber">1もんめ</span><button class="small-button" id="worksheetButton">プリント6もん</button><button class="small-button" id="recordsButton">学習きろく</button></div></header>
+<header><h1>10をつくろう<span class="subtitle">くりあがりの たしざん</span></h1><div class="header-actions"><span class="badge" id="problemNumber">1もんめ</span><button class="small-button" id="webPracticeReturn" hidden>Web練習にもどる</button><button class="small-button" id="worksheetButton">プリント6もん</button><button class="small-button" id="recordsButton">学習きろく</button></div></header>
 <div class="support-bar" role="group" aria-label="ヒントをじぶんでえらぶ">
 <span class="support-title">たすけを えらぶ</span>
 <button class="support-button" id="dotsToggle" aria-pressed="true">まる<span class="switch" id="dotsSwitch">あり</span></button>
@@ -176,7 +176,7 @@ const Learning = (() => {
 /* UI and browser-local persistence. No network requests or identifiers for children. */
 const $=id=>document.getElementById(id);
 const STORE_KEY='ten-maker.learning.v1';
-const APP_VERSION='2.6.0';
+const APP_VERSION='2.6.1';
 const uuid=()=>globalThis.crypto?.randomUUID?.()||`r${Date.now().toString(36)}${Math.random().toString(36).slice(2)}`;
 const now=()=>new Date().toISOString();
 const clone=value=>JSON.parse(JSON.stringify(value));
@@ -230,13 +230,13 @@ function makeCurrent(question){
 function startNext(){
   epoch++;allDots.forEach(d=>d.getAnimations().forEach(a=>a.cancel()));
   let question;
-  if(profile.level===0||profile.worksheetActive){
+  if(profile.worksheetActive){
     if(!profile.worksheetActive||!profile.worksheetRun)profile.worksheetRun=uuid();
     profile.worksheetActive=true;profile.level=0;
     const done=Learning.worksheetDone(profile.records,profile.worksheetRun),index=Learning.WORKSHEET.findIndex((q,i)=>!done.has(i));
     if(index<0){feedback('6もんの かくにんが おわったね。プリントの さくらんぼも たしかめよう。');renderCopy();save();return;}
     question={...Learning.WORKSHEET[index],mixed:false,worksheetSet:Learning.WORKSHEET_ID,worksheetRun:profile.worksheetRun,worksheetIndex:index};
-  }else question=Learning.chooseQuestion(profile.records);
+  }else {profile.level=Math.max(1,profile.level);question=Learning.chooseQuestion(profile.records);}
   current=makeCurrent(question);selected=new Set();profile.current=current;event('problem_start',{a:current.a,b:current.b,level:profile.level,worksheetSet:current.worksheetSet});renderProblem();updateClock();save();
 }
 function startFixedWorksheet(index=null){
@@ -255,7 +255,7 @@ function startFixedWorksheet(index=null){
 function returnToPractice(){
   syncClock();save();profile.worksheetActive=false;const draft=profile.practiceDraft;profile.practiceDraft=null;
   if($('worksheetDialog').open)$('worksheetDialog').close();activeSince=null;
-  if(draft){profile.level=draft.level;profile.streak=draft.streak;profile.current=draft.current;resumeProfile(profile);}
+  if(draft&&draft.current&&!draft.current.worksheetSet&&draft.level>0){profile.level=draft.level;profile.streak=draft.streak;profile.current=draft.current;resumeProfile(profile);}
   else {profile.level=5;profile.streak=0;startNext();}
 }
 function worksheetSVG(q,index,solved=false){
@@ -400,6 +400,7 @@ function renderTop(){
   else $('total').textContent='□';
 }
 function renderProblem(){
+  $('webPracticeReturn').hidden=!profile.worksheetActive;
   $('problemNumber').textContent=current.worksheetSet?`プリント ${current.worksheetIndex+1} / 6`:`${current.number}もんめ`;
   enterNotebookIfNeeded();renderTop();buildDots();buildSplit();buildFlow();renderVisibility();renderCopy();
 }
@@ -576,7 +577,7 @@ async function confirm(){
 function finish(){
   syncClock();current.phase='done';current.status='completed';current.completedAt=now();activeSince=null;
   event('problem_completed',{firstTry:Learning.firstTry(current),independent:Learning.independent(current)});
-  const adaptive=current.worksheetSet?{level:0,streak:0,reason:'fixed_worksheet'}:Learning.adapt({level:profile.level,streak:profile.streak},current);current.adaptation=adaptive;profile.level=adaptive.level;profile.streak=adaptive.streak;
+  const adaptive=current.worksheetSet?{level:0,streak:0,reason:'fixed_worksheet'}:Learning.adapt({level:profile.level,streak:profile.streak},current);if(!current.worksheetSet)adaptive.level=Math.max(1,adaptive.level);current.adaptation=adaptive;profile.level=adaptive.level;profile.streak=adaptive.streak;
   current.feedback=current.assessment==='notebook_report'?'ノートの こたえを たしかめたね！':Learning.totalErrors(current)===0?'できたね！':'たしかめて できたね！';
   // Keep a scored snapshot. Review controls cannot retrospectively alter the result.
   profile.records.push(clone(current));renderProblem();save();
@@ -615,7 +616,7 @@ function download(text,mime,extension){const blob=new Blob([text],{type:mime}),u
 document.querySelectorAll('.pad-key').forEach(button=>button.onmousedown=e=>e.preventDefault());
 document.querySelectorAll('[data-digit]').forEach(button=>button.onclick=()=>keypadInput(button.dataset.digit));
 $('padErase').onclick=()=>keypadInput(null);$('padClose').onclick=closeKeypad;
-$('worksheetButton').onclick=openWorksheet;$('closeWorksheet').onclick=()=>{$('worksheetDialog').close();updateClock();save();};$('worksheetDialog').addEventListener('close',()=>{updateClock();save();});$('startWorksheet').onclick=()=>startFixedWorksheet();$('practiceReturn').onclick=returnToPractice;$('printWorksheet').onclick=()=>{buildWorksheet();$('worksheetDialog').close();window.print();};
+$('webPracticeReturn').onclick=returnToPractice;$('worksheetButton').onclick=openWorksheet;$('closeWorksheet').onclick=()=>{$('worksheetDialog').close();updateClock();save();};$('worksheetDialog').addEventListener('close',()=>{updateClock();save();});$('startWorksheet').onclick=()=>startFixedWorksheet();$('practiceReturn').onclick=returnToPractice;$('printWorksheet').onclick=()=>{buildWorksheet();$('worksheetDialog').close();window.print();};
 $('noteCorrect').onclick=()=>notebookReport(true);$('noteIncorrect').onclick=()=>notebookReport(false);$('notebookReturn').onclick=returnToNotebook;
 $('confirm').onclick=()=>void confirm();$('reset').onclick=restart;$('dotsToggle').onclick=()=>setSupport('dots');$('splitToggle').onclick=()=>setSupport('split');$('hint').onclick=hint;$('numbersToggle').onclick=toggleNumbers;$('targetLeft').onclick=()=>chooseTarget('left');$('targetRight').onclick=()=>chooseTarget('right');
 $('recordsButton').onclick=openRecords;$('closeRecords').onclick=closeRecords;$('records').addEventListener('close',()=>{updateClock();save();});
