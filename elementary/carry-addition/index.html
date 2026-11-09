@@ -28,7 +28,7 @@ dialog{width:min(1050px,calc(100% - 28px));max-height:91dvh;padding:0;border:1px
 .flow-input{width:58px;height:46px;text-align:center;font:inherit;font-size:31px;font-weight:750;border:2px solid currentColor;border-radius:10px;background:white;padding:0;line-height:1.1}
 .flow-input::placeholder{color:currentColor;opacity:.7}.flow-input:focus-visible{outline-color:currentColor;outline-offset:3px}
 .flow-input.take-input{color:var(--purple);background:#fff0f2}.flow-input.rest-input{color:var(--orange);background:#fff6e9}.flow.rest-blue .rest-input{color:var(--blue);background:#edf7fa}.flow-input.ten-input{color:var(--blue);background:#edf7fa}.flow-ten.target-right .ten-input{color:var(--orange);background:#fff6e9}
-.mapping-active{box-shadow:0 0 0 3px var(--map-color,#a51d3b)!important}.bundle.mapping-active{box-shadow:none!important;background:#eaf5f8;border-radius:9px}.flow .mapping-active{border-radius:9px}.flow .flow-rest-top,.flow .flow-rest-bottom{min-width:58px;text-align:center}.flow-ten{min-width:70px;text-align:center}
+.mapping-active{box-shadow:0 0 0 3px color-mix(in srgb,var(--map-color,#8ebac5) 25%,transparent),0 0 14px 5px color-mix(in srgb,var(--map-color,#8ebac5) 16%,transparent)!important}.bundle.mapping-active{box-shadow:none!important;background:#eaf5f8;border-radius:9px}.flow .mapping-active{border-radius:9px}.flow .flow-rest-top,.flow .flow-rest-bottom{min-width:58px;text-align:center}.flow-ten{min-width:70px;text-align:center}
 @media(max-width:620px){.flow-input{width:43px;height:42px;font-size:27px}.flow .flow-rest-top,.flow .flow-rest-bottom{min-width:43px}}
 
 /* An empty, generous field is the input affordance; no inner square or text cue. */
@@ -60,7 +60,6 @@ input.entry-active{outline:none!important;box-shadow:0 0 0 4px var(--entry-halo,
 .board.no-dots .group{display:none}
 @media(max-width:760px){.board.no-dots:not(.note-mode){grid-template-rows:64px 104px 12px 248px}}
 @media(max-width:620px){.board.no-dots:not(.note-mode){grid-template-rows:62px 101px 12px 242px}}
-.error-hint{margin:8px 0 12px;padding:14px 18px;border:2px solid #a51d3b;border-left-width:7px;border-radius:12px;background:#fff0f2;color:#781229;font-size:20px;font-weight:700;line-height:1.7;text-align:center;overflow-wrap:anywhere}.error-hint strong{display:block;font-size:14px;margin-bottom:3px}@media(max-width:620px){.error-hint{font-size:18px;padding:10px 12px}}
 </style>
 </head>
 <body>
@@ -77,7 +76,6 @@ input.entry-active{outline:none!important;box-shadow:0 0 0 4px var(--entry-halo,
 </div>
 <article>
 <p class="prompt" id="prompt" aria-live="polite">10をつくるには、5から なんこ もらう？</p>
-<div class="error-hint" id="errorHint" role="status" aria-live="polite" hidden><strong>ここを たしかめよう</strong><span id="errorHintText"></span></div>
 <div class="choice-line choice-space" id="targetChoice" role="group" aria-label="10をつくるほう"><label>10をつくるのは</label><button class="target-button" id="targetLeft" aria-pressed="true">ひだりの8</button><button class="target-button" id="targetRight" aria-pressed="false">みぎの5</button></div>
 <div class="board" id="board">
 <span class="number blue" id="operandLeft" style="grid-area:1/1">8</span><span class="sign" style="grid-area:1/2">＋</span><span class="number orange" id="operandRight" style="grid-area:1/3">5</span><span class="sign" style="grid-area:1/4">＝</span><span class="answer" id="total" style="grid-area:1/5">□</span>
@@ -184,7 +182,7 @@ const Learning = (() => {
 /* UI and browser-local persistence. No network requests or identifiers for children. */
 const $=id=>document.getElementById(id);
 const STORE_KEY='ten-maker.learning.v1';
-const APP_VERSION='2.7.0';
+const APP_VERSION='2.7.1';
 const uuid=()=>globalThis.crypto?.randomUUID?.()||`r${Date.now().toString(36)}${Math.random().toString(36).slice(2)}`;
 const now=()=>new Date().toISOString();
 const clone=value=>JSON.parse(JSON.stringify(value));
@@ -330,7 +328,7 @@ function refreshSplit(){
 function clearMapping(){document.querySelectorAll('.mapping-active').forEach(el=>el.classList.remove('mapping-active'));}
 function highlightMapping(kind){
   clearMapping();const left=current.target==='left';const color=kind==='take'?'#a51d3b':kind==='rest'?(left?'#d39239':'#3389a4'):(left?'#3389a4':'#d39239');
-  let nodes=kind==='take'?[$('take'),$(current.target==='left'?'bundleLast':'bundleFirst'),...document.querySelectorAll('.dot.donated')]:kind==='rest'?[$('rest'),$('flowRestTop'),$('flowRestBottom'),...document.querySelectorAll('#'+donorSide()+' .dot')]:[$('bundle'),$('bundleMark'),$('flowTen'),$(current.target)];
+  let nodes=kind==='take'?[$('take'),$('operand'+(left?'Left':'Right')),...document.querySelectorAll('.dot.selected'),$(current.target==='left'?'bundleLast':'bundleFirst'),...document.querySelectorAll('.dot.donated')]:kind==='rest'?[$('rest'),$('flowRestTop'),$('flowRestBottom'),...document.querySelectorAll('#'+donorSide()+' .dot')]:[$('bundle'),$('bundleMark'),$('flowTen'),$(current.target)];
   nodes.filter(Boolean).forEach(el=>{el.style.setProperty('--map-color',color);el.classList.add('mapping-active');});
 }
 function editableEntries(){return [...document.querySelectorAll('#board input')].filter(el=>!el.disabled&&!el.closest('[inert],.reserved,.future-part'));}
@@ -456,19 +454,27 @@ function renderCopy(){
     $('prompt').textContent=`${current.a} ＋ ${current.b} ＝ ${current.a+current.b}　できたね！`;
     $(current.target+'Caption').textContent='10の まとまり';$(donorSide()+'Caption').textContent=`のこりの ${remainder()}こ`;$('confirm').textContent='つぎの もんだい';
   }
+  $('prompt').dataset.basePrompt=$('prompt').textContent;
   $('confirm').disabled=phase==='moving';renderFeedback();
   $('reset').textContent=phase==='done'?'みなおす':'やりなおす';
   if(current.phase==='done'&&current.worksheetSet&&Learning.worksheetDone(profile.records,profile.worksheetRun).size===Learning.WORKSHEET.length){$('confirm').textContent='6もん おわり';$('confirm').disabled=true;}
   prepareEntryCues();
+  if(current.feedbackErrorPhase===current.phase&&current.attentionKind)guideAttention(current.attentionKind);
   $('sessionNote').textContent=phase==='done'&&current.adaptation?.reason==='less'?'つぎは たすけを すこし へらすよ。ボタンで もどせるよ。':'ヒントは いつでも つかっていいよ。';
 }
 function renderFeedback(){
-  const error=!!current.feedback&&current.feedbackErrorPhase===current.phase;
-  $('errorHint').hidden=!error;$('errorHintText').textContent=error?current.feedback:'';
-  $('feedback').textContent=error?'':current.feedback;
+  const guidance=!!current.feedback&&current.feedbackErrorPhase===current.phase;
+  $('prompt').textContent=guidance?current.feedback:($('prompt').dataset.basePrompt||$('prompt').textContent);
+  $('feedback').textContent=guidance?'':current.feedback;
 }
-function clearFeedback(){current.feedback='';current.feedbackErrorPhase=null;renderFeedback();}
-function feedback(text,isError=true){current.feedback=text;current.feedbackErrorPhase=isError?current.phase:null;renderFeedback();}
+function clearFeedback(){current.feedback='';current.feedbackErrorPhase=null;current.attentionKind=null;renderFeedback();}
+function feedback(text,isError=true,kind=null){current.feedback=text;current.feedbackErrorPhase=isError?current.phase:null;current.attentionKind=kind;renderFeedback();if(kind)guideAttention(kind);}
+function guideAttention(kind){
+  const input=editableEntries().find(el=>el.dataset.entryKind===kind);
+  if(input)setActiveEntry(input);
+  else if(kind==='sum'){clearMapping();for(const id of ['flowTen','flowRestBottom'])$(id).classList.add('mapping-active');}
+  else highlightMapping(kind);
+}
 function toggleDot(index){
   if(current.phase!=='select'||!current.support.dots)return;
   selected.has(index)?selected.delete(index):selected.add(index);current.touched=true;current.typedTake=String(selected.size);current.typedRest=String(donorValue()-selected.size);
@@ -550,7 +556,7 @@ async function confirm(){
     const answer=parseNumber(current.answerDraft,0,99);
     if(answer===null){feedback('こたえの すうじを いれてね。');return;}
     current.checkNumber=(current.checkNumber||0)+1;const ok=answer===current.a+current.b;attempt('sum',answer,ok,current.path==='equation'?'equation':'guided');
-    if(!ok){feedback(current.support.guide?`10と${remainder()}で いくつかな？`:'もういちど たしかめよう。ヒントも つかえるよ。');save();return;}
+    if(!ok){feedback(`10と${remainder()}を あわせると いくつ？`,true,'sum');save();return;}
     current.path=current.path||'numbers';finish();return;
   }
   if(current.phase==='expand'){
@@ -558,14 +564,14 @@ async function confirm(){
     const take=parseNumber(current.expandTake,0,9),rest=parseNumber(current.expandRest,0,9);
     if(take===null||rest===null){feedback('ふたつの □に すうじを いれてね。');return;}
     current.checkNumber=(current.checkNumber||0)+1;attempt('expand_take',take,take===need(),'equation');attempt('expand_rest',rest,rest===remainder(),'equation');
-    if(take!==need()||rest!==remainder()){const kind=take!==need()?'take':'rest';feedback(kind==='take'?'赤い □は、もらった かずだよ。':'のこりの □と、のこった まるを みくらべよう。');highlightMapping(kind);save();return;}
+    if(take!==need()||rest!==remainder()){const kind=take!==need()?'take':'rest';feedback(kind==='take'?'わけかたと しきの、もらう かずを みくらべよう。':'わけかたと しきの、のこる かずを みくらべよう。',true,kind);save();return;}
     current.phase='regroup';event('expanded_equation_completed');clearFeedback();renderProblem();save();return;
   }
   if(current.phase==='regroup'){
     if(current.support.showTen){event('regrouped_equation_viewed');startSum();return;}
     const ten=parseNumber(current.regroupTen,0,99);if(ten===null){feedback('くくった ところの こたえを いれてね。');return;}
     current.checkNumber=(current.checkNumber||0)+1;attempt('regroup',ten,ten===10,'equation');
-    if(ten!==10){feedback(`${targetValue()}と${need()}を あわせると いくつ？`);highlightMapping('ten');save();return;}
+    if(ten!==10){feedback(`${targetValue()}と${need()}を あわせると いくつ？`,true,'ten');save();return;}
     event('regrouped_equation_completed');startSum();return;
   }
   if(current.phase==='ten'){
@@ -577,7 +583,7 @@ async function confirm(){
   if(take===null||rest===null){feedback('もらう かずと、のこる かずを いれてね。');return;}
   current.checkNumber=(current.checkNumber||0)+1;const takeOK=take===need();attempt('need',take,takeOK,dotMode?'dots':'numbers');
   const restOK=rest===donorValue()-take;if(!dotMode)attempt('rest',rest,restOK,'numbers');
-  if(!takeOK||!restOK){feedback(!takeOK?`${targetValue()}は あと なんこで10かな？`:`${donorValue()}こから ${take}こ もらったら、なんこ のこる？`);save();return;}
+  if(!takeOK||!restOK){feedback(!takeOK?`${targetValue()}を10にするには、あと いくつ？`:`${donorValue()}こから ${take}こ もらうと、なんこ のこる？`,true,!takeOK?'take':'rest');save();return;}
   current.path=dotMode?'dots':'numbers';current.touched=true;
   if(!dotMode)selected=new Set(Array.from({length:take},(_,i)=>i));
   current.phase='moving';updateClock();renderVisibility();renderCopy();save();const ticket=++epoch;
