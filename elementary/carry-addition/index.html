@@ -184,7 +184,7 @@ const Learning = (() => {
 /* UI and browser-local persistence. No network requests or identifiers for children. */
 const $=id=>document.getElementById(id);
 const STORE_KEY='ten-maker.learning.v1';
-const APP_VERSION='2.6.1';
+const APP_VERSION='2.7.0';
 const uuid=()=>globalThis.crypto?.randomUUID?.()||`r${Date.now().toString(36)}${Math.random().toString(36).slice(2)}`;
 const now=()=>new Date().toISOString();
 const clone=value=>JSON.parse(JSON.stringify(value));
