@@ -121,7 +121,7 @@ input.entry-active{outline:none!important;box-shadow:0 0 0 4px var(--entry-halo,
 <div class="record-actions"><button class="small-button" id="exportCSV">CSVで保存</button><button class="small-button" id="resetLearning">記録をリセットして最初から</button><button class="small-button" id="undoReset" hidden>リセット前の記録にもどす</button><button class="small-button" id="exportJSON">操作記録も保存（JSON）</button></div>
 <p class="record-meta" id="recordMeta"></p>
 <details><summary>支援の調整・記録の見方</summary>
-<ul class="record-rules"><li>開始時は途中式の数字を表示します。正答に合わせて「分けた数の穴埋め → 10にまとめる部分も穴埋め」へ進み、その後に説明・丸・分解図を順に減らす6段階です。最終段階は固定6問のプリントです。右の数をさくらんぼで分け、10と残りの途中式と答えを書きます。Web練習の問題は引き続き変化します。分からない問題は同じ6問を画面上で確認できます。</li><li>現在の開始支援で、途中に支援を追加せず、3問続けて一度で正解すると、次の問題から1段階減らします。今の問題の表示は途中で変えません。</li><li>ヒントを追加した問題は失敗にせず、支援を減らす判定をいったん区切ります。同じ問題で2回以上答え直すと、次の問題は1段階支援を増やします。</li><li>「初回でできた」は入力した全ての確認が1回目で正解した問題です。表示済みの数字を見て進んだ段階は自力の正答として集計しません。ノートの正誤は、表示した答えと本人または先生が比べて申告します。ノートの途中式は自動判定しません。画面上の入力による正誤と分けて記録します。答えを見た後の再挑戦やヒント利用を消して自力達成にはしません。</li><li>8問以上進み、直近5問のうち4問以上が初回正答になると、左右の数の大小が入れ替わる問題も出ます。両方の数について、どちらを10にする方法も選べます。</li><li>時間は画面が見えている間だけを数えます。記録画面・丸の移動中・別タブにいる時間は除きます。速さは支援を減らす条件に使いません。</li><li>このブラウザの端末内に記録します。固定の保存期限は設けず、ブラウザのサイトデータが保持されている間保存されます。端末やブラウザを変えた場合は引き継がれません。CSVは集計用、JSONは操作と途中の記録も含む保存用です。</li></ul>
+<ul class="record-rules"><li>開始時は途中式の数字を表示します。正答に合わせて「分けた数の穴埋め → 10にまとめる部分も穴埋め」へ進み、その後に説明・丸・分解図を順に減らす6段階です。最終段階は固定6問のプリントです。右の数をさくらんぼで分け、10と残りの途中式と答えを書きます。Web練習の問題は引き続き変化します。分からない問題は同じ6問を画面上で確認できます。</li><li>現在の開始支援で、途中に支援を追加せず、2問続けて一度で正解すると、次の問題から1段階減らします。今の問題の表示は途中で変えません。</li><li>ヒントを追加した問題は失敗にせず、支援を減らす判定をいったん区切ります。同じ問題で2回以上答え直すと、次の問題は1段階支援を増やします。</li><li>「初回でできた」は入力した全ての確認が1回目で正解した問題です。表示済みの数字を見て進んだ段階は自力の正答として集計しません。ノートの正誤は、表示した答えと本人または先生が比べて申告します。ノートの途中式は自動判定しません。画面上の入力による正誤と分けて記録します。答えを見た後の再挑戦やヒント利用を消して自力達成にはしません。</li><li>8問以上進み、直近5問のうち4問以上が初回正答になると、左右の数の大小が入れ替わる問題も出ます。両方の数について、どちらを10にする方法も選べます。</li><li>時間は画面が見えている間だけを数えます。記録画面・丸の移動中・別タブにいる時間は除きます。速さは支援を減らす条件に使いません。</li><li>このブラウザの端末内に記録します。固定の保存期限は設けず、ブラウザのサイトデータが保持されている間保存されます。端末やブラウザを変えた場合は引き継がれません。CSVは集計用、JSONは操作と途中の記録も含む保存用です。</li></ul>
 <p id="adaptiveState" class="record-meta"></p>
 </details>
 </div>
@@ -149,8 +149,8 @@ const Learning = (() => {
     if(totalErrors(record)>=2){next.level=Math.min(5,next.level+1);next.streak=0;reason=next.level===state.level?'same':'more';}
     else if(firstTry(record) && !record.addedSupport && !record.restarts && record.startSupport===state.level){
       next.streak++;
-      if(next.streak>=3 && next.level>0){next.level--;next.streak=0;reason='less';}
-      else if(next.level===0)next.streak=Math.min(3,next.streak);
+      if(next.streak>=2 && next.level>0){next.level--;next.streak=0;reason='less';}
+      else if(next.level===0)next.streak=Math.min(2,next.streak);
     } else next.streak=0;
     return {...next,reason};
   }
@@ -469,7 +469,7 @@ function toggleDot(index){
 }
 function markSupport(type){
   const level=Learning.levelOf(current.support);current.maxSupport=Math.max(current.maxSupport,level);
-  current.addedSupport=true;current.supportRequests++;event('support_request',{kind:type,visible:clone(current.support)});
+  profile.streak=0;current.addedSupport=true;current.supportRequests++;event('support_request',{kind:type,visible:clone(current.support)});
 }
 function leaveNotebookForHelp(){
   const wasNote=['note','note_check'].includes(current.phase);
@@ -656,7 +656,7 @@ $('confirmReset').onclick=resetLearningProfile;
 $('undoReset').onclick=undoLearningReset;
 
 $('exportCSV').onclick=()=>{save();download(Learning.csv(profile),'text/csv;charset=utf-8','csv');$('profileMessage').textContent='CSVを保存しました。';};
-$('exportJSON').onclick=()=>{save();download(JSON.stringify({schema:1,appVersion:APP_VERSION,exportedAt:now(),rules:{fadeAfterFirstTry:3,increaseAfterErrors:2,timeExcludes:['hidden','records','animation'],webGoal:'fixed-6-cherry-worksheet',worksheet:{id:Learning.WORKSHEET_ID,problems:Learning.WORKSHEET},levels:Learning.LEVELS},profile},null,2),'application/json','json');$('profileMessage').textContent='操作記録を保存しました。';};
+$('exportJSON').onclick=()=>{save();download(JSON.stringify({schema:1,appVersion:APP_VERSION,exportedAt:now(),rules:{fadeAfterFirstTry:2,increaseAfterErrors:2,timeExcludes:['hidden','records','animation'],webGoal:'fixed-6-cherry-worksheet',worksheet:{id:Learning.WORKSHEET_ID,problems:Learning.WORKSHEET},levels:Learning.LEVELS},profile},null,2),'application/json','json');$('profileMessage').textContent='操作記録を保存しました。';};
 document.addEventListener('visibilitychange',()=>{updateClock();save();});window.addEventListener('pagehide',()=>{updateClock();save();});
 // Debounced input saves above plus a checkpoint keep active time across refreshes.
 setInterval(()=>{if(activeSince!==null)save();},10000);
