@@ -278,6 +278,7 @@ function resumeProfile(p){
   epoch++;allDots.forEach(d=>d.getAnimations().forEach(a=>a.cancel()));profile=p;current=p.current;
   if(!current){startNext();return;}
   if(current.phase==='moving'){current.phase='expand';current.path=current.path||'dots';}
+  if(current.phase==='ten'){current.phase='answer';event('sum_start');current.feedback='10が できたね！';}
   selected=new Set(current.selected||[]);renderProblem();updateClock();save();
 }
 function setVisible(el,visible){el.classList.toggle('reserved',!visible);el.inert=!visible;el.setAttribute('aria-hidden',String(!visible));}
@@ -530,6 +531,9 @@ function chooseTarget(side){
 }
 function parseNumber(text,min,max){const s=String(text).normalize('NFKC').trim();if(!/^\d+$/.test(s))return null;const n=Number(s);return Number.isInteger(n)&&n>=min&&n<=max?n:null;}
 function attempt(stage,value,correct,source){const submission=current.checkNumber||1;current.attempts.push({stage,value,correct,source,submission,atMs:elapsed()});event('check',{stage,value,correct,source,submission});}
+function startSum(){
+  current.phase='answer';event('sum_start');current.feedback='10が できたね！';renderProblem();updateClock();save();
+}
 async function confirm(){
   if(current.phase==='moving')return;
   if(current.phase==='done'){startNext();return;}
@@ -551,14 +555,14 @@ async function confirm(){
     current.phase='regroup';event('expanded_equation_completed');clearFeedback();renderProblem();save();return;
   }
   if(current.phase==='regroup'){
-    if(current.support.showTen){event('regrouped_equation_viewed');current.phase='ten';clearFeedback();renderProblem();save();return;}
+    if(current.support.showTen){event('regrouped_equation_viewed');startSum();return;}
     const ten=parseNumber(current.regroupTen,0,99);if(ten===null){feedback('くくった ところの こたえを いれてね。');return;}
     current.checkNumber=(current.checkNumber||0)+1;attempt('regroup',ten,ten===10,'equation');
     if(ten!==10){feedback(`${targetValue()}と${need()}を あわせると いくつ？`);highlightMapping('ten');save();return;}
-    current.phase='ten';event('regrouped_equation_completed');clearFeedback();renderProblem();save();return;
+    event('regrouped_equation_completed');startSum();return;
   }
   if(current.phase==='ten'){
-    current.phase='answer';event('sum_start');current.feedback='10が できたね！';buildFlow();renderVisibility();renderCopy();updateClock();save();return;
+    startSum();return;
   }
   const dotMode=current.support.dots;
   const take=dotMode?selected.size:parseNumber(current.typedTake,0,donorValue());
