@@ -61,6 +61,9 @@ input.entry-active{outline:none!important;box-shadow:0 0 0 4px var(--entry-halo,
 @media(max-width:760px){.board.no-dots:not(.note-mode){grid-template-rows:64px 104px 12px 248px}}
 @media(max-width:620px){.board.no-dots:not(.note-mode){grid-template-rows:62px 101px 12px 242px}}
 .practice-progress{margin:10px 0 8px;padding:9px 13px;border:1px solid #d7e3e6;border-radius:12px;background:white}.progress-copy{display:flex;justify-content:space-between;gap:12px;font-size:14px;font-weight:650;margin-bottom:7px}.progress-track{display:grid;grid-template-columns:repeat(10,minmax(0,1fr));gap:5px}.progress-piece{height:12px;border:1px solid #b7cdd1;background:#f0f5f6;border-radius:4px}.progress-piece.filled{background:#357f85;border-color:#357f85}.set-complete{text-align:center;padding:40px 20px;background:white;border:1px solid #c3d9d8;border-radius:24px}.set-complete h2{font-size:27px;margin:0 0 16px}.set-complete p{line-height:1.8;margin:12px 0 22px}.set-complete button{margin-top:12px}@media(max-width:620px){.progress-copy{font-size:13px}.progress-track{gap:4px}.set-complete h2{font-size:23px}}
+.board.no-equation:not(.note-mode){grid-template-rows:66px 104px auto 0;min-height:180px}.board.no-equation.no-split:not(.note-mode){grid-template-rows:66px 0 auto 0;min-height:130px}.board.no-equation #flow{display:none!important}.board.no-equation #numberPad{grid-row:3;margin-top:14px}.board.no-split #split{display:none!important}
+@media(max-width:760px){.board.no-equation:not(.note-mode){grid-template-rows:64px 104px auto 0}.board.no-equation.no-split:not(.note-mode){grid-template-rows:64px 0 auto 0}}
+@media(max-width:620px){.board.no-equation:not(.note-mode){grid-template-rows:62px 101px auto 0}.board.no-equation.no-split:not(.note-mode){grid-template-rows:62px 0 auto 0}}
 </style>
 </head>
 <body>
@@ -71,8 +74,8 @@ input.entry-active{outline:none!important;box-shadow:0 0 0 4px var(--entry-halo,
 <div class="support-bar" id="supportBar" role="group" aria-label="ヒントをじぶんでえらぶ">
 <span class="support-title">たすけを えらぶ</span>
 <button class="support-button" id="dotsToggle" aria-pressed="true">まる<span class="switch" id="dotsSwitch">あり</span></button>
+<button class="support-button" id="numbersToggle" aria-pressed="true">とちゅうしきをかくす</button>
 <button class="support-button" id="splitToggle" aria-pressed="true">わけかた<span class="switch" id="splitSwitch">あり</span></button>
-<button class="support-button" id="numbersToggle" aria-pressed="true">すうじをかくす</button>
 <button class="support-button" id="notebookReturn" hidden>ノートにもどる</button>
 <button class="support-button" id="hint">ヒント</button>
 <span class="support-status" id="supportStatus">はじめは いっしょに</span>
@@ -124,7 +127,7 @@ input.entry-active{outline:none!important;box-shadow:0 0 0 4px var(--entry-halo,
 <div class="record-actions"><button class="small-button" id="exportCSV">CSVで保存</button><button class="small-button" id="resetLearning">記録をリセットして最初から</button><button class="small-button" id="undoReset" hidden>リセット前の記録にもどす</button><button class="small-button" id="exportJSON">操作記録も保存（JSON）</button></div>
 <p class="record-meta" id="recordMeta"></p>
 <details><summary>支援の調整・記録の見方</summary>
-<ul class="record-rules"><li>開始時は途中式の数字を表示します。正答に合わせて「分けた数の穴埋め → 10にまとめる部分も穴埋め」へ進み、その後に説明・丸・分解図を順に減らす6段階です。最終段階は固定6問のプリントです。右の数をさくらんぼで分け、10と残りの途中式と答えを書きます。Web練習の問題は引き続き変化します。分からない問題は同じ6問を画面上で確認できます。</li><li>途中式も含め、追加ヒント・答え直し・やりなおしなしで1問解けたら、次の問題から支援を1段階減らします。今の問題の表示は途中で変えません。</li><li>ミスがなく、ヒントを追加して解けた場合は、次も同じ開始支援にします。分ける数・途中式の穴埋め・10にまとめる計算・最後の答えを通して、同じ問題で1回でもミスすると、次の問題は1段階支援を増やします。同時に2つの欄を間違えた場合は、1回の確認として数えます。</li><li>「初回でできた」は入力した全ての確認が1回目で正解した問題です。表示済みの数字を見て進んだ段階は自力の正答として集計しません。ノートの正誤は、表示した答えと本人または先生が比べて申告します。ノートの途中式は自動判定しません。画面上の入力による正誤と分けて記録します。答えを見た後の再挑戦やヒント利用を消して自力達成にはしません。</li><li>8問以上進み、直近5問のうち4問以上が初回正答になると、左右の数の大小が入れ替わる問題も出ます。両方の数について、どちらを10にする方法も選べます。</li><li>考え直すときは、普段の問いかけと同じ表示で見る場所を案内します。入力した数字は残し、対応する欄や図をやわらかな光で示します。</li><li>Web練習は10問でひと区切りです。ヒントや答え直しで問題数は増えません。途中で閉じても続きを再開できます。次の10問にも、記録と支援量を引き継ぎます。</li><li>時間は画面が見えている間だけを数えます。記録画面・丸の移動中・別タブにいる時間は除きます。速さは支援を減らす条件に使いません。</li><li>このブラウザの端末内に記録します。固定の保存期限は設けず、ブラウザのサイトデータが保持されている間保存されます。端末やブラウザを変えた場合は引き継がれません。CSVは集計用、JSONは操作と途中の記録も含む保存用です。</li></ul>
+<ul class="record-rules"><li>支援は「丸＋途中式＋分け方 → 途中式＋分け方 → 分け方のみ → 元の問題のみ」の4段階です。途中式は穴埋めで計算します。元の問題のみの段階も、答えを画面に入力します。必要な支援は各ボタンで戻せます。プリントの確認は別に取り組めます。</li><li>途中式も含め、追加ヒント・答え直し・やりなおしなしで1問解けたら、次の問題から支援を1段階減らします。今の問題の表示は途中で変えません。</li><li>ミスがなく、ヒントを追加して解けた場合は、次も同じ開始支援にします。分ける数・途中式の穴埋め・10にまとめる計算・最後の答えを通して、同じ問題で1回でもミスすると、次の問題は1段階支援を増やします。同時に2つの欄を間違えた場合は、1回の確認として数えます。</li><li>「初回でできた」は入力した全ての確認が1回目で正解した問題です。表示済みの数字を見て進んだ段階は自力の正答として集計しません。ノートの正誤は、表示した答えと本人または先生が比べて申告します。ノートの途中式は自動判定しません。画面上の入力による正誤と分けて記録します。答えを見た後の再挑戦やヒント利用を消して自力達成にはしません。</li><li>8問以上進み、直近5問のうち4問以上が初回正答になると、左右の数の大小が入れ替わる問題も出ます。両方の数について、どちらを10にする方法も選べます。</li><li>考え直すときは、普段の問いかけと同じ表示で見る場所を案内します。入力した数字は残し、対応する欄や図をやわらかな光で示します。</li><li>Web練習は10問でひと区切りです。ヒントや答え直しで問題数は増えません。途中で閉じても続きを再開できます。次の10問にも、記録と支援量を引き継ぎます。</li><li>時間は画面が見えている間だけを数えます。記録画面・丸の移動中・別タブにいる時間は除きます。速さは支援を減らす条件に使いません。</li><li>このブラウザの端末内に記録します。固定の保存期限は設けず、ブラウザのサイトデータが保持されている間保存されます。端末やブラウザを変えた場合は引き継がれません。CSVは集計用、JSONは操作と途中の記録も含む保存用です。</li></ul>
 <p id="adaptiveState" class="record-meta"></p>
 </details>
 </div>
@@ -133,15 +136,15 @@ input.entry-active{outline:none!important;box-shadow:0 0 0 4px var(--entry-halo,
 'use strict';
 /* Pure learning/record logic; independent of the display. */
 const Learning = (() => {
-  const LEVELS = ['固定6問のプリント（最終段階）','穴埋め＋分解図','穴埋め＋丸・分解図','穴埋め＋説明・丸・分解図','分けた数の穴埋め＋説明・丸・分解図','数字・説明・丸・分解図'];
+  const LEVELS = ['元の問題のみ','分け方のみ','途中式＋分け方','丸＋途中式＋分け方'];
   const WORKSHEET_ID='carry-final-6-v1';
   const WORKSHEET=[{a:8,b:5},{a:9,b:6},{a:7,b:4},{a:6,b:8},{a:8,b:7},{a:9,b:4}];
   function worksheetDone(records,run=null){return new Set(records.filter(r=>r.status==='completed'&&r.worksheetSet===WORKSHEET_ID&&(!run||r.worksheetRun===run)).map(r=>r.worksheetIndex));}
   const BANK = [];
   for(let a=2;a<=9;a++) for(let b=2;b<=9;b++) if(a+b>10) BANK.push({a,b,key:`${a}+${b}`});
   const SEED = ['8+5','9+7','7+5','8+6','9+3','7+6','8+7','9+4'];
-  function flags(level){return {dots:level>=2,split:level>=1,guide:level>=3,showExpand:level>=5,showTen:level>=4};}
-  function levelOf(f){return f.showExpand?5:f.showTen?4:f.guide?3:f.dots?2:f.split?1:0;}
+  function flags(level){return {dots:level>=3,equation:level>=2,split:level>=1,guide:true,showExpand:false,showTen:false};}
+  function levelOf(f){return f.dots?3:f.equation?2:f.split?1:0;}
   function totalErrors(record){return new Set(record.attempts.map((a,i)=>({...a,submission:a.submission??`legacy-${i}`})).filter(a=>!a.correct).map(a=>a.submission)).size;}
   function firstTry(record){return record.status==='completed' && totalErrors(record)===0;}
   function firstAutoTry(record){const a=record.attempts.filter(x=>x.source!=='notebook_report');return record.status==='completed'&&a.length>0&&a.every(x=>x.correct);}
@@ -149,9 +152,9 @@ const Learning = (() => {
   function independent(record){return firstTry(record) && record.maxSupport===0 && !record.addedSupport && !record.restarts && record.path==='notebook' && record.assessment==='notebook_report' && record.notebookAnswerViews===1;}
   function adapt(state,record){
     let level=state.level,reason='same';
-    if(totalErrors(record)>=1){level=Math.min(5,level+1);reason=level===state.level?'same':'more';}
+    if(totalErrors(record)>=1){level=Math.min(3,level+1);reason=level===state.level?'same':'more';}
     else if(firstTry(record)&&!record.addedSupport&&!record.restarts&&record.startSupport===state.level){
-      level=Math.max(1,level-1);reason=level===state.level?'same':'less';
+      level=Math.max(0,level-1);reason=level===state.level?'same':'less';
     }
     return {level,streak:0,reason};
   }
@@ -183,23 +186,31 @@ const Learning = (() => {
 /* UI and browser-local persistence. No network requests or identifiers for children. */
 const $=id=>document.getElementById(id);
 const STORE_KEY='ten-maker.learning.v1';
-const APP_VERSION='2.8.0';
+const APP_VERSION='3.0.0';
 const uuid=()=>globalThis.crypto?.randomUUID?.()||`r${Date.now().toString(36)}${Math.random().toString(36).slice(2)}`;
 const now=()=>new Date().toISOString();
 const clone=value=>JSON.parse(JSON.stringify(value));
 let db,profile,current,epoch=0,activeSince=null,saveFailed=false,readBlocked=false;
 let selected=new Set(),donorDots=[],allDots=[];
 let keypadOpen=false,keypadTargetId=null;
-function newProfile(label){return {id:uuid(),label,level:5,streak:0,records:[],current:null,createdAt:now()};}
+function newProfile(label){return {id:uuid(),label,supportScheme:'four-v1',level:3,streak:0,records:[],current:null,createdAt:now()};}
 function upgradeLegacyProfile(p){
-  const legacy=p.current?.support&&!Object.prototype.hasOwnProperty.call(p.current.support,'showExpand');
-  if(!legacy)return;
-  const labels=['支援なし（旧版）','分解図（旧版）','まる＋分解図（旧版）','フル（旧版）'];
-  for(const r of p.records){r.startSupportLabel=labels[r.startSupport]||'旧版';r.maxSupportLabel=labels[r.maxSupport]||'旧版';r.legacySupportVersion=1;}
-  p.level=5;p.streak=0;
-  p.current.startSupport=5;p.current.maxSupport=5;
-  p.current.support={...p.current.support,showExpand:true,showTen:true};
-  p.current.assessment=p.current.assessment||'web';
+  if(p.supportScheme==='four-v1')return;
+  const labels=['ノート／プリント（旧版）','穴埋め＋分解図（旧版）','穴埋め＋丸・分解図（旧版）','穴埋め＋説明・丸・分解図（旧版）','分けた数の穴埋め＋説明・丸・分解図（旧版）','数字・説明・丸・分解図（旧版）'];
+  for(const r of p.records||[]){r.startSupportLabel=r.startSupportLabel||labels[r.startSupport]||'旧版';r.maxSupportLabel=r.maxSupportLabel||labels[r.maxSupport]||'旧版';r.legacySupportVersion=r.legacySupportVersion||2;}
+  const convertLevel=n=>n>=2?3:n===1?2:0;
+  function convertState(state){
+    if(!state)return;state.level=convertLevel(state.level);state.streak=0;
+    const r=state.current;if(!r)return;
+    r.startSupportLabel=r.startSupportLabel||labels[r.startSupport]||'旧版';r.maxSupportLabel=r.maxSupportLabel||labels[r.maxSupport]||'旧版';r.legacySupportVersion=2;
+    r.startSupport=convertLevel(r.startSupport);r.maxSupport=convertLevel(r.maxSupport);
+    if(r.support){r.support.equation=!r.worksheetSet&&!['direct','notebook'].includes(r.path);}
+    if(!r.worksheetSet&&['note','note_check'].includes(r.phase)){r.phase='answer';r.path='direct';r.notebookOrigin=false;r.assessment='web';}
+    r.assessment=r.assessment||'web';
+  }
+  convertState(p);convertState(p.practiceDraft);
+  if(p.resetBackup)upgradeLegacyProfile(p.resetBackup);
+  p.supportScheme='four-v1';
 }
 function loadDatabase(){
   try{
@@ -227,12 +238,13 @@ function donorSide(){return current.target==='left'?'right':'left';}
 function need(){return 10-targetValue();}
 function remainder(){return current.a+current.b-10;}
 function enterNotebookIfNeeded(){
-  if(current.phase==='select'&&!current.support.dots&&!current.support.split){
-    current.phase='note';current.path='notebook';current.notebookOrigin=true;current.support=Learning.flags(0);event('notebook_start');
-  }
+  if(current.phase!=='select'||current.support.dots||current.support.split)return;
+  if(current.worksheetSet){current.phase='note';current.path='notebook';current.notebookOrigin=true;event('notebook_start');}
+  else if(current.support.equation){current.phase='expand';current.path='equation';event('equation_start');}
+  else {current.phase='answer';current.path='direct';event('sum_start');}
 }
 function makeCurrent(question){
-    return {id:uuid(),number:profile.records.length+1,a:question.a,b:question.b,target:'left',mixed:question.mixed,startedAt:now(),completedAt:null,status:'in_progress',phase:'select',startSupport:profile.level,maxSupport:profile.level,support:Learning.flags(profile.level),supportRequests:0,addedSupport:false,attempts:[],events:[],activeMs:0,selected:[],touched:false,typedTake:'',typedRest:'',answerDraft:'',path:null,restarts:0,highlight:false,feedback:'',adaptation:null,worksheetRun:question.worksheetRun||null,worksheetSet:question.worksheetSet||null,worksheetIndex:question.worksheetIndex??null,checkNumber:0,assessment:'web',notebookOrigin:false,notebookAnswerViews:0,practiceSetId:question.worksheetSet?null:ensurePracticeSet().id,expandTake:'',expandRest:'',regroupTen:''};
+    return {id:uuid(),number:profile.records.length+1,a:question.a,b:question.b,target:'left',mixed:question.mixed,startedAt:now(),completedAt:null,status:'in_progress',phase:'select',startSupport:profile.level,maxSupport:profile.level,support:Learning.flags(profile.level),supportScheme:'four-v1',supportRequests:0,addedSupport:false,attempts:[],events:[],activeMs:0,selected:[],touched:false,typedTake:'',typedRest:'',answerDraft:'',path:null,restarts:0,highlight:false,feedback:'',adaptation:null,worksheetRun:question.worksheetRun||null,worksheetSet:question.worksheetSet||null,worksheetIndex:question.worksheetIndex??null,checkNumber:0,assessment:'web',notebookOrigin:false,notebookAnswerViews:0,practiceSetId:question.worksheetSet?null:ensurePracticeSet().id,expandTake:'',expandRest:'',regroupTen:''};
 }
 const PRACTICE_SET_SIZE=10;
 function ensurePracticeSet(){
@@ -273,7 +285,7 @@ function startNext(){
     const done=Learning.worksheetDone(profile.records,profile.worksheetRun),index=Learning.WORKSHEET.findIndex((q,i)=>!done.has(i));
     if(index<0){feedback('6もんの かくにんが おわったね。プリントの さくらんぼも たしかめよう。',false);renderCopy();save();return;}
     question={...Learning.WORKSHEET[index],mixed:false,worksheetSet:Learning.WORKSHEET_ID,worksheetRun:profile.worksheetRun,worksheetIndex:index};
-  }else {profile.level=Math.max(1,profile.level);question=Learning.chooseQuestion(profile.records);}
+  }else {profile.level=Math.max(0,profile.level);question=Learning.chooseQuestion(profile.records);}
   current=makeCurrent(question);selected=new Set();profile.current=current;event('problem_start',{a:current.a,b:current.b,level:profile.level,worksheetSet:current.worksheetSet});renderProblem();updateClock();save();
 }
 function startFixedWorksheet(index=null){
@@ -292,8 +304,8 @@ function startFixedWorksheet(index=null){
 function returnToPractice(){
   syncClock();save();profile.worksheetActive=false;const draft=profile.practiceDraft;profile.practiceDraft=null;
   if($('worksheetDialog').open)$('worksheetDialog').close();activeSince=null;
-  if(draft&&draft.current&&!draft.current.worksheetSet&&draft.level>0){profile.level=draft.level;profile.streak=draft.streak;profile.current=draft.current;resumeProfile(profile);}
-  else {profile.level=5;profile.streak=0;startNext();}
+  if(draft&&draft.current&&!draft.current.worksheetSet&&draft.level>=0){profile.level=draft.level;profile.streak=draft.streak;profile.current=draft.current;resumeProfile(profile);}
+  else {profile.level=3;profile.streak=0;startNext();}
 }
 function worksheetSVG(q,index,solved=false){
   const take=10-q.a,rest=q.a+q.b-10,total=q.a+q.b;
@@ -368,7 +380,7 @@ function setActiveEntry(input){
   if(!input){clearMapping();closeKeypad();return;}
   const kind=input.dataset.entryKind||'sum';
   if(kind==='sum'){
-    clearMapping();const nodes=current.phase==='answer'?[$('flowTen'),$('flowRestBottom'),$('left'),$('right')]:[$('operandLeft'),$('operandRight')];
+    clearMapping();const nodes=current.phase==='answer'&&current.support.equation?[$('flowTen'),$('flowRestBottom'),$('left'),$('right')]:[$('operandLeft'),$('operandRight')];
     nodes.forEach(el=>{el.style.setProperty('--map-color','#8ebac5');el.classList.add('mapping-active');});
   }else highlightMapping(kind);
   input.style.setProperty('--entry-halo',kind==='take'?'#e6a0ae':kind==='rest'&&current.target==='left'?'#f2d1a5':'#b9d9e5');
@@ -425,16 +437,17 @@ function buildFlow(){
   $('flowRestTop').replaceChildren();if(current.phase==='expand'&&!current.support.showExpand)$('flowRestTop').append(flowInput('expandRest','式の のこるかず','expandRest','rest'));else $('flowRestTop').textContent=remainder();
   $('flowRestBottom').textContent=remainder();$('flow').classList.toggle('rest-blue',!left);$('flowTen').classList.toggle('target-right',!left);
   $('flowTen').replaceChildren();if(current.phase==='regroup'&&!current.support.showTen)$('flowTen').append(flowInput('regroupTen','括った数を あわせたかず','regroupTen','ten',2));else $('flowTen').textContent='10';
-  const show=isCommitted()&&!['direct','notebook'].includes(current.path);setVisible($('flow'),show);
+  const show=current.support.equation&&isCommitted()&&current.path!=='notebook';setVisible($('flow'),show);
   const lower=current.phase!=='expand';for(const id of ['bundleMark','flowTen','flowPlusBottom','flowRestBottom'])$(id).classList.toggle('future-part',!lower);
   $('flow').setAttribute('aria-label','分けた数を 式に入れて じゅんに計算しよう');
   const showFinal=['answer','done'].includes(current.phase);$('flowArrow').classList.toggle('future-part',!showFinal);$('finalLine').classList.toggle('future-part',!showFinal);$('finalLine').classList.toggle('active',current.phase==='answer');
-  $('flowResult').replaceChildren();if(current.phase==='answer')$('flowResult').append(makeAnswerInput('answer','10とのこりのこたえ'));else $('flowResult').textContent=current.phase==='done'?current.a+current.b:'□';
+  $('flowResult').replaceChildren();if(current.phase==='answer'&&current.support.equation)$('flowResult').append(makeAnswerInput('answer','10とのこりのこたえ'));else $('flowResult').textContent=current.phase==='done'?current.a+current.b:'□';
 }
 function makeAnswerInput(id,label){const input=document.createElement('input');input.id=id;input.className='number-input';input.inputMode='numeric';input.autocomplete='off';input.maxLength=2;input.setAttribute('aria-label',label);input.value=current.answerDraft;input.oninput=()=>{current.answerDraft=input.value;clearFeedback();save();};input.onkeydown=e=>{if(e.key==='Enter'){e.preventDefault();confirm();}};return wireEntry(input,'sum');}
 function renderTop(){
   $('operandLeft').textContent=current.a;$('operandRight').textContent=current.b;$('total').replaceChildren();$('total').classList.toggle('solved',current.phase==='done');
   if(current.phase==='done'||current.phase==='note_check')$('total').textContent=current.a+current.b;
+  else if(current.phase==='answer'&&!current.support.equation&&!current.worksheetSet)$('total').append(makeAnswerInput('answer','こたえ'));
   else $('total').textContent='□';
 }
 function renderProblem(){
@@ -444,6 +457,8 @@ function renderProblem(){
 }
 function renderVisibility(){
   $('board').classList.toggle('no-dots',!current.support.dots);
+  $('board').classList.toggle('no-equation',!current.support.equation);
+  $('board').classList.toggle('no-split',!current.support.split);
   setVisible($('leftGroup'),current.support.dots);setVisible($('rightGroup'),current.support.dots);setVisible($('split'),current.support.split);
   setVisible($('leftArrow'),isCommitted()&&!['direct','notebook'].includes(current.path));setVisible($('rightArrow'),isCommitted()&&!['direct','notebook'].includes(current.path));
   $('board').classList.toggle('note-mode',['note','note_check'].includes(current.phase)||(current.phase==='done'&&current.path==='notebook'));
@@ -453,12 +468,12 @@ function renderVisibility(){
   $('noteCheck').hidden=current.phase!=='note_check';$('notebookReturn').hidden=!current.notebookOrigin||['note','note_check','done'].includes(current.phase);$('confirm').hidden=current.phase==='note_check';
   $('board').classList.toggle('sum-focus',current.phase==='answer');
   for(const key of ['dots','split']){$(key+'Toggle').setAttribute('aria-pressed',String(current.support[key]));$(key+'Toggle').firstChild.textContent=`${key==='dots'?'まる':'わけかた'}を${current.support[key]?'かくす':'みる'}`;$(key+'Switch').textContent='';$(key+'Toggle').disabled=current.phase==='moving';}
-  $('numbersToggle').textContent=current.support.showExpand&&current.support.showTen?'すうじをかくす':'すうじをみる';$('numbersToggle').setAttribute('aria-pressed',String(!!(current.support.showExpand&&current.support.showTen)));$('numbersToggle').disabled=current.phase==='moving';
+  $('numbersToggle').textContent=current.support.equation?'とちゅうしきをかくす':'とちゅうしきをみる';$('numbersToggle').setAttribute('aria-pressed',String(!!current.support.equation));$('numbersToggle').disabled=current.phase==='moving';
   $('hint').disabled=current.phase==='moving';$('recordsButton').disabled=current.phase==='moving';
   const choiceAllowed=current.mixed&&(current.phase==='select'||(current.phase==='expand'&&current.path==='equation'));$('targetChoice').classList.toggle('choice-space',!choiceAllowed);$('targetChoice').inert=!choiceAllowed;$('targetChoice').setAttribute('aria-hidden',String(!choiceAllowed));
   $('targetLeft').textContent=`ひだりの${current.a}`;$('targetRight').textContent=`みぎの${current.b}`;
   $('targetLeft').setAttribute('aria-pressed',String(current.target==='left'));$('targetRight').setAttribute('aria-pressed',String(current.target==='right'));
-  $('supportStatus').textContent=current.startSupport===5?'はじめは すうじを みてみよう':`はじめの たすけ：${['ノートで けいさん','わけかた','まると わけかた','せつめいと まる','わけた かずが □','すうじ あり'][current.startSupport]}`;
+  $('supportStatus').textContent=`はじめの たすけ：${Learning.LEVELS[current.startSupport]}`;
   if(['note','note_check'].includes(current.phase)||(current.phase==='done'&&current.path==='notebook'))$('supportStatus').textContent=current.worksheetSet?'プリントで やってみよう':'ノートで やってみよう';
 }
 function renderCopy(){
@@ -479,7 +494,7 @@ function renderCopy(){
     $('prompt').textContent=current.support.guide?`${t}に${need()}を たして、10が できたね。`:'つぎの けいさんへ すすもう';
     $(current.target+'Caption').textContent='10の まとまり';$(donorSide()+'Caption').textContent=`${remainder()}こ のこったね`;$('confirm').textContent='のこりを たす';
   }else if(phase==='answer'){
-    $('prompt').textContent=current.support.guide?`10と のこりの${remainder()}で、いくつ？`:'こたえを いれよう';
+    $('prompt').textContent=current.support.equation?`10と のこりの${remainder()}で、いくつ？`:'こたえを いれよう';
     $(current.target+'Caption').textContent='10の まとまり';$(donorSide()+'Caption').textContent=`のこりの ${remainder()}こ`;$('confirm').textContent='こたえあわせ';
   }else{
     $('prompt').textContent=`${current.a} ＋ ${current.b} ＝ ${current.a+current.b}　できたね！`;
@@ -533,41 +548,30 @@ function notebookReport(correct){
 }
 function setSupport(kind){
   if(current.phase==='moving')return;
-  leaveNotebookForHelp();
-  // Completed steps stay visible; support changes during review do not change the scored record.
-  const review=current.phase==='done';const show=!current.support[kind];
+  leaveNotebookForHelp();const review=current.phase==='done',show=!current.support[kind];
   current.support[kind]=show;
-  if(kind==='dots'&&show)current.support.split=true;
-  if(show&&review&&['direct','notebook'].includes(current.path)){current.path='review';selected=new Set(Array.from({length:need()},(_,i)=>i));}
-  if(kind==='split'&&!show&&current.support.dots)current.support.dots=false;
-  if(!current.support.dots&&!current.support.split)current.support.guide=false;
-  if(show&&!review)markSupport(kind);else event(review?'review_support':'support_hide',{kind,visible:clone(current.support)});
+  if(kind==='dots'&&show){current.support.split=true;current.support.equation=true;}
+  if(kind==='split'&&!show)current.support.dots=false;
+  if(kind==='equation'&&!show){current.support.dots=false;if(['expand','regroup','ten'].includes(current.phase))current.phase='answer';}
+  if(show&&!review){
+    if(['answer','expand','regroup'].includes(current.phase)&&['dots','split'].includes(kind)){current.phase='select';current.path=null;}
+    else if(kind==='equation'&&current.phase==='answer'){current.phase='expand';current.path='equation';}
+    markSupport(kind);
+  }else event(review?'review_support':'support_hide',{kind,visible:clone(current.support)});
+  if(show&&review){current.path='review';selected=new Set(Array.from({length:need()},(_,i)=>i));}
   if(show&&kind==='dots'&&current.phase==='select'&&current.typedTake!==''){
-    const amount=parseNumber(current.typedTake,0,donorValue());if(amount!==null){selected=new Set(Array.from({length:amount},(_,i)=>i));current.touched=true;current.typedRest=String(donorValue()-amount);}
+    const amount=parseNumber(current.typedTake,0,donorValue());if(amount!==null){selected=new Set(Array.from({length:amount},(_,i)=>i));current.touched=true;}
   }
-  clearFeedback();renderProblem();save();
+  clearFeedback();renderProblem();updateClock();save();
 }
-function toggleNumbers(){
-  if(current.phase==='moving')return;
-  const fromNotebook=leaveNotebookForHelp();
-  const show=!(current.support.showExpand&&current.support.showTen);
-  current.support.showExpand=show;current.support.showTen=show;
-  if(fromNotebook&&show){current.phase='expand';current.path='numbers';}
-  if(show&&current.phase!=='done')markSupport('numbers');else event(current.phase==='done'?'review_numbers':'numbers_hide',{show});
-  clearFeedback();renderProblem();save();
-}
+function toggleNumbers(){setSupport('equation');}
 function hint(){
   if(current.phase==='moving')return;
-  leaveNotebookForHelp();
-  if(current.phase==='done'){
-    current.support=Learning.flags(5);if(['direct','notebook'].includes(current.path)){current.path='review';selected=new Set(Array.from({length:need()},(_,i)=>i));}
-    event('review_hint');current.feedback=`${targetValue()}と${need()}で10。10と${remainder()}で${current.a+current.b}。`;renderProblem();save();return;
-  }
-  current.support=Learning.flags(5);current.highlight=current.phase==='select';markSupport('hint');
-  if(current.phase==='select'&&current.typedTake!==''){const amount=parseNumber(current.typedTake,0,donorValue());if(amount!==null){selected=new Set(Array.from({length:amount},(_,i)=>i));current.touched=true;current.typedRest=String(donorValue()-amount);}}
-  if(current.phase==='select')current.feedback=`${targetValue()}の あいている ところを みてみよう。`;
-  else current.feedback=`10の まとまりと、のこりの${remainder()}こを あわせよう。`;
-  renderProblem();save();
+  leaveNotebookForHelp();const review=current.phase==='done';
+  current.support=Learning.flags(3);
+  if(review){current.path='review';event('review_hint');}
+  else {if(current.phase==='answer'){current.phase='select';current.path=null;}markSupport('hint');}
+  clearFeedback();renderProblem();updateClock();save();
 }
 function chooseTarget(side){
   if(!(current.phase==='select'||(current.phase==='expand'&&current.path==='equation'))||side===current.target||!current.mixed)return;
@@ -576,7 +580,7 @@ function chooseTarget(side){
 function parseNumber(text,min,max){const s=String(text).normalize('NFKC').trim();if(!/^\d+$/.test(s))return null;const n=Number(s);return Number.isInteger(n)&&n>=min&&n<=max?n:null;}
 function attempt(stage,value,correct,source){const submission=current.checkNumber||1;current.attempts.push({stage,value,correct,source,submission,atMs:elapsed()});event('check',{stage,value,correct,source,submission});}
 function startSum(){
-  current.phase='answer';event('sum_start');current.feedback='10が できたね！';renderProblem();updateClock();save();
+  current.phase='answer';event('sum_start');current.feedback=current.support.equation?'10が できたね！':'';renderProblem();updateClock();save();
 }
 async function confirm(){
   if(current.phase==='moving')return;
@@ -587,7 +591,7 @@ async function confirm(){
     const answer=parseNumber(current.answerDraft,0,99);
     if(answer===null){feedback('こたえの すうじを いれてね。');return;}
     current.checkNumber=(current.checkNumber||0)+1;const ok=answer===current.a+current.b;attempt('sum',answer,ok,current.path==='equation'?'equation':'guided');
-    if(!ok){feedback(`10と${remainder()}を あわせると いくつ？`,true,'sum');save();return;}
+    if(!ok){feedback(current.support.equation?`10と${remainder()}を あわせると いくつ？`:`${current.a}と${current.b}を あわせると いくつ？`,true,'sum');save();return;}
     current.path=current.path||'numbers';finish();return;
   }
   if(current.phase==='expand'){
@@ -616,6 +620,7 @@ async function confirm(){
   const restOK=rest===donorValue()-take;if(!dotMode)attempt('rest',rest,restOK,'numbers');
   if(!takeOK||!restOK){feedback(!takeOK?`${targetValue()}を10にするには、あと いくつ？`:`${donorValue()}こから ${take}こ もらうと、なんこ のこる？`,true,!takeOK?'take':'rest');save();return;}
   current.path=dotMode?'dots':'numbers';current.touched=true;
+  if(!current.support.equation){startSum();return;}
   if(!dotMode)selected=new Set(Array.from({length:take},(_,i)=>i));
   current.phase='moving';updateClock();renderVisibility();renderCopy();save();const ticket=++epoch;
   const moved=[...selected].map(i=>donorDots[i]);
@@ -633,7 +638,7 @@ function finish(){
   if(current.status==='completed')return;
   syncClock();current.phase='done';current.status='completed';current.completedAt=now();activeSince=null;
   event('problem_completed',{firstTry:Learning.firstTry(current),independent:Learning.independent(current)});
-  const adaptive=current.worksheetSet?{level:0,streak:0,reason:'fixed_worksheet'}:Learning.adapt({level:profile.level,streak:profile.streak},current);if(!current.worksheetSet)adaptive.level=Math.max(1,adaptive.level);current.adaptation=adaptive;profile.level=adaptive.level;profile.streak=adaptive.streak;
+  const adaptive=current.worksheetSet?{level:0,streak:0,reason:'fixed_worksheet'}:Learning.adapt({level:profile.level,streak:profile.streak},current);if(!current.worksheetSet)adaptive.level=Math.max(0,adaptive.level);current.adaptation=adaptive;profile.level=adaptive.level;profile.streak=adaptive.streak;
   current.feedback=current.assessment==='notebook_report'?'ノートの こたえを たしかめたね！':Learning.totalErrors(current)===0?'できたね！':'たしかめて できたね！';
   // Keep a scored snapshot. Review controls cannot retrospectively alter the result.
   countPracticeCompletion();profile.records.push(clone(current));renderProblem();save();
@@ -703,7 +708,7 @@ $('confirmReset').onclick=resetLearningProfile;
 $('undoReset').onclick=undoLearningReset;
 
 $('exportCSV').onclick=()=>{save();download(Learning.csv(profile),'text/csv;charset=utf-8','csv');$('profileMessage').textContent='CSVを保存しました。';};
-$('exportJSON').onclick=()=>{save();download(JSON.stringify({schema:1,appVersion:APP_VERSION,exportedAt:now(),rules:{fadeAfterFirstTry:1,increaseAfterErrors:1,practiceSetSize:10,timeExcludes:['hidden','records','animation'],webGoal:'fixed-6-cherry-worksheet',worksheet:{id:Learning.WORKSHEET_ID,problems:Learning.WORKSHEET},levels:Learning.LEVELS},profile},null,2),'application/json','json');$('profileMessage').textContent='操作記録を保存しました。';};
+$('exportJSON').onclick=()=>{save();download(JSON.stringify({schema:1,appVersion:APP_VERSION,exportedAt:now(),rules:{fadeAfterFirstTry:1,increaseAfterErrors:1,practiceSetSize:10,timeExcludes:['hidden','records','animation'],webGoal:'original-equation-with-answer-input',supportScheme:'four-v1',worksheet:{id:Learning.WORKSHEET_ID,problems:Learning.WORKSHEET},levels:Learning.LEVELS},profile},null,2),'application/json','json');$('profileMessage').textContent='操作記録を保存しました。';};
 document.addEventListener('visibilitychange',()=>{updateClock();save();});window.addEventListener('pagehide',()=>{updateClock();save();});
 // Debounced input saves above plus a checkpoint keep active time across refreshes.
 setInterval(()=>{if(activeSince!==null)save();},10000);
