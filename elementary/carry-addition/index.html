@@ -60,12 +60,15 @@ input.entry-active{outline:none!important;box-shadow:0 0 0 4px var(--entry-halo,
 .board.no-dots .group{display:none}
 @media(max-width:760px){.board.no-dots:not(.note-mode){grid-template-rows:64px 104px 12px 248px}}
 @media(max-width:620px){.board.no-dots:not(.note-mode){grid-template-rows:62px 101px 12px 242px}}
+.practice-progress{margin:10px 0 8px;padding:9px 13px;border:1px solid #d7e3e6;border-radius:12px;background:white}.progress-copy{display:flex;justify-content:space-between;gap:12px;font-size:14px;font-weight:650;margin-bottom:7px}.progress-track{display:grid;grid-template-columns:repeat(10,minmax(0,1fr));gap:5px}.progress-piece{height:12px;border:1px solid #b7cdd1;background:#f0f5f6;border-radius:4px}.progress-piece.filled{background:#357f85;border-color:#357f85}.set-complete{text-align:center;padding:40px 20px;background:white;border:1px solid #c3d9d8;border-radius:24px}.set-complete h2{font-size:27px;margin:0 0 16px}.set-complete p{line-height:1.8;margin:12px 0 22px}.set-complete button{margin-top:12px}@media(max-width:620px){.progress-copy{font-size:13px}.progress-track{gap:4px}.set-complete h2{font-size:23px}}
 </style>
 </head>
 <body>
 <main>
 <header><h1>10をつくろう<span class="subtitle">くりあがりの たしざん</span></h1><div class="header-actions"><span class="badge" id="problemNumber">1もんめ</span><button class="small-button" id="webPracticeReturn" hidden>Web練習にもどる</button><button class="small-button" id="worksheetButton">プリント6もん</button><button class="small-button" id="recordsButton">学習きろく</button></div></header>
-<div class="support-bar" role="group" aria-label="ヒントをじぶんでえらぶ">
+<section class="practice-progress" id="practiceProgress" aria-label="こんかいの10問の進み具合"><div class="progress-copy"><span>こんかいは 10もん</span><span id="progressCopy" aria-live="polite">0 / 10もん おわり</span></div><div class="progress-track" id="progressTrack" role="progressbar" aria-label="解き終わった問題数" aria-valuemin="0" aria-valuemax="10" aria-valuenow="0"></div></section>
+<section class="set-complete" id="setComplete" aria-labelledby="setCompleteTitle" hidden><h2 id="setCompleteTitle" tabindex="-1">10もん おわり！</h2><p>ここで ひとくぎり。おつかれさま！</p><button class="small-button" id="startNextSet">つぎの10もんを はじめる</button></section>
+<div class="support-bar" id="supportBar" role="group" aria-label="ヒントをじぶんでえらぶ">
 <span class="support-title">たすけを えらぶ</span>
 <button class="support-button" id="dotsToggle" aria-pressed="true">まる<span class="switch" id="dotsSwitch">あり</span></button>
 <button class="support-button" id="splitToggle" aria-pressed="true">わけかた<span class="switch" id="splitSwitch">あり</span></button>
@@ -74,7 +77,7 @@ input.entry-active{outline:none!important;box-shadow:0 0 0 4px var(--entry-halo,
 <button class="support-button" id="hint">ヒント</button>
 <span class="support-status" id="supportStatus">はじめは いっしょに</span>
 </div>
-<article>
+<article id="practiceArticle">
 <p class="prompt" id="prompt" aria-live="polite">10をつくるには、5から なんこ もらう？</p>
 <div class="choice-line choice-space" id="targetChoice" role="group" aria-label="10をつくるほう"><label>10をつくるのは</label><button class="target-button" id="targetLeft" aria-pressed="true">ひだりの8</button><button class="target-button" id="targetRight" aria-pressed="false">みぎの5</button></div>
 <div class="board" id="board">
@@ -97,7 +100,7 @@ input.entry-active{outline:none!important;box-shadow:0 0 0 4px var(--entry-halo,
 </div></aside>
 </div>
 </article>
-<footer><button class="control" id="reset">やりなおす</button><p class="feedback" id="feedback" role="status" aria-live="polite"></p><button class="control primary" id="confirm">けってい</button></footer>
+<footer id="practiceFooter"><button class="control" id="reset">やりなおす</button><p class="feedback" id="feedback" role="status" aria-live="polite"></p><button class="control primary" id="confirm">けってい</button></footer>
 <p class="session-note" id="sessionNote">ヒントは いつでも つかっていいよ。</p>
 <p class="storage-status" id="storageStatus" role="status" hidden></p>
 </main>
@@ -121,7 +124,7 @@ input.entry-active{outline:none!important;box-shadow:0 0 0 4px var(--entry-halo,
 <div class="record-actions"><button class="small-button" id="exportCSV">CSVで保存</button><button class="small-button" id="resetLearning">記録をリセットして最初から</button><button class="small-button" id="undoReset" hidden>リセット前の記録にもどす</button><button class="small-button" id="exportJSON">操作記録も保存（JSON）</button></div>
 <p class="record-meta" id="recordMeta"></p>
 <details><summary>支援の調整・記録の見方</summary>
-<ul class="record-rules"><li>開始時は途中式の数字を表示します。正答に合わせて「分けた数の穴埋め → 10にまとめる部分も穴埋め」へ進み、その後に説明・丸・分解図を順に減らす6段階です。最終段階は固定6問のプリントです。右の数をさくらんぼで分け、10と残りの途中式と答えを書きます。Web練習の問題は引き続き変化します。分からない問題は同じ6問を画面上で確認できます。</li><li>現在の開始支援で、途中に支援を追加せず、2問続けて一度で正解すると、次の問題から1段階減らします。今の問題の表示は途中で変えません。</li><li>ヒントを追加した問題は失敗にせず、支援を減らす判定をいったん区切ります。分ける数・途中式の穴埋め・10にまとめる計算・最後の答えを通して、同じ問題で合計2回以上ミスすると、次の問題は1段階支援を増やします。同時に2つの欄を間違えた場合は、1回の確認として数えます。</li><li>「初回でできた」は入力した全ての確認が1回目で正解した問題です。表示済みの数字を見て進んだ段階は自力の正答として集計しません。ノートの正誤は、表示した答えと本人または先生が比べて申告します。ノートの途中式は自動判定しません。画面上の入力による正誤と分けて記録します。答えを見た後の再挑戦やヒント利用を消して自力達成にはしません。</li><li>8問以上進み、直近5問のうち4問以上が初回正答になると、左右の数の大小が入れ替わる問題も出ます。両方の数について、どちらを10にする方法も選べます。</li><li>考え直すときは、普段の問いかけと同じ表示で見る場所を案内します。入力した数字は残し、対応する欄や図をやわらかな光で示します。</li><li>時間は画面が見えている間だけを数えます。記録画面・丸の移動中・別タブにいる時間は除きます。速さは支援を減らす条件に使いません。</li><li>このブラウザの端末内に記録します。固定の保存期限は設けず、ブラウザのサイトデータが保持されている間保存されます。端末やブラウザを変えた場合は引き継がれません。CSVは集計用、JSONは操作と途中の記録も含む保存用です。</li></ul>
+<ul class="record-rules"><li>開始時は途中式の数字を表示します。正答に合わせて「分けた数の穴埋め → 10にまとめる部分も穴埋め」へ進み、その後に説明・丸・分解図を順に減らす6段階です。最終段階は固定6問のプリントです。右の数をさくらんぼで分け、10と残りの途中式と答えを書きます。Web練習の問題は引き続き変化します。分からない問題は同じ6問を画面上で確認できます。</li><li>途中式も含め、追加ヒント・答え直し・やりなおしなしで1問解けたら、次の問題から支援を1段階減らします。今の問題の表示は途中で変えません。</li><li>ミスがなく、ヒントを追加して解けた場合は、次も同じ開始支援にします。分ける数・途中式の穴埋め・10にまとめる計算・最後の答えを通して、同じ問題で1回でもミスすると、次の問題は1段階支援を増やします。同時に2つの欄を間違えた場合は、1回の確認として数えます。</li><li>「初回でできた」は入力した全ての確認が1回目で正解した問題です。表示済みの数字を見て進んだ段階は自力の正答として集計しません。ノートの正誤は、表示した答えと本人または先生が比べて申告します。ノートの途中式は自動判定しません。画面上の入力による正誤と分けて記録します。答えを見た後の再挑戦やヒント利用を消して自力達成にはしません。</li><li>8問以上進み、直近5問のうち4問以上が初回正答になると、左右の数の大小が入れ替わる問題も出ます。両方の数について、どちらを10にする方法も選べます。</li><li>考え直すときは、普段の問いかけと同じ表示で見る場所を案内します。入力した数字は残し、対応する欄や図をやわらかな光で示します。</li><li>Web練習は10問でひと区切りです。ヒントや答え直しで問題数は増えません。途中で閉じても続きを再開できます。次の10問にも、記録と支援量を引き継ぎます。</li><li>時間は画面が見えている間だけを数えます。記録画面・丸の移動中・別タブにいる時間は除きます。速さは支援を減らす条件に使いません。</li><li>このブラウザの端末内に記録します。固定の保存期限は設けず、ブラウザのサイトデータが保持されている間保存されます。端末やブラウザを変えた場合は引き継がれません。CSVは集計用、JSONは操作と途中の記録も含む保存用です。</li></ul>
 <p id="adaptiveState" class="record-meta"></p>
 </details>
 </div>
@@ -145,14 +148,12 @@ const Learning = (() => {
   function autoErrors(record){return totalErrors({...record,attempts:record.attempts.filter(x=>x.source!=='notebook_report')});}
   function independent(record){return firstTry(record) && record.maxSupport===0 && !record.addedSupport && !record.restarts && record.path==='notebook' && record.assessment==='notebook_report' && record.notebookAnswerViews===1;}
   function adapt(state,record){
-    const next={level:state.level,streak:state.streak};let reason='same';
-    if(totalErrors(record)>=2){next.level=Math.min(5,next.level+1);next.streak=0;reason=next.level===state.level?'same':'more';}
-    else if(firstTry(record) && !record.addedSupport && !record.restarts && record.startSupport===state.level){
-      next.streak++;
-      if(next.streak>=2 && next.level>0){next.level--;next.streak=0;reason='less';}
-      else if(next.level===0)next.streak=Math.min(2,next.streak);
-    } else next.streak=0;
-    return {...next,reason};
+    let level=state.level,reason='same';
+    if(totalErrors(record)>=1){level=Math.min(5,level+1);reason=level===state.level?'same':'more';}
+    else if(firstTry(record)&&!record.addedSupport&&!record.restarts&&record.startSupport===state.level){
+      level=Math.max(1,level-1);reason=level===state.level?'same':'less';
+    }
+    return {level,streak:0,reason};
   }
   function mixedReady(records){const done=records.filter(r=>r.status==='completed');return done.length>=8 && done.slice(-5).filter(firstTry).length>=4;}
   function chooseQuestion(records,random=Math.random){
@@ -182,7 +183,7 @@ const Learning = (() => {
 /* UI and browser-local persistence. No network requests or identifiers for children. */
 const $=id=>document.getElementById(id);
 const STORE_KEY='ten-maker.learning.v1';
-const APP_VERSION='2.7.1';
+const APP_VERSION='2.8.0';
 const uuid=()=>globalThis.crypto?.randomUUID?.()||`r${Date.now().toString(36)}${Math.random().toString(36).slice(2)}`;
 const now=()=>new Date().toISOString();
 const clone=value=>JSON.parse(JSON.stringify(value));
@@ -231,9 +232,39 @@ function enterNotebookIfNeeded(){
   }
 }
 function makeCurrent(question){
-    return {id:uuid(),number:profile.records.length+1,a:question.a,b:question.b,target:'left',mixed:question.mixed,startedAt:now(),completedAt:null,status:'in_progress',phase:'select',startSupport:profile.level,maxSupport:profile.level,support:Learning.flags(profile.level),supportRequests:0,addedSupport:false,attempts:[],events:[],activeMs:0,selected:[],touched:false,typedTake:'',typedRest:'',answerDraft:'',path:null,restarts:0,highlight:false,feedback:'',adaptation:null,worksheetRun:question.worksheetRun||null,worksheetSet:question.worksheetSet||null,worksheetIndex:question.worksheetIndex??null,checkNumber:0,assessment:'web',notebookOrigin:false,notebookAnswerViews:0,expandTake:'',expandRest:'',regroupTen:''};
+    return {id:uuid(),number:profile.records.length+1,a:question.a,b:question.b,target:'left',mixed:question.mixed,startedAt:now(),completedAt:null,status:'in_progress',phase:'select',startSupport:profile.level,maxSupport:profile.level,support:Learning.flags(profile.level),supportRequests:0,addedSupport:false,attempts:[],events:[],activeMs:0,selected:[],touched:false,typedTake:'',typedRest:'',answerDraft:'',path:null,restarts:0,highlight:false,feedback:'',adaptation:null,worksheetRun:question.worksheetRun||null,worksheetSet:question.worksheetSet||null,worksheetIndex:question.worksheetIndex??null,checkNumber:0,assessment:'web',notebookOrigin:false,notebookAnswerViews:0,practiceSetId:question.worksheetSet?null:ensurePracticeSet().id,expandTake:'',expandRest:'',regroupTen:''};
+}
+const PRACTICE_SET_SIZE=10;
+function ensurePracticeSet(){
+  if(!profile.practiceSet||!Array.isArray(profile.practiceSet.completedIds))profile.practiceSet={id:uuid(),completedIds:[],startedAt:now()};
+  return profile.practiceSet;
+}
+function practiceSetDone(){return ensurePracticeSet().completedIds.length>=PRACTICE_SET_SIZE;}
+function countPracticeCompletion(){
+  if(current.worksheetSet)return;
+  const set=ensurePracticeSet();
+  current.practiceSetId=set.id;
+  if(!set.completedIds.includes(current.id)&&set.completedIds.length<PRACTICE_SET_SIZE)set.completedIds.push(current.id);
+  if(practiceSetDone()&&!set.completedAt)set.completedAt=now();
+}
+function renderPracticeProgress(){
+  const set=ensurePracticeSet(),count=Math.min(PRACTICE_SET_SIZE,set.completedIds.length),worksheet=!!profile.worksheetActive;
+  const complete=!worksheet&&practiceSetDone();
+  $('practiceProgress').hidden=worksheet;
+  $('progressCopy').textContent=`${count} / 10もん おわり`;
+  $('progressTrack').setAttribute('aria-valuenow',String(count));
+  $('progressTrack').setAttribute('aria-valuetext',`${count}問おわり、あと${10-count}問`);
+  $('progressTrack').replaceChildren(...Array.from({length:PRACTICE_SET_SIZE},(_,i)=>{const piece=document.createElement('span');piece.className='progress-piece'+(i<count?' filled':'');piece.setAttribute('aria-hidden','true');return piece;}));
+  $('setComplete').hidden=!complete;
+  for(const id of ['supportBar','practiceArticle','practiceFooter','sessionNote'])$(id).hidden=complete;
+  if(!worksheet)$('problemNumber').textContent=complete?'10もん おわり':`${Math.max(1,Math.min(10,count+(current.status==='completed'?0:1)))} / 10もんめ`;
+}
+function startNextSet(){
+  if(profile.worksheetActive||!practiceSetDone())return;
+  profile.practiceSet={id:uuid(),completedIds:[],startedAt:now()};startNext();
 }
 function startNext(){
+  ensurePracticeSet();if(!profile.worksheetActive&&practiceSetDone()){renderPracticeProgress();save();return;}
   epoch++;allDots.forEach(d=>d.getAnimations().forEach(a=>a.cancel()));
   let question;
   if(profile.worksheetActive){
@@ -275,7 +306,7 @@ function buildWorksheet(){
 }
 function openWorksheet(){buildWorksheet();$('practiceReturn').hidden=!profile.worksheetActive;closeKeypad();$('worksheetDialog').showModal();updateClock();save();}
 function resumeProfile(p){
-  epoch++;allDots.forEach(d=>d.getAnimations().forEach(a=>a.cancel()));profile=p;current=p.current;
+  epoch++;allDots.forEach(d=>d.getAnimations().forEach(a=>a.cancel()));profile=p;current=p.current;ensurePracticeSet();
   if(!current){startNext();return;}
   if(current.phase==='moving'){current.phase='expand';current.path=current.path||'dots';}
   if(current.phase==='ten'){current.phase='answer';event('sum_start');current.feedback='10が できたね！';}
@@ -409,7 +440,7 @@ function renderTop(){
 function renderProblem(){
   $('webPracticeReturn').hidden=!profile.worksheetActive;
   $('problemNumber').textContent=current.worksheetSet?`プリント ${current.worksheetIndex+1} / 6`:`${current.number}もんめ`;
-  enterNotebookIfNeeded();renderTop();buildDots();buildSplit();buildFlow();renderVisibility();renderCopy();
+  enterNotebookIfNeeded();renderTop();buildDots();buildSplit();buildFlow();renderVisibility();renderCopy();renderPracticeProgress();
 }
 function renderVisibility(){
   $('board').classList.toggle('no-dots',!current.support.dots);
@@ -599,12 +630,14 @@ async function confirm(){
   renderProblem();updateClock();save();
 }
 function finish(){
+  if(current.status==='completed')return;
   syncClock();current.phase='done';current.status='completed';current.completedAt=now();activeSince=null;
   event('problem_completed',{firstTry:Learning.firstTry(current),independent:Learning.independent(current)});
   const adaptive=current.worksheetSet?{level:0,streak:0,reason:'fixed_worksheet'}:Learning.adapt({level:profile.level,streak:profile.streak},current);if(!current.worksheetSet)adaptive.level=Math.max(1,adaptive.level);current.adaptation=adaptive;profile.level=adaptive.level;profile.streak=adaptive.streak;
   current.feedback=current.assessment==='notebook_report'?'ノートの こたえを たしかめたね！':Learning.totalErrors(current)===0?'できたね！':'たしかめて できたね！';
   // Keep a scored snapshot. Review controls cannot retrospectively alter the result.
-  profile.records.push(clone(current));renderProblem();save();
+  countPracticeCompletion();profile.records.push(clone(current));renderProblem();save();
+  if(!current.worksheetSet&&practiceSetDone())$('setCompleteTitle').focus({preventScroll:true});
 }
 function restart(){
   epoch++;allDots.forEach(d=>d.getAnimations().forEach(a=>a.cancel()));
@@ -632,7 +665,7 @@ function renderRecords(){
   $('recentRows').replaceChildren();if(!count){const row=document.createElement('tr');const td=cell(row,'まだ完了した問題はありません。');td.colSpan=6;td.className='table-empty';$('recentRows').append(row);}
   for(const r of records.slice(-30).reverse())tableRow($('recentRows'),[`${r.number}. ${r.a}＋${r.b}＝${r.a+r.b}`,['direct','notebook'].includes(r.path)?'—':r.target==='left'?'左':'右',`${r.startSupportLabel||Learning.LEVELS[r.startSupport]} → ${r.maxSupportLabel||Learning.LEVELS[r.maxSupport]}`,r.assessment==='notebook_report'?(Learning.independent(r)?'ノート：追加支援なし（申告）':`ノート：答え合わせ済み（申告）`):Learning.firstAutoTry(r)?'画面入力：初回正答':`画面入力：答え直し ${Learning.autoErrors(r)}回`,`${r.supportRequests}回`,duration(r.activeMs)]);
   $('recordMeta').textContent=`${profile.label} ／ 問題は${Learning.BANK.length}通り。記録はこのブラウザに自動保存します。${saveFailed||readBlocked?' 現在は自動保存できていません。書き出して保管してください。':''}`;
-  $('adaptiveState').textContent=`次の開始支援：${Learning.LEVELS[profile.level]} ／ 今の支援での連続初回正答：${profile.streak}問 ／ 左右を入れ替えた出題：${Learning.mixedReady(records)?'開始条件を満たしています':'定着を確認してから始めます'}`;
+  $('adaptiveState').textContent=`次の開始支援：${Learning.LEVELS[profile.level]} ／ 1問ごとに支援を調整 ／ 左右を入れ替えた出題：${Learning.mixedReady(records)?'開始条件を満たしています':'定着を確認してから始めます'}`;
   $('exportCSV').disabled=!count;$('exportJSON').disabled=false;
 }
 function openRecords(){updateClock();$('records').showModal();updateClock();save();renderRecords();}
@@ -643,6 +676,7 @@ document.querySelectorAll('[data-digit]').forEach(button=>button.onclick=()=>key
 $('padErase').onclick=()=>keypadInput(null);$('padClose').onclick=closeKeypad;
 $('webPracticeReturn').onclick=returnToPractice;$('worksheetButton').onclick=openWorksheet;$('closeWorksheet').onclick=()=>{$('worksheetDialog').close();updateClock();save();};$('worksheetDialog').addEventListener('close',()=>{updateClock();save();});$('startWorksheet').onclick=()=>startFixedWorksheet();$('practiceReturn').onclick=returnToPractice;$('printWorksheet').onclick=()=>{buildWorksheet();$('worksheetDialog').close();window.print();};
 $('noteCorrect').onclick=()=>notebookReport(true);$('noteIncorrect').onclick=()=>notebookReport(false);$('notebookReturn').onclick=returnToNotebook;
+$('startNextSet').onclick=startNextSet;
 $('confirm').onclick=()=>void confirm();$('reset').onclick=restart;$('dotsToggle').onclick=()=>setSupport('dots');$('splitToggle').onclick=()=>setSupport('split');$('hint').onclick=hint;$('numbersToggle').onclick=toggleNumbers;$('targetLeft').onclick=()=>chooseTarget('left');$('targetRight').onclick=()=>chooseTarget('right');
 $('recordsButton').onclick=openRecords;$('closeRecords').onclick=closeRecords;$('records').addEventListener('close',()=>{updateClock();save();});
 $('learnerSelect').onchange=()=>{save();const p=db.profiles.find(p=>p.id===$('learnerSelect').value);if(p){resumeProfile(p);renderRecords();$('profileMessage').textContent=`${p.label}の記録に切り替えました。`;}};
@@ -669,7 +703,7 @@ $('confirmReset').onclick=resetLearningProfile;
 $('undoReset').onclick=undoLearningReset;
 
 $('exportCSV').onclick=()=>{save();download(Learning.csv(profile),'text/csv;charset=utf-8','csv');$('profileMessage').textContent='CSVを保存しました。';};
-$('exportJSON').onclick=()=>{save();download(JSON.stringify({schema:1,appVersion:APP_VERSION,exportedAt:now(),rules:{fadeAfterFirstTry:2,increaseAfterErrors:2,timeExcludes:['hidden','records','animation'],webGoal:'fixed-6-cherry-worksheet',worksheet:{id:Learning.WORKSHEET_ID,problems:Learning.WORKSHEET},levels:Learning.LEVELS},profile},null,2),'application/json','json');$('profileMessage').textContent='操作記録を保存しました。';};
+$('exportJSON').onclick=()=>{save();download(JSON.stringify({schema:1,appVersion:APP_VERSION,exportedAt:now(),rules:{fadeAfterFirstTry:1,increaseAfterErrors:1,practiceSetSize:10,timeExcludes:['hidden','records','animation'],webGoal:'fixed-6-cherry-worksheet',worksheet:{id:Learning.WORKSHEET_ID,problems:Learning.WORKSHEET},levels:Learning.LEVELS},profile},null,2),'application/json','json');$('profileMessage').textContent='操作記録を保存しました。';};
 document.addEventListener('visibilitychange',()=>{updateClock();save();});window.addEventListener('pagehide',()=>{updateClock();save();});
 // Debounced input saves above plus a checkpoint keep active time across refreshes.
 setInterval(()=>{if(activeSince!==null)save();},10000);
